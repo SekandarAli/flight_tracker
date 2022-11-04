@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flight_tracker">
-   <application
-        android:label="flight_tracker"
+
+    <!-- Required to fetch data from the internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:label="Flight Track"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

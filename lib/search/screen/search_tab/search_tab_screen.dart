@@ -2,9 +2,8 @@
 
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flutter/material.dart';
-
-import 'search_tab/search_tab_by_flightcode.dart';
-import 'search_tab/search_tab_by_route.dart';
+import 'search_tab_by_flightcode/search_tab_by_flightcode.dart';
+import 'search_tab_by_route/search_tab_by_route.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);

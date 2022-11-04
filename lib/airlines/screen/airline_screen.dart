@@ -1,24 +1,21 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_tracker/app_theme/color.dart';
-import 'package:flight_tracker/app_theme_work/theme_colors.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
 
-class AirportsScreen extends StatefulWidget {
-  final String title;
+class AirlineScreen extends StatefulWidget {
 
-  AirportsScreen({super.key, required this.title});
+  AirlineScreen({super.key});
 
   @override
-  State<AirportsScreen> createState() => _AirportsScreenState();
+  State<AirlineScreen> createState() => _AirlineScreenState();
 }
 
-class _AirportsScreenState extends State<AirportsScreen> {
+class _AirlineScreenState extends State<AirlineScreen> {
 
   bool isSearching = true;
-
   final searchAirportController = TextEditingController();
   String? placeId;
   GooglePlace? googlePlace;
@@ -27,20 +24,19 @@ class _AirportsScreenState extends State<AirportsScreen> {
 
   void autoCompleteSearch(String value) async {
     var result = await googlePlace!.autocomplete.get(value);
-    print("Hello Pajji ${result}");
+    print("Hello $result");
 
     if (result != null && result.predictions != null && mounted) {
-      print("Hello Pajji ${result.predictions}");
+      print("Hello ${result.predictions}");
       setState(() {
         predictions = result.predictions!;
       });
     }
   }
 
-  String? cityName = "Lahore";
-  String? cityShortName = "LHR";
+  String? airlineName = "Lahore";
   String? countryShortName = "PK";
-  String? airportName = "Lahore Airport Exact";
+  var airlineImage;
 
   @override
   void initState() {
@@ -64,14 +60,15 @@ class _AirportsScreenState extends State<AirportsScreen> {
                   // focusNode: focusNode,
                   controller: searchAirportController,
                   enableInteractiveSelection: false,
-                  style: ThemeTexts.textStyleTitle2,
+                  style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   onChanged: (String value) {
-                    autoCompleteSearch(value);
+                    // autoCompleteSearch(value);
+                    print(value);
                   },
                   decoration: SearchTextFormField(
                       context: context,
                       controller: searchAirportController,
-                      hintText: widget.title ?? "Enter Location",
+                      hintText: "Search for an Airline",
                   ),
                 ),
               ),
@@ -83,16 +80,16 @@ class _AirportsScreenState extends State<AirportsScreen> {
                   itemBuilder: (context, index) {
                     return InkWell(
                         onTap: () async {
-                            Navigator.pop(context);
+                            // Navigator.pop(context);
                           },
                         child: ListTile(
-                          title: Text("$cityName, $countryShortName",style: ThemeTexts.textStyleValueBlack,),
-                          subtitle: Text("$cityShortName -  $airportName",style: ThemeTexts.textStyleValueBlack2),
-                          trailing: Icon(
-                            Icons.flag,
-                            color: Colors.green,
+                          title: Text("$airlineName",style: ThemeTexts.textStyleValueBlack,),
+                          subtitle: Text("$countryShortName",style: ThemeTexts.textStyleValueBlack2),
+                          trailing: FlutterLogo(
                             size: 40,
-                          ),
+                            textColor: Colors.blue,
+                            style: FlutterLogoStyle.stacked,
+                          ), //F
                         ));
                   },
                 ),
@@ -111,7 +108,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
     return InputDecoration(
       prefixIcon: InkWell(
         onTap: () {
-          Navigator.pop(context);
+          // Navigator.pop(context);
         },
         child: Icon(
           Icons.search,

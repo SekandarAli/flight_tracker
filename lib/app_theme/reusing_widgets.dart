@@ -221,7 +221,7 @@ class ReusingWidgets {
               SizedBox(width: 20),
               Text(
                 flightCodeText,
-                style: ThemeTexts.textStyleValueGrey,
+                style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
 
               )
             ],

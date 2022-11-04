@@ -118,6 +118,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
         keyboardType: inputType,
         style: TextStyle(fontSize: 22),
         decoration: InputDecoration(
+          counterText: "",
           hintText: hintText,
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -152,12 +153,12 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  child: Text('Done'),
-                  onPressed: () {
-                    Navigator.of(context).pop(numberController.text.toString());
-                  },
-                ),
+                TextButton(onPressed: () {
+                  Navigator.of(context).pop(numberController.text.toString());
+                  // alphabetsController.clear();
+                  // numberController.clear();
+                },
+                    child: Text('DONE')),
               ],
             ),
           ],

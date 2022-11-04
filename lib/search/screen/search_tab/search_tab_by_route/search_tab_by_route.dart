@@ -3,8 +3,9 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/functions/date.dart';
-import 'package:flight_tracker/screens/bottom_navbar/airports/airports_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'search_tab_departure_airport.dart';
 
 class SearchTabByRoute extends StatefulWidget {
   const SearchTabByRoute({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       arrivalTitle: arrivalAirport,
                     onTapDepartureTitle: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return AirportsScreen(title: "Search for an Airport");
+                          return SearchTabDepartureAirport();
                         }));
                     },
                     onTapArrivalTitle: () {  },

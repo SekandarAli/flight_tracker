@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:flight_tracker/airlines/screen/airline_screen.dart';
+import 'package:flight_tracker/airports/screen/airports_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/search/screen/search_tab/search_tab_screen.dart';
+import 'package:flight_tracker/settings/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'search/search_tab_screen.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   const BottomNavBarScreen({Key? key}) : super(key: key);
@@ -13,20 +15,20 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 2;
 
-  _getDrawerItemWidget(int pos) {
-    switch (pos) {
+  _getDrawerItemWidget(int position) {
+    switch (position) {
       case 0:
         return SearchScreen();
       // case 1:
       //   return EstimatesScreen();
-      // case 2:
-      //   return ClientsScreen();
-      // case 3:
-      //   return ToolsScreen();
-      // case 4:
-      //   return ReportScreen();
+      case 2:
+        return AirportsScreen();
+      case 3:
+        return AirlineScreen();
+      case 4:
+        return SettingsScreen();
 
       default:
         return Center(child: Text("Error"));
