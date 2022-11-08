@@ -2,8 +2,12 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/myflights/model/myflights_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive_flutter/adapters.dart';
+
 
 class AirportTrackFlight extends StatefulWidget {
   const AirportTrackFlight({super.key});
@@ -13,40 +17,87 @@ class AirportTrackFlight extends StatefulWidget {
 }
 
 class _AirportTrackFlightState extends State<AirportTrackFlight> {
+
+  bool trackFlight = true;
+  Box<ModelMyFlights>? dataBox;
+  ModelMyFlights? modelMyFlights;
+
+  String flightCode = "PK 3309";
+  String departureCityDate = 'Nov 08, 2022';
+  String departureCity = "Islamabad";
+  String departureCityShortCode = "ISL";
+  String departureCityTime = '09:30 AM';
+  String arrivalCity = "Lahore";
+  String arrivalCityShortCode = "LHR";
+  String arrivalCityTime = "12:50 PM";
+  String arrivalCityDate = 'Nov 09, 2022';
+
+
+  @override
+  void initState() {
+    super.initState();
+    dataBox = Hive.box<ModelMyFlights>("modelMyFlights");
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 1,
-        backgroundColor: Colors.white,
-        selectedItemColor: ColorsTheme.primaryColor,
-        unselectedItemColor: Colors.grey[400],
-        onTap: (value) {
-          setState(() {
-            // _currentIndex = value;
-          });
-        },
-        items: [
+      bottomNavigationBar: Container(
+          alignment: Alignment.center,
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                child: Text(
+                    trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+                    style: ThemeTexts.textStyleTitle3.copyWith(
+                        color: ColorsTheme.primaryColor,
+                        fontWeight: FontWeight.normal)),
+                onPressed: () {
+                   setState(() {
+                    trackFlight = !trackFlight;
+                    if (trackFlight == false) {
+                       modelMyFlights = ModelMyFlights(
+                        flightCode: flightCode,
+                        departureCityDate: departureCityDate,
+                        departureCity: departureCity,
+                        departureCityShortCode: departureCityShortCode,
+                        departureCityTime: departureCityTime,
+                        arrivalCityDate: departureCityDate,
+                        arrivalCity: arrivalCity,
+                        arrivalCityShortCode: arrivalCityShortCode,
+                        arrivalCityTime: arrivalCityTime,
+                      );
 
-          BottomNavigationBarItem(
-            label: "Airlines",
-            icon: Icon(Icons.line_style_outlined),
-          ),
+                      dataBox!.add(modelMyFlights!);
+                      if (kDebugMode) {
+                        print(modelMyFlights!.arrivalCity);
+                      }
 
-          BottomNavigationBarItem(
-            label: "Settings",
-            icon: Icon(Icons.settings),
-          ),
 
-        ],
-      ),
+                    } else {
+                      dataBox!.delete(modelMyFlights);
+                    }
+                  });
+                },
+              ),
+              TextButton(
+                child: Text("ADD TO TRIPS",
+                    style: ThemeTexts.textStyleTitle3.copyWith(
+                        color: ColorsTheme.primaryColor,
+                        fontWeight: FontWeight.normal)),
+                onPressed: () {},
+              ),
+            ],
+          )),
       body: Stack(
         children: [
           CustomGoogleMap(),
-          CustomSearchContainer(),
+          CustomMapsButton(),
           DraggableScrollableSheet(
-            initialChildSize: 0.55,
+            initialChildSize: 0.45,
             minChildSize: 0.15,
             builder: (BuildContext context, ScrollController scrollController) {
               return SingleChildScrollView(
@@ -55,46 +106,59 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
               );
             },
           ),
-
         ],
       ),
     );
   }
-}
 
-/// Google Map in the background
-class CustomGoogleMap extends StatefulWidget {
-  const CustomGoogleMap({super.key});
+  Widget CustomGoogleMap() {
 
-  @override
-  State<CustomGoogleMap> createState() => _CustomGoogleMapState();
-}
+    final Set<Polyline> polyline = {};
+    GoogleMapController controller;
 
-class _CustomGoogleMapState extends State<CustomGoogleMap> {
-  late GoogleMapController mapController;
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+    Set<Marker> markers = {}; //markers for google map
 
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+    LatLng startLocation = LatLng(33.6844, 73.0479);
+    LatLng endLocation = LatLng(27.6688312, 85.3077329);
 
-  @override
-  Widget build(BuildContext context) {
+
+
+    void _onMapCreated(GoogleMapController controllerParam) {
+      setState(() {
+        controller = controllerParam;
+        markers.add(Marker(
+          markerId: MarkerId(startLocation.toString()),
+          position: startLocation,
+          infoWindow: InfoWindow(
+            title: 'Starting Point ',
+            snippet: 'Start Marker',
+          ),
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
+
+        polyline.add(Polyline(
+          polylineId: PolylineId('line1'),
+          visible: true,
+          points: [LatLng(33.6844, 73.0479),LatLng(33.6844, 73.0479)],
+          width: 2,
+          color: Colors.blue,
+        ));
+      });
+    }
+
     return GoogleMap(
+      polylines: polyline,
+      markers: markers,
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
-        target: _center,
-        zoom: 13.0,
+        target: endLocation,
+        zoom: 11.0,
       ),
+      mapType: MapType.normal,
     );
   }
-}
 
-class CustomSearchContainer extends StatelessWidget {
-  const CustomSearchContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget CustomMapsButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
       child: Row(
@@ -114,206 +178,284 @@ class CustomSearchContainer extends StatelessWidget {
       ),
     );
   }
-}
 
-/// Content of the DraggableBottomSheet's child SingleChildScrollView
-class CustomScrollViewContent extends StatelessWidget {
-  const CustomScrollViewContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget CustomScrollViewContent() {
     return Card(
+      color: Colors.white,
       elevation: 12.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      margin: const EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      margin: EdgeInsets.all(0),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
         ),
-        child: CustomInnerContent(),
-      ),
-    );
-  }
-}
-
-class CustomInnerContent extends StatelessWidget {
-  const CustomInnerContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 12),
-        CustomDraggingHandle(),
-        SizedBox(height: 16),
-        CustomExploreBerlin(),
-        SizedBox(height: 16),
-        Divider(),
-        SizedBox(height: 16),
-        CustomHorizontallyScrollingRestaurants(),
-        SizedBox(height: 24),
-        CustomFeaturedListsText(),
-        SizedBox(height: 16),
-        CustomFeaturedItemsGrid(),
-        SizedBox(height: 24),
-        CustomRecentPhotosText(),
-        SizedBox(height: 16),
-        CustomRecentPhotoLarge(),
-        SizedBox(height: 12),
-        CustomRecentPhotosSmall(),
-        SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-class CustomDraggingHandle extends StatelessWidget {
-  const CustomDraggingHandle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 5,
-      width: 50,
-      decoration: BoxDecoration(
-          color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
-    );
-  }
-}
-
-class CustomExploreBerlin extends StatelessWidget {
-  const CustomExploreBerlin({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text("PK 330", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-        Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-
-      ],
-    );
-  }
-}
-
-class CustomHorizontallyScrollingRestaurants extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
-            CustomRestaurantCategory(),
-            SizedBox(width: 12),
+        child: Column(
+          children: [
+            SizedBox(height: 12),
+            CustomDraggingHandle(),
+            SizedBox(height: 10),
+            CustomFlightName(),
+            SizedBox(height: 10),
+            Divider(),
+            SizedBox(height: 16),
+            CustomFlightCountryNameRow(),
+            SizedBox(height: 24),
+            CustomDistanceDurationRow(),
+            SizedBox(height: 24),
+            CustomSeatAircraftInfo(context: context),
+            SizedBox(height: 20),
+            CustomSeatAircraftInfo(context: context),
+            SizedBox(height: 20),
+            CustomAirportDetails(context: context),
+            SizedBox(height: 20),
+            CustomAirportDetails(context: context)
           ],
         ),
       ),
     );
   }
-}
 
-class CustomFeaturedListsText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      //only to left align the text
-      child: Row(
-        children: <Widget>[
-          Text("Featured Lists", style: TextStyle(fontSize: 14))
-        ],
-      ),
-    );
-  }
-}
-
-class CustomFeaturedItemsGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.count(
-        //to avoid scrolling conflict with the dragging sheet
-        physics: NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(0),
-        crossAxisCount: 2,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        shrinkWrap: true,
-        children: <Widget>[
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-          CustomFeaturedItem(),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomRecentPhotosText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: Row(
-        children: <Widget>[
-          Text("Recent Photos", style: TextStyle(fontSize: 14)),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomRecentPhotoLarge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: CustomFeaturedItem(),
-    );
-  }
-}
-
-class CustomRecentPhotosSmall extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomFeaturedItemsGrid();
-  }
-}
-
-class CustomRestaurantCategory extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget CustomDraggingHandle() {
     return Container(
-      height: 100,
-      width: 100,
+      height: 5,
+      width: 50,
       decoration: BoxDecoration(
-        color: Colors.grey[500],
-        borderRadius: BorderRadius.circular(8),
+          color: Colors.grey, borderRadius: BorderRadius.circular(16)),
+    );
+  }
+
+  Widget CustomFlightName() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          padding: EdgeInsets.all(5),
+          color: ColorsTheme.primaryColor,
+          child: Text(flightCode,
+              style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+        ),
+        Text("Scheduled",
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
+      ],
+    );
+  }
+
+  Widget CustomFlightCountryName({
+      required String cityName,
+      required String cityShortCode,
+      required String cityTime,
+      required String cityDate,
+      required CrossAxisAlignment crossAlignment}) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: crossAlignment,
+      children: [
+        Text(cityName,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+        Text(cityShortCode,
+            style: ThemeTexts.textStyleTitle1.copyWith(color: Colors.black)),
+        SizedBox(height: 10),
+        Text(cityTime,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+        Text("🗓️ $cityDate",
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget CustomFlightCountryNameRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomFlightCountryName(
+              cityName: departureCity,
+              cityShortCode: departureCityShortCode,
+              cityTime: departureCityTime,
+              cityDate: departureCityDate,
+              crossAlignment: CrossAxisAlignment.start),
+          Icon(Icons.flight_land_rounded, size: 50),
+          CustomFlightCountryName(
+              cityName: arrivalCity,
+              cityShortCode: arrivalCityShortCode,
+              cityTime: arrivalCityTime,
+              cityDate: arrivalCityDate,
+              crossAlignment: CrossAxisAlignment.end),
+        ],
       ),
     );
   }
-}
 
-class CustomFeaturedItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget CustomDistanceDuration() {
+    return Column(
+      children: [
+        Text("Distance",
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+        Text("977 mi",
+            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black)),
+      ],
+    );
+  }
+
+  Widget CustomDistanceDurationRow() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomDistanceDuration(),
+          CustomDistanceDuration(),
+          CustomDistanceDuration(),
+        ],
+      ),
+    );
+  }
+
+  Widget CustomSeatAircraftInfo({required BuildContext context}) {
+    return Card(
+      color: Colors.white,
+      child: Column(
+        children: [
+          SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25,
+              width: MediaQuery.of(context).size.width,
+              child:
+                  Image.asset("assets/images/airline.png", fit: BoxFit.cover)),
+          Divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Seat Map",
+                        style: ThemeTexts.textStyleTitle2.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal)),
+                    SizedBox(height: 5),
+                    Text("Airplane",
+                        style: ThemeTexts.textStyleTitle3
+                            .copyWith(color: Colors.black)),
+                    SizedBox(height: 5),
+                  ],
+                ),
+                TextButton(
+                  child: Text("Info",
+                      style: ThemeTexts.textStyleTitle2.copyWith(
+                          color: ColorsTheme.primaryColor,
+                          fontWeight: FontWeight.normal)),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget CustomAirportDetails({required BuildContext context}) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
+    return Card(
+      child: Column(
+        children: [
+          SizedBox(
+            height: h * 0.25,
+            width: w,
+            child: Image.asset('assets/images/airport.jpg', fit: BoxFit.fill),
+          ),
+          Container(
+            padding: EdgeInsets.all(15),
+            width: w,
+            color: ColorsTheme.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Airport Name",
+                    style: ThemeTexts.textStyleTitle2
+                        .copyWith(color: Colors.black)),
+                SizedBox(height: 5),
+              ],
+            ),
+          ),
+          Container(
+            width: w,
+            color: ColorsTheme.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Departure Airport",
+                              style: ThemeTexts.textStyleTitle2
+                                  .copyWith(color: Colors.grey)),
+                          Text("Local Time: Wed 02:56 PM",
+                              style: ThemeTexts.textStyleTitle3
+                                  .copyWith(color: Colors.grey)),
+                        ],
+                      ),
+                      Text("86°C",
+                          style: ThemeTexts.textStyleTitle1
+                              .copyWith(fontWeight: FontWeight.normal)),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    container(icon: Icons.info, text: "INFO"),
+                    container(icon: Icons.assistant_navigation, text: "NAV"),
+                    container(
+                        icon: Icons.sports_baseball_rounded, text: "WEBSITE"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget container({
+    required IconData icon,
+    required String text,
+  }) {
     return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[500],
-        borderRadius: BorderRadius.circular(8),
+      padding: EdgeInsets.all(5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: ColorsTheme.primaryColor,
+          ),
+          SizedBox(height: 5),
+          Text(text,
+              style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
+        ],
       ),
     );
   }

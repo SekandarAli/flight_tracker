@@ -48,27 +48,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     "The Flight Tracker",
                     style: ThemeTexts.textStyleTitle3,
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Text("Flights"),
-                  //     Text("Flights"),
-                  //     Text("Flights"),
-                  //   ],
-                  // ),
                 ],
               )),
-          settingsTile(title: "Application Setting"),
-          settingsTile(title: "Alert Default Settings"),
-          settingsTile(title: "Triplt"),
-          settingsTile(title: "Privacy Settings"),
-          settingsTile(
-              title: "Subscribe", subTitle: "Gain access to premium features"),
-          settingsTile(title: "Frequently Asked Questions", subTitle: "FAQ"),
-          settingsTile(
-              title: "License Information",
-              subTitle: "License for included libraries"),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    settingsTile(title: "Application Setting"),
+                    settingsTile(title: "Alert Default Settings"),
+                    settingsTile(title: "Triplt"),
+                    settingsTile(title: "Privacy Settings"),
+                    settingsTile(
+                        title: "Subscribe", subTitle: "Gain access to premium features"),
+                    settingsTile(title: "Frequently Asked Questions", subTitle: "FAQ"),
+                    settingsTile(
+                        title: "License Information",
+                        subTitle: "License for included libraries"),
+                  ],
+                ),
+              ),
+            ),
+          )
+
         ],
       ),
     );
@@ -83,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         print("aaa");
       },
       child: Container(
-        padding: EdgeInsets.only(left: 30, top: 10),
+        padding: EdgeInsets.only(left: 50, top: 30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

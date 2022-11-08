@@ -59,7 +59,6 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                 ),
               ),
               Container(
-                // height: h * 0.2,
                 width: w,
                 color: ColorsTheme.white,
                 child: Column(
