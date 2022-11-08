@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:flight_tracker/airlines/model/model_airlines.dart';
+import 'package:flight_tracker/airlines/screen/airline_screen_detail.dart';
+import 'package:flight_tracker/airlines/services/services_airlines.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
@@ -15,32 +19,18 @@ class AirlineScreen extends StatefulWidget {
 
 class _AirlineScreenState extends State<AirlineScreen> {
 
-  bool isSearching = true;
-  final searchAirportController = TextEditingController();
-  String? placeId;
-  GooglePlace? googlePlace;
-  List<AutocompletePrediction> predictions = [];
-  DetailsResult? detailsResult;
-
-  void autoCompleteSearch(String value) async {
-    var result = await googlePlace!.autocomplete.get(value);
-    print("Hello $result");
-
-    if (result != null && result.predictions != null && mounted) {
-      print("Hello ${result.predictions}");
-      setState(() {
-        predictions = result.predictions!;
-      });
-    }
-  }
-
   String? airlineName = "Lahore";
   String? countryShortName = "PK";
   var airlineImage;
+  final searchAirportController = TextEditingController();
+  Future<ModelAirlines>? future_list;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      future_list = ServicesAirlines().GetAllPosts();
+    });
   }
 
   @override
@@ -65,7 +55,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                     // autoCompleteSearch(value);
                     print(value);
                   },
-                  decoration: SearchTextFormField(
+                  decoration: ReusingWidgets.SearchTextFormField(
                       context: context,
                       controller: searchAirportController,
                       hintText: "Search for an Airline",
@@ -73,72 +63,71 @@ class _AirlineScreenState extends State<AirlineScreen> {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  // itemCount: predictions.length,
-                  padding: EdgeInsets.all(5),
-                itemCount: 50,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                        onTap: () async {
-                            // Navigator.pop(context);
-                          },
-                        child: ListTile(
-                          title: Text("$airlineName",style: ThemeTexts.textStyleValueBlack,),
-                          subtitle: Text("$countryShortName",style: ThemeTexts.textStyleValueBlack2),
-                          trailing: FlutterLogo(
-                            size: 40,
-                            textColor: Colors.blue,
-                            style: FlutterLogoStyle.stacked,
-                          ), //F
-                        ));
+                child: FutureBuilder(
+                  future: future_list,
+                  builder: (context,snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.response!.isNotEmpty) {
+                        return Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.all(5),
+                                  itemCount: snapshot.data!.response!.length,
+                                  itemBuilder: (context, index) {
+                                    return InkWell(
+                                        onTap: () async {
+                                          // Navigator.pop(context);
+                                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                                            return AirlineScreenDetails();
+                                          }));
+                                        },
+                                        child: ListTile(
+                                          title: Text("${snapshot.data!.response![index].name}",style: ThemeTexts.textStyleValueBlack,),
+                                          subtitle: Text("${snapshot.data!.request!.client!.geo!.countryCode}",style: ThemeTexts.textStyleValueBlack2),
+                                          trailing: FlutterLogo(
+                                            size: 40,
+                                            textColor: Colors.blue,
+                                            style: FlutterLogoStyle.stacked,
+                                          ), //F
+                                        ));
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            "error 1${snapshot.error}",
+                          ),
+                        );
+                      }
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          "error 2${snapshot.error}",
+                        ),
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator(
+                        backgroundColor: ColorsTheme.primaryColor,
+                        valueColor: AlwaysStoppedAnimation(Colors.grey),
+                        strokeWidth: 10,
+                      ));
+                    }
                   },
+
                 ),
               ),
+
             ],
           ),
         ),
       ),
-    );
-  }
-
-  static InputDecoration SearchTextFormField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String hintText}) {
-    return InputDecoration(
-      prefixIcon: InkWell(
-        onTap: () {
-          // Navigator.pop(context);
-        },
-        child: Icon(
-          Icons.search,
-          size: 22,
-          color: Colors.grey,
-        ),
-      ),
-      // labelText: labelText,
-      // suffixIcon: suffixIcon,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      hintText: hintText,
-      filled: true,
-      fillColor: Colors.white,
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.black45, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.black45, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      errorStyle: ThemeTexts.textStyleTitle2,
-      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
-      labelStyle: ThemeTexts.textStyleTitle2,
-      floatingLabelStyle: ThemeTexts.textStyleTitle2,
     );
   }
 }

@@ -16,6 +16,96 @@ class ReusingWidgets {
 
   /// TAP BAR ///
 
+
+  /// Airlines TAP BAR ///
+
+
+  Widget airlineTapBar({
+    required Function() onTap,
+    required BuildContext context,
+    required String text,
+    required Color textColor,
+    required Color borderColor,
+    required double borderWidth,
+  }) {
+    return InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 50.0,
+          width: MediaQuery.of(context).size.width * 0.5,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(
+                  color: borderColor,
+                  width: borderWidth,
+                )
+              )
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+              style: ThemeTexts.textStyleTitle2.copyWith(color: textColor,fontWeight: FontWeight.normal)
+          ),
+        ));
+  }
+
+
+  /// Airlines TAP BAR ///
+
+
+  /// SEARCH BAR
+
+
+  static InputDecoration SearchTextFormField(
+      {required BuildContext context,
+        required TextEditingController controller,
+        required String hintText}) {
+    return InputDecoration(
+      prefixIcon: InkWell(
+        onTap: () {
+          // Navigator.pop(context);
+        },
+        child: Icon(
+          Icons.search,
+          size: 22,
+          color: Colors.grey,
+        ),
+      ),
+      // labelText: labelText,
+      // suffixIcon: suffixIcon,
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      hintText: hintText,
+      filled: true,
+      fillColor: Colors.white,
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white, width: .5),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5),
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white, width: .5),
+        borderRadius: BorderRadius.all(
+          Radius.circular(2),
+        ),
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      errorStyle: ThemeTexts.textStyleTitle2,
+      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
+      labelStyle: ThemeTexts.textStyleTitle2,
+      floatingLabelStyle: ThemeTexts.textStyleTitle2,
+    );
+  }
+
+  ///  SEARCH BAR
+
+
+
+
+
   /// BY ROUTE ///
 
   static Widget byRouteContainer({
@@ -228,5 +318,14 @@ class ReusingWidgets {
           )),
     );
   }
+
+/// BY FLIGHT CODE ///
+
+
+/// Airport Detail ///
+
+
+
+
 
 }

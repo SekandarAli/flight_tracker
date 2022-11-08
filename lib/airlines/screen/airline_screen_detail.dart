@@ -1,23 +1,23 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
-import 'package:flight_tracker/airports/screen/airport_track_flight.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/search/screen/search_tab/search_tab_by_flightcode/search_tab_by_flightcode.dart';
+import 'package:flight_tracker/search/screen/search_tab/search_tab_by_route/search_tab_by_route.dart';
 import 'package:flutter/material.dart';
 
-class AirportScreenDetail extends StatefulWidget {
-   AirportScreenDetail({Key? key,required this.airportName}) : super(key: key);
-
-   String airportName;
+class AirlineScreenDetails extends StatefulWidget {
+  const AirlineScreenDetails({Key? key}) : super(key: key);
 
   @override
-  State<AirportScreenDetail> createState() => _AirportScreenDetailState();
+  State<AirlineScreenDetails> createState() => _AirlineScreenDetailsState();
 }
 
-class _AirportScreenDetailState extends State<AirportScreenDetail> {
-
+class _AirlineScreenDetailsState extends State<AirlineScreenDetails>
+    with SingleTickerProviderStateMixin {
   int index = 1;
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -33,7 +33,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(0),
                   image: DecorationImage(
-                      image: AssetImage('assets/images/airport.jpg'),
+                      image: AssetImage('assets/images/airline.png'),
                       fit: BoxFit.fill),
                 ),
                 child: Align(
@@ -52,9 +52,9 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.airportName, style: ThemeTexts.textStyleTitle2),
+                    Text("Caspian Airline", style: ThemeTexts.textStyleTitle2),
                     SizedBox(height: 5),
-                    Text("Airport", style: ThemeTexts.textStyleTitle3),
+                    Text("Airline", style: ThemeTexts.textStyleTitle3),
                   ],
                 ),
               ),
@@ -66,36 +66,10 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Local Time",
-                                  style: ThemeTexts.textStyleTitle2
-                                      .copyWith(color: Colors.grey)),
-                              Text("Wed 02:56 PM",
-                                  style: ThemeTexts.textStyleTitle3
-                                      .copyWith(color: Colors.grey)),
-                            ],
-                          ),
-                          Text("86°C",
-                              style: ThemeTexts.textStyleTitle1
-                                  .copyWith(fontWeight: FontWeight.normal)),
-                        ],
-                      ),
-                    ),
-                    Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         container(icon: Icons.info, text: "INFO"),
-                        container(
-                            icon: Icons.assistant_navigation, text: "NAV"),
                         container(
                             icon: Icons.sports_baseball_rounded,
                             text: "WEBSITE"),
@@ -108,9 +82,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                   ],
                 ),
               ),
-              selectTabs(),
-              index == 1
-                  ? Column(
+              Column(
                       children: [
                         Container(
                           padding: EdgeInsets.all(20),
@@ -118,24 +90,21 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("TIME           "),
-                              Text("DESTINATION"),
-                              Text("FLIGHT #"),
+                              Text("TIME"),
+                              Text("DEP/ARR"),
+                              Text("NR/STATE"),
                             ],
                           ),
                         ),
                         Container(
                           height: h * 0.7,
+                          width: w,
                           child: ListView.builder(
                             padding: EdgeInsets.all(20),
-                            itemCount: 20,
+                            itemCount: 50,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                onTap: () async {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    return AirportTrackFlight();
-                                  }));
-                                },
+                                onTap: () async {},
                                 child: Padding(
                                   padding: EdgeInsets.only(bottom: 20,top: 20),
                                   child: Row(
@@ -143,7 +112,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("11:06 AM"),
-                                      Text("Dubai, DXB"),
+                                      Text("Dubai, DXB/Karachi, DVC"),
                                       Text("PK 247"),
                                     ],
                                   ),
@@ -153,8 +122,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                           ),
                         ),
                       ],
-                    )
-                  : Container(),
+                    ),
             ],
           ),
         ),
@@ -168,6 +136,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
   }) {
     return Container(
       padding: EdgeInsets.all(5),
+      // margin: EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

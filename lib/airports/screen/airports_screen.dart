@@ -4,6 +4,7 @@ import 'package:flight_tracker/airports/model/model_airport.dart';
 import 'package:flight_tracker/airports/screen/airport_screen_detail.dart';
 import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
@@ -35,10 +36,6 @@ class _AirportsScreenState extends State<AirportsScreen> {
     }
   }
 
-  String? cityName = "Lahore";
-  String? cityShortName = "LHR";
-  String? countryShortName = "PK";
-  String? airportName = "Lahore Airport Exact";
 
   Future<ModelAirport>? future_list;
 
@@ -73,7 +70,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                     // autoCompleteSearch(value);
                     print(value);
                   },
-                  decoration: SearchTextFormField(
+                  decoration: ReusingWidgets.SearchTextFormField(
                     context: context,
                     controller: searchAirportController,
                     hintText: "Search for an Airport",
@@ -85,7 +82,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                     future: future_list,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.response!.length > 0) {
+                      if (snapshot.data!.response!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -95,19 +92,23 @@ class _AirportsScreenState extends State<AirportsScreen> {
                                     padding: EdgeInsets.all(5),
                                     itemCount: snapshot.data!.response!.length,
                                     itemBuilder: (context, index) {
+                                      String? cityName = snapshot.data!.request!.client!.geo!.city;
+                                      String? cityShortName = "LHR";
+                                      String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
+                                      String? airportName = snapshot.data!.response![index].name;
                                       return InkWell(
                                           onTap: () async {
-                                            // Navigator.pop(context);
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return AirportScreenDetail();
+                                              return AirportScreenDetail(airportName: airportName!);
                                             }));
                                           },
                                           child: ListTile(
                                             title: Text(
-                                              "${snapshot.data!.request!.client!.geo!.city}, ${snapshot.data!.request!.client!.geo!.countryCode}",
+                                              "$cityName,"
+                                                  " $countryShortName",
                                               style: ThemeTexts.textStyleValueBlack,
                                             ),
-                                            subtitle: Text("$cityShortName -  ${snapshot.data!.response![index].name}",
+                                            subtitle: Text("$cityShortName -  $airportName",
                                                 style: ThemeTexts.textStyleValueBlack2),
                                             trailing: FlutterLogo(
                                               size: 30,
@@ -152,44 +153,4 @@ class _AirportsScreenState extends State<AirportsScreen> {
     );
   }
 
-  static InputDecoration SearchTextFormField(
-      {required BuildContext context,
-      required TextEditingController controller,
-      required String hintText}) {
-    return InputDecoration(
-      prefixIcon: InkWell(
-        onTap: () {
-          // Navigator.pop(context);
-        },
-        child: Icon(
-          Icons.search,
-          size: 22,
-          color: Colors.grey,
-        ),
-      ),
-      // labelText: labelText,
-      // suffixIcon: suffixIcon,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      hintText: hintText,
-      filled: true,
-      fillColor: Colors.white,
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.black45, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.black45, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      errorStyle: ThemeTexts.textStyleTitle2,
-      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
-      labelStyle: ThemeTexts.textStyleTitle2,
-      floatingLabelStyle: ThemeTexts.textStyleTitle2,
-    );
-  }
 }

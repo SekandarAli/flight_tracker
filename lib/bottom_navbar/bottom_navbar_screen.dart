@@ -3,6 +3,7 @@
 import 'package:flight_tracker/airlines/screen/airline_screen.dart';
 import 'package:flight_tracker/airports/screen/airports_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flight_tracker/search/screen/search_tab/search_tab_screen.dart';
 import 'package:flight_tracker/settings/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     switch (position) {
       case 0:
         return SearchScreen();
-      // case 1:
-      //   return EstimatesScreen();
+      case 1:
+        return MyFlightsScreen();
       case 2:
         return AirportsScreen();
       case 3:
