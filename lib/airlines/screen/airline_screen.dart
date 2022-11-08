@@ -21,15 +21,14 @@ class _AirlineScreenState extends State<AirlineScreen> {
 
   String? airlineName = "Lahore";
   String? countryShortName = "PK";
-  var airlineImage;
-  final searchAirportController = TextEditingController();
-  Future<ModelAirlines>? future_list;
+  TextEditingController searchAirlineController = TextEditingController();
+  Future<List<ModelAirlines>>? futureList;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      future_list = ServicesAirlines().GetAllPosts();
+      futureList = ServicesAirlines().GetAllPosts();
     });
   }
 
@@ -47,27 +46,24 @@ class _AirlineScreenState extends State<AirlineScreen> {
                 color: ColorsTheme.primaryColor,
                 padding: EdgeInsets.all(12),
                 child: TextFormField(
-                  // focusNode: focusNode,
-                  controller: searchAirportController,
+                  controller: searchAirlineController,
                   enableInteractiveSelection: false,
                   style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   onChanged: (String value) {
-                    // autoCompleteSearch(value);
                     print(value);
+                    setState(() {});
                   },
                   decoration: ReusingWidgets.SearchTextFormField(
-                      context: context,
-                      controller: searchAirportController,
                       hintText: "Search for an Airline",
                   ),
                 ),
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: future_list,
+                  future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.response!.isNotEmpty) {
+                      if (snapshot.data!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -75,24 +71,27 @@ class _AirlineScreenState extends State<AirlineScreen> {
                               Flexible(
                                 child: ListView.builder(
                                   padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.response!.length,
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    return InkWell(
+                                    String? airlineName = snapshot.data![index].airlineName ?? "Unknown";
+                                    String? countryShortName = snapshot.data![index].countryIso2 ?? "Unknown";
+                                    String? airportImage;
+                                    return airlineName.toLowerCase().contains(searchAirlineController.text) ?
+                                    InkWell(
                                         onTap: () async {
-                                          // Navigator.pop(context);
                                           Navigator.push(context, MaterialPageRoute(builder: (context){
                                             return AirlineScreenDetails();
                                           }));
                                         },
                                         child: ListTile(
-                                          title: Text("${snapshot.data!.response![index].name}",style: ThemeTexts.textStyleValueBlack,),
-                                          subtitle: Text("${snapshot.data!.request!.client!.geo!.countryCode}",style: ThemeTexts.textStyleValueBlack2),
+                                          title: Text(airlineName,style: ThemeTexts.textStyleValueBlack,),
+                                          subtitle: Text(countryShortName,style: ThemeTexts.textStyleValueBlack2),
                                           trailing: FlutterLogo(
                                             size: 40,
                                             textColor: Colors.blue,
                                             style: FlutterLogoStyle.stacked,
                                           ), //F
-                                        ));
+                                        )) : Container();
                                   },
                                 ),
                               ),

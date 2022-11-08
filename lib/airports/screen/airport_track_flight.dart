@@ -37,7 +37,6 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlights>("modelMyFlights");
-
   }
 
   @override
@@ -58,8 +57,9 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
                 onPressed: () {
                    setState(() {
                     trackFlight = !trackFlight;
+
                     if (trackFlight == false) {
-                       modelMyFlights = ModelMyFlights(
+                      modelMyFlights = ModelMyFlights(
                         flightCode: flightCode,
                         departureCityDate: departureCityDate,
                         departureCity: departureCity,
@@ -72,13 +72,11 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
                       );
 
                       dataBox!.add(modelMyFlights!);
-                      if (kDebugMode) {
-                        print(modelMyFlights!.arrivalCity);
-                      }
+                      print(modelMyFlights!.arrivalCity);
+                    }
 
-
-                    } else {
-                      dataBox!.delete(modelMyFlights);
+                    else {
+                      // modelMyFlights!.delete();
                     }
                   });
                 },

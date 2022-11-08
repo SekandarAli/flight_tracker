@@ -3,7 +3,7 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/myflights_model.dart';
-import 'package:flight_tracker/myflights/screen/add_myflights_screen.dart';
+import 'package:flight_tracker/myflights/screen/myflights_create_new_trip_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -45,9 +45,12 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       }),
                 ],
               ),
+              /// My Upcoming Flights
+              ///
               myUpComingFlightsText(
                   text: "My Upcoming Flights", icon: Icons.flight_outlined),
-              Container(
+
+              SizedBox(
                 height: h * 0.7,
                 width: w,
                 child: ValueListenableBuilder<Box<ModelMyFlights>>(
@@ -94,6 +97,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                 key: Key(UniqueKey().toString()),
                                 background: Container(
                                   margin: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(15),
                                   color: Colors.red,
                                   child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,7 +111,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                   setState(() {
                                     currentTask.delete();
                                   });
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Deleted Successfully'),duration: Duration(milliseconds: 700)));
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
                                 },
                                 child: Card(
                                   child: Column(

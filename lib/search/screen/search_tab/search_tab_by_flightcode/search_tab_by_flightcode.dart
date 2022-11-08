@@ -2,7 +2,8 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
-import 'package:flight_tracker/functions/date.dart';
+import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flutter/material.dart';
 
 class SearchTabByFlightCode extends StatefulWidget {
@@ -43,7 +44,10 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                   ReusingWidgets.byFlightCodeContainer(
                       context: context,
-                      flightCodeText: flightCode,
+                      flightCodeText: flightCode.isEmpty ? "Enter Flight Code" : flightCode,
+                      flightCodeStyle: flightCode == "Enter Flight Code" ?
+                      ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
+                          : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                       onTapFlightCodeText: () async{
 
                         var dialogueText =
@@ -52,6 +56,9 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                           setState(() {
                             flightCode = alphabetsController.text.toString() + numberController.text.toString();
                           });
+                        }
+                        else{
+                          // dialogueText = "Enter Flight Code";
                         }
                       }),
 

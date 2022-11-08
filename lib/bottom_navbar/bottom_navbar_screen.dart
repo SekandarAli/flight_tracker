@@ -16,7 +16,8 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
-  int _currentIndex = 2;
+
+  int currentIndex = 0;
 
   _getDrawerItemWidget(int position) {
     switch (position) {
@@ -43,16 +44,20 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // var cart = Provider.of<ProviderData>(context);
+    // var subTotal = cart.currentIndex;
+    // int currentIndex = 0;
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         backgroundColor: Colors.white,
         selectedItemColor: ColorsTheme.primaryColor,
         unselectedItemColor: Colors.grey[400],
         onTap: (value) {
           setState(() {
-            _currentIndex = value;
+            currentIndex = value;
           });
         },
         items: [
@@ -84,7 +89,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
         ],
       ),
-      body: _getDrawerItemWidget(_currentIndex),
+      body: _getDrawerItemWidget(currentIndex),
     );
   }
 }

@@ -55,13 +55,40 @@ class ReusingWidgets {
 
   /// Airlines TAP BAR ///
 
+  //
+  // /// SEARCH BAR
+  //
+  //
+  // static Widget SearchTextFormField(
+  //     {required BuildContext context,
+  //       required TextEditingController controller,
+  //       required String hintText}) {
+  //   return TextFormField(
+  //     controller: controller,
+  //     decoration:  InputDecoration(
+  //       icon: Icon(Icons.person),
+  //       hintText: hintText,
+  //       labelText: 'Name *',
+  //     ),
+  //     onSaved: (String? value) {
+  //       // This optional block of code can be used to run
+  //       // code when the user saves the form.
+  //     },
+  //     validator: (String? value) {
+  //       return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
+  //     },
+  //   );
+  // }
+  //
+  // ///  SEARCH BAR
+
+
 
   /// SEARCH BAR
 
 
   static InputDecoration SearchTextFormField(
-      {required BuildContext context,
-        required TextEditingController controller,
+      {
         required String hintText}) {
     return InputDecoration(
       prefixIcon: InkWell(
@@ -114,6 +141,8 @@ class ReusingWidgets {
     required BuildContext context,
     required Function() onTapDepartureTitle,
     required Function() onTapArrivalTitle,
+    required TextStyle depStyle,
+    required TextStyle arrStyle,
     // required onTapClearDepartureTitle,
     // required onTapClearArrivalTitle,
   }) {
@@ -146,7 +175,7 @@ class ReusingWidgets {
                       SizedBox(width: 20),
                       Text(
                         departureTitle,
-                        style: ThemeTexts.textStyleValueGrey,
+                        style: depStyle,
                       )
                     ],
                   ),
@@ -169,7 +198,7 @@ class ReusingWidgets {
                       SizedBox(width: 20),
                       Text(
                         arrivalTitle,
-                        style: ThemeTexts.textStyleValueGrey,
+                        style: arrStyle,
                       )
                     ],
                   ),
@@ -286,6 +315,7 @@ class ReusingWidgets {
     required String flightCodeText,
     required BuildContext context,
     required Function() onTapFlightCodeText,
+    required TextStyle flightCodeStyle,
     // required onTapArrivalTitle,
     // required onTapClearDepartureTitle,
     // required onTapClearArrivalTitle,
@@ -311,7 +341,7 @@ class ReusingWidgets {
               SizedBox(width: 20),
               Text(
                 flightCodeText,
-                style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
+                style: flightCodeStyle,
 
               )
             ],

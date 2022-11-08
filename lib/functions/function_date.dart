@@ -3,7 +3,6 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PickDate extends StatefulWidget {
   const PickDate({Key? key}) : super(key: key);

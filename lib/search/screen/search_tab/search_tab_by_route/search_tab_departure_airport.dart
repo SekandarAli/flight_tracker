@@ -1,13 +1,14 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:flight_tracker/airports/model/model_airports.dart';
+import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:google_place/google_place.dart';
 
 class SearchTabDepartureAirport extends StatefulWidget {
-
-  SearchTabDepartureAirport({super.key,});
+  SearchTabDepartureAirport({super.key});
 
   @override
   State<SearchTabDepartureAirport> createState() => _SearchTabDepartureAirportState();
@@ -15,34 +16,15 @@ class SearchTabDepartureAirport extends StatefulWidget {
 
 class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
 
-  bool isSearching = true;
-
-  final searchAirportController = TextEditingController();
-  String? placeId;
-  GooglePlace? googlePlace;
-  List<AutocompletePrediction> predictions = [];
-  DetailsResult? detailsResult;
-
-  void autoCompleteSearch(String value) async {
-    var result = await googlePlace!.autocomplete.get(value);
-    print("Hello ${result}");
-
-    if (result != null && result.predictions != null && mounted) {
-      print("Hello ${result.predictions}");
-      setState(() {
-        predictions = result.predictions!;
-      });
-    }
-  }
-
-  String? cityName = "Lahore";
-  String? cityShortName = "LHR";
-  String? countryShortName = "PK";
-  String? airportName = "Lahore Airport Exact";
+  TextEditingController searchAirportController = TextEditingController();
+  Future<List<ModelAirports>>? futureList;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      futureList = ServicesAirports().GetAllPosts();
+    });
   }
 
   @override
@@ -59,40 +41,88 @@ class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
                 color: ColorsTheme.primaryColor,
                 padding: EdgeInsets.all(12),
                 child: TextFormField(
-                  // focusNode: focusNode,
                   controller: searchAirportController,
                   enableInteractiveSelection: false,
-                  style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+                  style:
+                  ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   onChanged: (String value) {
-                    autoCompleteSearch(value);
+                    setState(() {
+                      // searchAirportController.text = value.toLowerCase();
+                    });
                   },
-                  decoration: SearchTextFormField(
-                    context: context,
-                    controller: searchAirportController,
+                  decoration: ReusingWidgets.SearchTextFormField(
                     hintText: "Search for an Airport",
                   ),
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  // itemCount: predictions.length,
-                  padding: EdgeInsets.all(5),
-                  itemCount: 50,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                        onTap: () async {
-                          Navigator.pop(context);
-                        },
-                        child: ListTile(
-                          title: Text("$cityName, $countryShortName",style: ThemeTexts.textStyleValueBlack,),
-                          subtitle: Text("$cityShortName -  $airportName",style: ThemeTexts.textStyleValueBlack2),
-                          trailing: FlutterLogo(
-                            size: 30,
-                            textColor: Colors.blue,
-                            style: FlutterLogoStyle.stacked,
-                          ), //F
-                        ),);
+                child: FutureBuilder(
+                  future: futureList,
+                  builder: (context,snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.isNotEmpty) {
+                        return Container(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Flexible(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.all(5),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    String? cityName = snapshot.data![index].countryName ?? "Unknown";
+                                    String? cityShortName = snapshot.data![index].cityIataCode;
+                                    String? countryShortName = snapshot.data![index].countryIso2;
+                                    String? airportName = snapshot.data![index].airportName;
+
+                                    return
+                                      cityName.toLowerCase().contains(searchAirportController.text) ?
+                                      InkWell(
+                                          onTap: () async {
+                                            Navigator.pop(context,[cityName]);
+                                          },
+                                          child: ListTile(
+                                            title: Text(
+                                              "$cityName,"
+                                                  " $countryShortName",
+                                              style: ThemeTexts.textStyleValueBlack,
+                                            ),
+                                            subtitle: Text("$cityShortName -  $airportName",
+                                                style: ThemeTexts.textStyleValueBlack2),
+                                            trailing: FlutterLogo(
+                                              size: 30,
+                                              textColor: Colors.blue,
+                                              style: FlutterLogoStyle.stacked,
+                                            ), //F
+                                          )) : Container();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Text(
+                            "error 1${snapshot.error}",
+                          ),
+                        );
+                      }
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          "error 2${snapshot.error}",
+                        ),
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator(
+                        backgroundColor: ColorsTheme.primaryColor,
+                        valueColor: AlwaysStoppedAnimation(Colors.grey),
+                        strokeWidth: 10,
+                      ));
+                    }
                   },
+
                 ),
               ),
             ],
@@ -102,42 +132,4 @@ class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
     );
   }
 
-  static InputDecoration SearchTextFormField({
-    required BuildContext context,
-    required TextEditingController controller,
-    required String hintText}) {
-    return InputDecoration(
-      prefixIcon: InkWell(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Icon(
-          Icons.search,
-          size: 22,
-          color: Colors.grey,
-        ),
-      ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      hintText: hintText,
-      filled: true,
-      fillColor: Colors.white,
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      errorStyle: ThemeTexts.textStyleTitle2,
-      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
-      labelStyle: ThemeTexts.textStyleTitle2,
-      floatingLabelStyle: ThemeTexts.textStyleTitle2,
-    );
-  }
 }

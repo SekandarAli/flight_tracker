@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_tracker/airports/model/model_airport.dart';
+import 'package:flight_tracker/airports/model/model_airports.dart';
 import 'package:flight_tracker/airports/screen/airport_screen_detail.dart';
 import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
-import 'package:google_place/google_place.dart';
 
 class AirportsScreen extends StatefulWidget {
   AirportsScreen({super.key});
@@ -17,33 +17,15 @@ class AirportsScreen extends StatefulWidget {
 }
 
 class _AirportsScreenState extends State<AirportsScreen> {
-  bool isSearching = true;
-  final searchAirportController = TextEditingController();
-  String? placeId;
-  GooglePlace? googlePlace;
-  List<AutocompletePrediction> predictions = [];
-  DetailsResult? detailsResult;
 
-  void autoCompleteSearch(String value) async {
-    var result = await googlePlace!.autocomplete.get(value);
-    print("Hello $result");
-
-    if (result != null && result.predictions != null && mounted) {
-      print("Hello ${result.predictions}");
-      setState(() {
-        predictions = result.predictions!;
-      });
-    }
-  }
-
-
-  Future<ModelAirport>? future_list;
+  TextEditingController searchAirportController = TextEditingController();
+  Future<List<ModelAirports>>? futureList;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      future_list = ServicesAirports().GetAllPosts();
+      futureList = ServicesAirports().GetAllPosts();
     });
   }
 
@@ -61,28 +43,26 @@ class _AirportsScreenState extends State<AirportsScreen> {
                 color: ColorsTheme.primaryColor,
                 padding: EdgeInsets.all(12),
                 child: TextFormField(
-                  // focusNode: focusNode,
                   controller: searchAirportController,
                   enableInteractiveSelection: false,
                   style:
                       ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   onChanged: (String value) {
-                    // autoCompleteSearch(value);
-                    print(value);
+                    setState(() {
+                      // searchAirportController.text = value.toLowerCase();
+                    });
                   },
                   decoration: ReusingWidgets.SearchTextFormField(
-                    context: context,
-                    controller: searchAirportController,
                     hintText: "Search for an Airport",
                   ),
                 ),
               ),
               Expanded(
                 child: FutureBuilder(
-                    future: future_list,
+                    future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.response!.isNotEmpty) {
+                      if (snapshot.data!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -90,13 +70,16 @@ class _AirportsScreenState extends State<AirportsScreen> {
                               Flexible(
                                   child: ListView.builder(
                                     padding: EdgeInsets.all(5),
-                                    itemCount: snapshot.data!.response!.length,
+                                    itemCount: snapshot.data!.length,
                                     itemBuilder: (context, index) {
-                                      String? cityName = snapshot.data!.request!.client!.geo!.city;
-                                      String? cityShortName = "LHR";
-                                      String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
-                                      String? airportName = snapshot.data!.response![index].name;
-                                      return InkWell(
+                                      String? cityName = snapshot.data![index].countryName ?? "Unknown";
+                                      String? cityShortName = snapshot.data![index].cityIataCode;
+                                      String? countryShortName = snapshot.data![index].countryIso2;
+                                      String? airportName = snapshot.data![index].airportName;
+
+                                      return
+                                        cityName.toLowerCase().contains(searchAirportController.text) ?
+                                      InkWell(
                                           onTap: () async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
                                               return AirportScreenDetail(airportName: airportName!);
@@ -115,7 +98,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                                               textColor: Colors.blue,
                                               style: FlutterLogoStyle.stacked,
                                             ), //F
-                                          ));
+                                          )) : Container();
                                     },
                                   ),
                               ),
