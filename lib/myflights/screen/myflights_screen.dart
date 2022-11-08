@@ -93,7 +93,8 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                               return Dismissible(
                                 key: Key(UniqueKey().toString()),
                                 background: Container(
-                                  margin: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(5),
+                                  margin: EdgeInsets.all(25),
                                   color: Colors.red,
                                   child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
