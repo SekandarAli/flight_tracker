@@ -2,10 +2,10 @@
 
 import 'package:hive/hive.dart';
 
-part 'myflights_model.g.dart';
+part 'myflights_upcoming_model.g.dart';
 
 @HiveType(typeId: 0)
-class ModelMyFlights extends HiveObject {
+class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(0)
   String flightCode;
 
@@ -33,7 +33,7 @@ class ModelMyFlights extends HiveObject {
   @HiveField(8)
   String arrivalCityDate;
 
-  ModelMyFlights({
+  ModelMyFlightsUpcoming({
       required this.flightCode,
       required this.departureCityDate,
       required this.departureCity,

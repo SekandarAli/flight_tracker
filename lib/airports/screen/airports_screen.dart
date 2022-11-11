@@ -7,6 +7,7 @@ import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AirportsScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class AirportsScreen extends StatefulWidget {
 class _AirportsScreenState extends State<AirportsScreen> {
 
   TextEditingController searchAirportController = TextEditingController();
-  Future<List<ModelAirports>>? futureList;
+  Future<ModelAirport>? futureList;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                   controller: searchAirportController,
                   enableInteractiveSelection: false,
                   style:
-                      ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+                  ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   onChanged: (String value) {
                     setState(() {
                       // searchAirportController.text = value.toLowerCase();
@@ -59,26 +60,30 @@ class _AirportsScreenState extends State<AirportsScreen> {
               ),
               Expanded(
                 child: FutureBuilder(
-                    future: futureList,
+                  future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.isNotEmpty) {
+                      if (snapshot.data!.response!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
                             children: [
                               Flexible(
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.all(5),
-                                    itemCount: snapshot.data!.length,
-                                    itemBuilder: (context, index) {
-                                      String? cityName = snapshot.data![index].countryName ?? "Unknown";
-                                      String? cityShortName = snapshot.data![index].cityIataCode;
-                                      String? countryShortName = snapshot.data![index].countryIso2;
-                                      String? airportName = snapshot.data![index].airportName;
+                                child: ListView.builder(
+                                  padding: EdgeInsets.all(5),
+                                  itemCount: snapshot.data!.response!.length,
+                                  itemBuilder: (context, index) {
+                                    // String? cityName = snapshot.data!.data![index].countryName ?? "Unknown";
+                                    // String? cityShortName = snapshot.data![index].cityIataCode;
+                                    // String? countryShortName = snapshot.data![index].countryIso2;
+                                    // String? airportName = snapshot.data![index].airportName;
+                                    String? cityName = snapshot.data!.request!.client!.geo!.country ?? "Unknown";
+                                    String? cityShortName = snapshot.data!.request!.client!.geo!.city;
+                                    String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
+                                    String? airportName = snapshot.data!.response![index].name;
 
-                                      return
-                                        cityName.toLowerCase().contains(searchAirportController.text) ?
+                                    return
+                                      cityName.toLowerCase().contains(searchAirportController.text) ?
                                       InkWell(
                                           onTap: () async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
@@ -99,8 +104,8 @@ class _AirportsScreenState extends State<AirportsScreen> {
                                               style: FlutterLogoStyle.stacked,
                                             ), //F
                                           )) : Container();
-                                    },
-                                  ),
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -119,15 +124,11 @@ class _AirportsScreenState extends State<AirportsScreen> {
                         ),
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator(
-                        backgroundColor: ColorsTheme.primaryColor,
-                        valueColor: AlwaysStoppedAnimation(Colors.grey),
-                        strokeWidth: 10,
-                      ));
+                      return Center(child: FunctionProgressIndicator());
                     }
                   },
 
-                    ),
+                ),
               ),
             ],
           ),

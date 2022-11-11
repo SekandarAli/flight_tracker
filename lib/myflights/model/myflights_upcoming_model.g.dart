@@ -1,22 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'myflights_model.dart';
+part of 'myflights_upcoming_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ModelMyFlightsAdapter extends TypeAdapter<ModelMyFlights> {
+class ModelMyFlightsUpcomingAdapter
+    extends TypeAdapter<ModelMyFlightsUpcoming> {
   @override
   final int typeId = 0;
 
   @override
-  ModelMyFlights read(BinaryReader reader) {
+  ModelMyFlightsUpcoming read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ModelMyFlights(
+    return ModelMyFlightsUpcoming(
       flightCode: fields[0] as String,
       departureCityDate: fields[1] as String,
       departureCity: fields[2] as String,
@@ -30,7 +31,7 @@ class ModelMyFlightsAdapter extends TypeAdapter<ModelMyFlights> {
   }
 
   @override
-  void write(BinaryWriter writer, ModelMyFlights obj) {
+  void write(BinaryWriter writer, ModelMyFlightsUpcoming obj) {
     writer
       ..writeByte(9)
       ..writeByte(0)
@@ -59,7 +60,7 @@ class ModelMyFlightsAdapter extends TypeAdapter<ModelMyFlights> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ModelMyFlightsAdapter &&
+      other is ModelMyFlightsUpcomingAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

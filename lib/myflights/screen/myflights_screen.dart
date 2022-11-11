@@ -2,8 +2,10 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/myflights/model/myflights_model.dart';
+import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
+import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/myflights_create_new_trip_screen.dart';
+import 'package:flight_tracker/myflights/screen/myflights_upcoming_flights.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -35,6 +37,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
         child: SafeArea(
           child: Column(
             children: [
+
+              /// CREATE NEW TRIP
+
               myUpComingFlightsText(text: "My Trips", icon: Icons.kitchen),
               Row(
                 children: [
@@ -43,21 +48,97 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       onTap: () {
                         openDialogue();
                       }),
+                  Container(
+                    color: ColorsTheme.myFlightsbg,
+                    height: w * 0.37,
+                    width: w * 0.58,
+                    child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
+                      valueListenable:
+                      Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
+                      builder: (context, box, _) {
+                        final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+
+                        if (items.isEmpty) {
+                          return Container();
+                        } else {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: box.values.length,
+                            itemBuilder: (context, index) {
+                              ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+                              return Row(
+                                children: [
+                                  InkWell(
+                                    onLongPress: () {
+                                      currentTask.delete();
+                                    },
+                                    child: SizedBox(
+                                      height: w * 0.4,
+                                      width: w * 0.4,
+                                      child: Card(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Image.asset("assets/images/airline.png",width: w * 0.4,height: w * 0.2,fit: BoxFit.cover,),
+                                            SizedBox(height: 10),
+                                            Text(
+                                              currentTask!.tripName,
+                                              style: ThemeTexts.textStyleTitle3.copyWith(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0),
+                                            ),
+                                            SizedBox(height: 5),
+                                            Text(
+                                              currentTask.noOfFlights,
+                                              style: ThemeTexts.textStyleTitle3.copyWith(
+                                                  color: Colors.grey,
+                                                  letterSpacing: 0),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  Spacer(),
+
                 ],
               ),
+
+              /// CREATE NEW TRIP
+
               /// My Upcoming Flights
-              ///
-              myUpComingFlightsText(
-                  text: "My Upcoming Flights", icon: Icons.flight_outlined),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  myUpComingFlightsText(text: "My Upcoming Flights", icon: Icons.flight_outlined),
+                  myUpComingFlightsText(text: "SHOW ALL",color: ColorsTheme.primaryColor,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return MyFlightsUpcomingScreen();
+                      }));
+                    },),
+                ],
+              ),
 
               SizedBox(
                 height: h * 0.7,
                 width: w,
-                child: ValueListenableBuilder<Box<ModelMyFlights>>(
+                child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
                   valueListenable:
-                      Hive.box<ModelMyFlights>("modelMyFlights").listenable(),
+                  Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
                   builder: (context, box, _) {
-                    final items = box.values.toList().cast<ModelMyFlights>();
+                    final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
                     if (items.isEmpty) {
                       return Column(
@@ -86,96 +167,96 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       );
                     } else {
                       return Flex(
-                        direction: Axis.vertical,
-                        children: [
-                          Expanded(
-                          child: ListView.builder(
-                            itemCount: box.values.length,
-                            itemBuilder: (context, index) {
-                              ModelMyFlights? currentTask = box.getAt(index);
-                              return Dismissible(
-                                key: Key(UniqueKey().toString()),
-                                background: Container(
-                                  margin: EdgeInsets.all(5),
-                                  padding: EdgeInsets.all(15),
-                                  color: Colors.red,
-                                  child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.delete,color: Colors.white,),
-                                    Icon(Icons.delete,color: Colors.white,),
-                                  ],
+                          direction: Axis.vertical,
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: box.values.length,
+                                itemBuilder: (context, index) {
+                                  ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+                                  return Dismissible(
+                                    key: Key(UniqueKey().toString()),
+                                    background: Container(
+                                      margin: EdgeInsets.all(5),
+                                      padding: EdgeInsets.all(15),
+                                      color: Colors.red.shade800,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Icon(Icons.delete,color: Colors.white,),
+                                          Icon(Icons.delete,color: Colors.white,),
+                                        ],
+                                      ),
                                     ),
-                                      ),
-                                onDismissed: (direction){
-                                  setState(() {
-                                    currentTask.delete();
-                                  });
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
-                                },
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(15),
-                                        color: ColorsTheme.primaryColor,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                            Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        padding: EdgeInsets.all(15),
-                                        color: Colors.grey.shade100,
-                                        child: Row(
-                                          mainAxisAlignment:
+                                    onDismissed: (direction){
+                                      setState(() {
+                                        currentTask.delete();
+                                      });
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                    },
+                                    child: Card(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(15),
+                                            color: ColorsTheme.primaryColor,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(15),
+                                            color: Colors.grey.shade100,
+                                            child: Row(
+                                              mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("🗓️ ${currentTask.departureCityDate}",
-                                                style: ThemeTexts.textStyleTitle3
-                                                    .copyWith(
+                                              children: [
+                                                Text("🗓️ ${currentTask.departureCityDate}",
+                                                    style: ThemeTexts.textStyleTitle3
+                                                        .copyWith(
                                                         color: Colors.black87)),
-                                            Text("🗓️ ${currentTask.arrivalCityDate}",
-                                                style: ThemeTexts.textStyleTitle3
-                                                    .copyWith(
+                                                Text("🗓️ ${currentTask.arrivalCityDate}",
+                                                    style: ThemeTexts.textStyleTitle3
+                                                        .copyWith(
                                                         color: Colors.black87)),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: Row(
-                                          mainAxisAlignment:
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(15),
+                                            child: Row(
+                                              mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            flightDetails(
-                                                cityName: currentTask.departureCity,
-                                                cityShortCode: currentTask.departureCityShortCode,
-                                                cityTime: currentTask.departureCityTime,
-                                                crossAlignment:
+                                              children: [
+                                                flightDetails(
+                                                    cityName: currentTask.departureCity,
+                                                    cityShortCode: currentTask.departureCityShortCode,
+                                                    cityTime: currentTask.departureCityTime,
+                                                    crossAlignment:
                                                     CrossAxisAlignment.start),
-                                            Icon(Icons.flight_land_rounded,
-                                                size: 50),
-                                            flightDetails(
-                                                cityName: currentTask.arrivalCity,
-                                                cityShortCode: currentTask.arrivalCityShortCode,
-                                                cityTime: currentTask.arrivalCityTime,
-                                                crossAlignment:
+                                                Icon(Icons.flight_land_rounded,
+                                                    size: 50),
+                                                flightDetails(
+                                                    cityName: currentTask.arrivalCity,
+                                                    cityShortCode: currentTask.arrivalCityShortCode,
+                                                    cityTime: currentTask.arrivalCityTime,
+                                                    crossAlignment:
                                                     CrossAxisAlignment.end),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),]
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),]
                       );
                     }
                   },
@@ -185,30 +266,34 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
           ),
         ),
       ),
-      // body:
     );
   }
 
   Widget myUpComingFlightsText({
     required String text,
-    required IconData icon,
+    IconData? icon,
+    Function()? onTap,
+    Color? color
   }) {
     return Container(
       padding: EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Icon(icon),
-          Text(
-            text,
-            style: ThemeTexts.textStyleValueBlack.copyWith(letterSpacing: 1),
-          ),
-        ],
+      child: GestureDetector(
+        onTap: (){onTap!();},
+        child: Row(
+          children: [
+            Icon(icon),
+            Text(
+              text,
+              style: ThemeTexts.textStyleValueBlack.copyWith(letterSpacing: 1,color: color),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget createTrip({required double width, required Function() onTap}) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         onTap();
       },
@@ -253,7 +338,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
             TextButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return AddMyFlightsScreen();
+                    return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
                   }));
                 },
                 child: Text('OK')),
@@ -298,9 +383,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
 
   Widget flightDetails(
       {required String cityName,
-      required String cityShortCode,
-      required String cityTime,
-      required CrossAxisAlignment crossAlignment}) {
+        required String cityShortCode,
+        required String cityTime,
+        required CrossAxisAlignment crossAlignment}) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAlignment,

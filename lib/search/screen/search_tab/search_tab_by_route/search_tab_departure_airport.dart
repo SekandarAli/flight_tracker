@@ -5,7 +5,10 @@ import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../airports/model/model_airport.dart';
 
 class SearchTabDepartureAirport extends StatefulWidget {
   SearchTabDepartureAirport({super.key});
@@ -17,7 +20,7 @@ class SearchTabDepartureAirport extends StatefulWidget {
 class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
 
   TextEditingController searchAirportController = TextEditingController();
-  Future<List<ModelAirports>>? futureList;
+  Future<ModelAirport>? futureList;
 
   @override
   void initState() {
@@ -60,7 +63,7 @@ class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
                   future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.isNotEmpty) {
+                      if (snapshot.data!.response!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -68,18 +71,23 @@ class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
                               Flexible(
                                 child: ListView.builder(
                                   padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: snapshot.data!.response!.length,
                                   itemBuilder: (context, index) {
-                                    String? cityName = snapshot.data![index].countryName ?? "Unknown";
-                                    String? cityShortName = snapshot.data![index].cityIataCode;
-                                    String? countryShortName = snapshot.data![index].countryIso2;
-                                    String? airportName = snapshot.data![index].airportName;
+                                    // String? cityName = snapshot.data![index].countryName ?? "Unknown";
+                                    // String? cityShortName = snapshot.data![index].cityIataCode;
+                                    // String? countryShortName = snapshot.data![index].countryIso2;
+                                    // String? airportName = snapshot.data![index].airportName;
+
+                                    String? cityName = snapshot.data!.request!.client!.geo!.country ?? "Unknown";
+                                    String? cityShortName = snapshot.data!.request!.client!.geo!.city;
+                                    String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
+                                    String? airportName = snapshot.data!.response![index].name;
 
                                     return
                                       cityName.toLowerCase().contains(searchAirportController.text) ?
                                       InkWell(
                                           onTap: () async {
-                                            Navigator.pop(context,[cityName]);
+                                            Navigator.pop(context,[airportName]);
                                           },
                                           child: ListTile(
                                             title: Text(
@@ -115,11 +123,9 @@ class _SearchTabDepartureAirportState extends State<SearchTabDepartureAirport> {
                         ),
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator(
-                        backgroundColor: ColorsTheme.primaryColor,
-                        valueColor: AlwaysStoppedAnimation(Colors.grey),
-                        strokeWidth: 10,
-                      ));
+                      return Center(
+                          child: FunctionProgressIndicator()
+                      );
                     }
                   },
 

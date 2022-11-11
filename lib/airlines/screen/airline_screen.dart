@@ -6,6 +6,7 @@ import 'package:flight_tracker/airlines/services/services_airlines.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
 
@@ -112,11 +113,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                         ),
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator(
-                        backgroundColor: ColorsTheme.primaryColor,
-                        valueColor: AlwaysStoppedAnimation(Colors.grey),
-                        strokeWidth: 10,
-                      ));
+                      return Center(child: FunctionProgressIndicator());
                     }
                   },
 

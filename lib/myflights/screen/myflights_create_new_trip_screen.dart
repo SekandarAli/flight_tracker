@@ -2,19 +2,35 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/myflights/model/myflights_model.dart';
+import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
+import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class AddMyFlightsScreen extends StatefulWidget {
-  const AddMyFlightsScreen({Key? key}) : super(key: key);
+class MyFlightCreateNewTrip extends StatefulWidget {
+   MyFlightCreateNewTrip({Key? key,required this.tripName}) : super(key: key);
+
+   String tripName;
 
   @override
-  State<AddMyFlightsScreen> createState() => _AddMyFlightsScreenState();
+  State<MyFlightCreateNewTrip> createState() => _MyFlightCreateNewTripState();
 }
 
-class _AddMyFlightsScreenState extends State<AddMyFlightsScreen> {
+class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
+
+  Box<ModelMyFlightsCreateTrip>? dataBox;
+  ModelMyFlightsCreateTrip? modelMyFlights;
+
+  // String tripName = "TRIP NO 1";
+  String noOfFlights = '0 Flight';
+  String tripImage = "Image";
+
+  @override
+  void initState() {
+    super.initState();
+    dataBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -22,19 +38,32 @@ class _AddMyFlightsScreenState extends State<AddMyFlightsScreen> {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar:AppBar(
+        backgroundColor: Colors.white,
         title: Text("Add Flights", style: ThemeTexts.textStyleTitle2
-            .copyWith(fontWeight: FontWeight.normal)),
+            .copyWith(fontWeight: FontWeight.normal,color: Colors.grey)),
+        leading: IconButton(icon: Icon(Icons.arrow_back),color: Colors.grey.shade600,
+        onPressed: (){Navigator.pop(context);},),
         actions: [
-          IconButton(onPressed: (){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
-          }, icon: Icon(Icons.check))
+          IconButton(onPressed: () async{
+
+            modelMyFlights = ModelMyFlightsCreateTrip(
+              tripName: widget.tripName,
+              noOfFlights: noOfFlights,
+              tripImage: tripImage
+            );
+            dataBox!.add(modelMyFlights!);
+
+            // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }, icon: Icon(Icons.check,color: Colors.grey.shade600,))
         ],
       ),
-      body:ValueListenableBuilder<Box<ModelMyFlights>>(
+      body:ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
         valueListenable:
-        Hive.box<ModelMyFlights>("modelMyFlights").listenable(),
+        Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
         builder: (context, box, _) {
-          final items = box.values.toList().cast<ModelMyFlights>();
+          final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
           if (items.isEmpty) {
             return Column(
@@ -70,7 +99,7 @@ class _AddMyFlightsScreenState extends State<AddMyFlightsScreen> {
                       itemCount: box.values.length,
                       itemBuilder: (context, index) {
                         bool value = false;
-                        ModelMyFlights? currentTask = box.getAt(index);
+                        ModelMyFlightsUpcoming? currentTask = box.getAt(index);
                         return Card(
                           child: Row(
                             children: [
@@ -82,7 +111,7 @@ class _AddMyFlightsScreenState extends State<AddMyFlightsScreen> {
                               // Icon(Icons.add),
                               Spacer(),
                               SizedBox(
-                                width: w * 0.89,
+                                width: w * 0.84,
                                 child: Column(
                                   children: [
                                     Container(

@@ -4,6 +4,7 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_date.dart';
+import 'package:flight_tracker/search/screen/search_tab_recent_searches/screen/search_tab_recent_searches.dart';
 import 'package:flutter/material.dart';
 
 class SearchTabByFlightCode extends StatefulWidget {
@@ -97,6 +98,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                   SizedBox(height: 10),
 
+                  SearchTabRecentSearches(),
 
                 ],
               ),

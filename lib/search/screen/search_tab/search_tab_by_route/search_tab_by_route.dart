@@ -5,8 +5,10 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flight_tracker/functions/function_search.dart';
-import 'package:flight_tracker/search/screen/search_tab_recent_searches/search_tab_recent_searches.dart';
+import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
+import 'package:flight_tracker/search/screen/search_tab_recent_searches/screen/search_tab_recent_searches.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'search_tab_departure_airport.dart';
 
@@ -23,6 +25,16 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
   var departureAirport = "Departure Airport";
   var arrivalAirport = "Arrival Airport";
+
+  Box<ModelSearch>? dataBox;
+  ModelSearch? modelMyFlights;
+
+  @override
+  void initState() {
+    super.initState();
+    dataBox = Hive.box<ModelSearch>("modelSearch");
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +105,19 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     },
                   ),
 
-                  ReusingWidgets.searchButton(onPress: (){}, context: context),
+                  ReusingWidgets.searchButton(onPress: (){
+
+                    setState((){
+                      modelMyFlights = ModelSearch(
+                          arrivalCity: arrivalAirport,
+                          departureCity: departureAirport,
+                      );
+
+                      print("okay ${modelMyFlights!.arrivalCity}");
+                      dataBox!.add(modelMyFlights!);
+                    });
+                  },
+                      context: context),
 
                 ],
               ),

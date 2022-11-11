@@ -2,7 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/myflights/model/myflights_model.dart';
+import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,8 +19,8 @@ class AirportTrackFlight extends StatefulWidget {
 class _AirportTrackFlightState extends State<AirportTrackFlight> {
 
   bool trackFlight = true;
-  Box<ModelMyFlights>? dataBox;
-  ModelMyFlights? modelMyFlights;
+  Box<ModelMyFlightsUpcoming>? dataBox;
+  ModelMyFlightsUpcoming? modelMyFlights;
 
   String flightCode = "PK 3309";
   String departureCityDate = 'Nov 08, 2022';
@@ -36,7 +36,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
   @override
   void initState() {
     super.initState();
-    dataBox = Hive.box<ModelMyFlights>("modelMyFlights");
+    dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   }
 
   @override
@@ -59,7 +59,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
                     trackFlight = !trackFlight;
 
                     if (trackFlight == false) {
-                      modelMyFlights = ModelMyFlights(
+                      modelMyFlights = ModelMyFlightsUpcoming(
                         flightCode: flightCode,
                         departureCityDate: departureCityDate,
                         departureCity: departureCity,
