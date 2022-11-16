@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_tracker/airports/model/model_airport.dart';
-import 'package:flight_tracker/airports/model/model_airports.dart';
 import 'package:flight_tracker/airports/screen/airport_screen_detail.dart';
 import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -63,7 +62,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                   future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.response!.isNotEmpty) {
+                      if (snapshot.data!.data!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -71,19 +70,21 @@ class _AirportsScreenState extends State<AirportsScreen> {
                               Flexible(
                                 child: ListView.builder(
                                   padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.response!.length,
+                                  itemCount: snapshot.data!.data!.length,
                                   itemBuilder: (context, index) {
-                                    // String? cityName = snapshot.data!.data![index].countryName ?? "Unknown";
-                                    // String? cityShortName = snapshot.data![index].cityIataCode;
-                                    // String? countryShortName = snapshot.data![index].countryIso2;
-                                    // String? airportName = snapshot.data![index].airportName;
-                                    String? cityName = snapshot.data!.request!.client!.geo!.country ?? "Unknown";
-                                    String? cityShortName = snapshot.data!.request!.client!.geo!.city;
-                                    String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
-                                    String? airportName = snapshot.data!.response![index].name;
+
+                                    String? cityName = snapshot.data!.data![index].countryName ?? "Unknown";
+                                    String? cityShortName = snapshot.data!.data![index].cityIataCode;
+                                    String? countryShortName = snapshot.data!.data![index].countryIso2;
+                                    String? airportName = snapshot.data!.data![index].airportName ?? "Unknown";
+
+                                    // String? cityName = snapshot.data!.request!.client!.geo!.country ?? "Unknown";
+                                    // String? cityShortName = snapshot.data!.request!.client!.geo!.city;
+                                    // String? countryShortName = snapshot.data!.request!.client!.geo!.countryCode;
+                                    // String? airportName = snapshot.data!.response![index].name;
 
                                     return
-                                      cityName.toLowerCase().contains(searchAirportController.text) ?
+                                      airportName.toLowerCase().contains(searchAirportController.text) ?
                                       InkWell(
                                           onTap: () async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context){

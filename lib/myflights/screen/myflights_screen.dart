@@ -5,6 +5,7 @@ import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/myflights_create_new_trip_screen.dart';
+import 'package:flight_tracker/myflights/screen/myflights_open_my_trips.dart';
 import 'package:flight_tracker/myflights/screen/myflights_upcoming_flights.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -69,6 +70,14 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                               return Row(
                                 children: [
                                   InkWell(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return MyFlightsOpenMyTrips(
+                                          noOfFlights: currentTask.noOfFlights,
+                                          tripName: currentTask.tripName,
+                                        );
+                                      }));
+                                    },
                                     onLongPress: () {
                                       currentTask.delete();
                                     },
@@ -80,7 +89,12 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Image.asset("assets/images/airline.png",width: w * 0.4,height: w * 0.2,fit: BoxFit.cover,),
+                                            Image.asset(
+                                              "assets/images/airline.png",
+                                              width: w * 0.4,
+                                              height: w * 0.2,
+                                              fit: BoxFit.cover,
+                                            ),
                                             SizedBox(height: 10),
                                             Text(
                                               currentTask!.tripName,

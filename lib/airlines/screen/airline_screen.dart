@@ -8,7 +8,6 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:google_place/google_place.dart';
 
 class AirlineScreen extends StatefulWidget {
 
@@ -23,7 +22,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
   String? airlineName = "Lahore";
   String? countryShortName = "PK";
   TextEditingController searchAirlineController = TextEditingController();
-  Future<List<ModelAirlines>>? futureList;
+  Future<ModelAirlines>? futureList;
 
   @override
   void initState() {
@@ -64,7 +63,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                   future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.isNotEmpty) {
+                      if (snapshot.data!.data!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -72,10 +71,10 @@ class _AirlineScreenState extends State<AirlineScreen> {
                               Flexible(
                                 child: ListView.builder(
                                   padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: snapshot.data!.data!.length,
                                   itemBuilder: (context, index) {
-                                    String? airlineName = snapshot.data![index].airlineName ?? "Unknown";
-                                    String? countryShortName = snapshot.data![index].countryIso2 ?? "Unknown";
+                                    String? airlineName = snapshot.data!.data![index].airlineName ?? "Unknown";
+                                    String? countryShortName = snapshot.data!.data![index].countryIso2 ?? "Unknown";
                                     String? airportImage;
                                     return airlineName.toLowerCase().contains(searchAirlineController.text) ?
                                     InkWell(

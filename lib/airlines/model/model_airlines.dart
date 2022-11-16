@@ -4,12 +4,32 @@
 
 import 'dart:convert';
 
-List<ModelAirlines> modelAirlinesFromJson(String str) => List<ModelAirlines>.from(json.decode(str).map((x) => ModelAirlines.fromJson(x)));
+ModelAirlines modelAirlinesFromJson(String str) => ModelAirlines.fromJson(json.decode(str));
 
-String modelAirlinesToJson(List<ModelAirlines> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String modelAirlinesToJson(ModelAirlines data) => json.encode(data.toJson());
 
 class ModelAirlines {
   ModelAirlines({
+    this.pagination,
+    this.data,
+  });
+
+  Pagination? pagination;
+  List<Datum>? data;
+
+  factory ModelAirlines.fromJson(Map<String, dynamic> json) => ModelAirlines(
+    pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
+    data: json["data"] == null ? null : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "pagination": pagination == null ? null : pagination!.toJson(),
+    "data": data == null ? null : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
+}
+
+class Datum {
+  Datum({
     this.id,
     this.fleetAverageAge,
     this.airlineId,
@@ -40,10 +60,10 @@ class ModelAirlines {
   String? airlineName;
   String? countryName;
   String? fleetSize;
-  Status? status;
-  Type? type;
+  String? status;
+  String? type;
 
-  factory ModelAirlines.fromJson(Map<String, dynamic> json) => ModelAirlines(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"] == null ? null : json["id"],
     fleetAverageAge: json["fleet_average_age"] == null ? null : json["fleet_average_age"],
     airlineId: json["airline_id"] == null ? null : json["airline_id"],
@@ -57,8 +77,8 @@ class ModelAirlines {
     airlineName: json["airline_name"] == null ? null : json["airline_name"],
     countryName: json["country_name"] == null ? null : json["country_name"],
     fleetSize: json["fleet_size"] == null ? null : json["fleet_size"],
-    status: json["status"] == null ? null : statusValues.map![json["status"]],
-    type: json["type"] == null ? null : typeValues.map![json["type"]],
+    status: json["status"] == null ? null : json["status"],
+    type: json["type"] == null ? null : json["type"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -75,35 +95,35 @@ class ModelAirlines {
     "airline_name": airlineName == null ? null : airlineName,
     "country_name": countryName == null ? null : countryName,
     "fleet_size": fleetSize == null ? null : fleetSize,
-    "status": status == null ? null : statusValues.reverse[status],
-    "type": type == null ? null : typeValues.reverse[type],
+    "status": status == null ? null : status,
+    "type": type == null ? null : type,
   };
 }
 
-enum Status { ACTIVE }
+class Pagination {
+  Pagination({
+    this.offset,
+    this.limit,
+    this.count,
+    this.total,
+  });
 
-final statusValues = EnumValues({
-  "active": Status.ACTIVE
-});
+  int? offset;
+  int? limit;
+  int? count;
+  int? total;
 
-enum Type { SCHEDULED, SCHEDULED_CHARTER, SCHEDULED_CARGO }
+  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+    offset: json["offset"] == null ? null : json["offset"],
+    limit: json["limit"] == null ? null : json["limit"],
+    count: json["count"] == null ? null : json["count"],
+    total: json["total"] == null ? null : json["total"],
+  );
 
-final typeValues = EnumValues({
-  "scheduled": Type.SCHEDULED,
-  "scheduled,cargo": Type.SCHEDULED_CARGO,
-  "scheduled,charter": Type.SCHEDULED_CHARTER
-});
-
-class EnumValues<T> {
-  Map<String, T>? map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map!.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap!;
-  }
+  Map<String, dynamic> toJson() => {
+    "offset": offset == null ? null : offset,
+    "limit": limit == null ? null : limit,
+    "count": count == null ? null : count,
+    "total": total == null ? null : total,
+  };
 }

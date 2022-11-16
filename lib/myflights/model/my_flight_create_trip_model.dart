@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:hive/hive.dart';
+import 'myflights_upcoming_model.dart';
+
 part 'my_flight_create_trip_model.g.dart';
 
 @HiveType(typeId: 1)
@@ -14,5 +16,17 @@ class ModelMyFlightsCreateTrip extends HiveObject {
   @HiveField(2)
   String tripImage;
 
-  ModelMyFlightsCreateTrip({required this.tripName,required this.noOfFlights,required this.tripImage});
+  @HiveField(3)
+  ModelMyFlightsUpcoming? modelMyFlightsUpcoming;
+
+  // @HiveField(4)
+  // bool isSelected;
+
+  ModelMyFlightsCreateTrip({
+    required this.tripName,
+    required this.noOfFlights,
+    required this.tripImage,
+    this.modelMyFlightsUpcoming,
+    // required this.isSelected
+  });
 }

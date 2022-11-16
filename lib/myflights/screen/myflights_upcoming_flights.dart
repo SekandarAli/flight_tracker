@@ -73,6 +73,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
               valueListenable:
               Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
               builder: (context, box, _) {
+
                 final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
                 if (items.isEmpty) {

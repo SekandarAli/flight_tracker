@@ -171,7 +171,7 @@ class ReusingWidgets {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.flight_takeoff, color: ColorsTheme.textColor),
+                      Icon(Icons.flight_takeoff, color: ColorsTheme.black),
                       SizedBox(width: 20),
                       Text(
                         departureTitle,
@@ -194,7 +194,7 @@ class ReusingWidgets {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.flight_land, color: ColorsTheme.textColor),
+                      Icon(Icons.flight_land, color: ColorsTheme.black),
                       SizedBox(width: 20),
                       Text(
                         arrivalTitle,

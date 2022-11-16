@@ -97,6 +97,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
           DraggableScrollableSheet(
             initialChildSize: 0.45,
             minChildSize: 0.15,
+            snap: true,
             builder: (BuildContext context, ScrollController scrollController) {
               return SingleChildScrollView(
                 controller: scrollController,
@@ -117,7 +118,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
     Set<Marker> markers = {}; //markers for google map
 
     LatLng startLocation = LatLng(33.6844, 73.0479);
-    LatLng endLocation = LatLng(27.6688312, 85.3077329);
+    LatLng endLocation = LatLng(33.6844, 73.0479);
 
 
 
@@ -150,7 +151,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
         target: endLocation,
-        zoom: 11.0,
+        zoom: 14.0,
       ),
       mapType: MapType.normal,
     );

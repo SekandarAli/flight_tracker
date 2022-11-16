@@ -21,19 +21,22 @@ class ModelMyFlightsCreateTripAdapter
       tripName: fields[0] as String,
       noOfFlights: fields[1] as String,
       tripImage: fields[2] as String,
+      modelMyFlightsUpcoming: fields[3] as ModelMyFlightsUpcoming?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelMyFlightsCreateTrip obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.tripName)
       ..writeByte(1)
       ..write(obj.noOfFlights)
       ..writeByte(2)
-      ..write(obj.tripImage);
+      ..write(obj.tripImage)
+      ..writeByte(3)
+      ..write(obj.modelMyFlightsUpcoming);
   }
 
   @override

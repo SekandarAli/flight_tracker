@@ -27,7 +27,9 @@ dependencies:
 
   syncfusion_flutter_gauges: ^20.3.56
 
-  google_mobile_ads: ^1.2.0
+  google_mobile_ads: ^2.2.0
+
+
 
 dev_dependencies:
   flutter_test:
