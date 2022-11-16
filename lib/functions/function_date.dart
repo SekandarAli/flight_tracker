@@ -12,12 +12,11 @@ class PickDate extends StatefulWidget {
 }
 
 class _PickDateState extends State<PickDate> {
-  // DateTime selectedDate = DateTime.now();
   DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         selectDate(context);
       },
