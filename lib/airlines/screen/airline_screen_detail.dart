@@ -3,12 +3,12 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/search/screen/search_tab/search_tab_by_flightcode/search_tab_by_flightcode.dart';
-import 'package:flight_tracker/search/screen/search_tab/search_tab_by_route/search_tab_by_route.dart';
 import 'package:flutter/material.dart';
 
 class AirlineScreenDetails extends StatefulWidget {
-  const AirlineScreenDetails({Key? key}) : super(key: key);
+   AirlineScreenDetails({Key? key,required this.airlineName}) : super(key: key);
+
+   String airlineName;
 
   @override
   State<AirlineScreenDetails> createState() => _AirlineScreenDetailsState();
@@ -52,7 +52,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Caspian Airline", style: ThemeTexts.textStyleTitle2),
+                    Text(widget.airlineName, style: ThemeTexts.textStyleTitle2),
                     SizedBox(height: 5),
                     Text("Airline", style: ThemeTexts.textStyleTitle3),
                   ],

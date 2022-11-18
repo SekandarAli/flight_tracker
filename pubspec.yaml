@@ -29,6 +29,7 @@ dependencies:
 
   google_mobile_ads: ^2.2.0
 
+  qr_code_scanner: ^1.0.1
 
 
 dev_dependencies:

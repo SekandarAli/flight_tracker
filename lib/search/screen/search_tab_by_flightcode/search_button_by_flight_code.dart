@@ -1,22 +1,21 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
+import 'package:flight_tracker/search/model/model_search_flights.dart';
+import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import '../../../../app_theme/theme_texts.dart';
-import '../../../model/model_search_flights.dart';
-import '../../../services/services_search_flight.dart';
 
-class SearchButtonScreen extends StatefulWidget {
-   SearchButtonScreen({required this.departureAirport,required this.arrivalAirport}) : super();
+class SearchButtonByFlightCode extends StatefulWidget {
+   SearchButtonByFlightCode({required this.flightCode}) : super();
 
-  var departureAirport;
-  var arrivalAirport;
+  var flightCode;
 
   @override
-  State<SearchButtonScreen> createState() => _SearchButtonScreenState();
+  State<SearchButtonByFlightCode> createState() => _SearchButtonByFlightCodeState();
 }
 
-class _SearchButtonScreenState extends State<SearchButtonScreen> {
+class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
 
   String? flightCode;
   var flightStatus;
@@ -29,7 +28,6 @@ class _SearchButtonScreenState extends State<SearchButtonScreen> {
 
   Future<ModelSearchFlights>? futureList;
 
-  bool cardExpand = false;
 
   @override
   void initState() {
@@ -45,7 +43,7 @@ class _SearchButtonScreenState extends State<SearchButtonScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("${widget.departureAirport} - ${widget.arrivalAirport}"),
+        title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -55,7 +53,7 @@ class _SearchButtonScreenState extends State<SearchButtonScreen> {
             future: futureList,
             builder: (context,snapshot) {
               if (snapshot.hasData) {
-                if (snapshot.data!.data!.isNotEmpty) {
+                if (snapshot.data!.response!.isNotEmpty) {
                   return Container(
                     color: Colors.white,
                     child: Column(
@@ -63,46 +61,41 @@ class _SearchButtonScreenState extends State<SearchButtonScreen> {
                         Flexible(
                           child: ListView.builder(
                             padding: EdgeInsets.all(5),
-                            itemCount: snapshot.data!.data!.length,
+                            itemCount: snapshot.data!.response!.length,
                             itemBuilder: (context, index) {
-                              flightCode = snapshot.data!.data![index].flight!.number ?? "Unknown";
-                              flightStatus = snapshot.data!.data![index].flightStatus ?? "Unknown";
-                              departureCity = snapshot.data!.data![index].departure!.airport ?? "Unknown";
-                              arrivalCity = snapshot.data!.data![index].arrival!.airport ?? "Unknown";
-                              departureCityShortName = snapshot.data!.data![index].departure!.iata ?? "Unknown";
-                              arrivalCityShortName = snapshot.data!.data![index].arrival!.iata ?? "Unknown";
-                              departureCityTime = snapshot.data!.data![index].flightDate ?? "Unknown";
-                              arrivalCityTime = snapshot.data!.data![index].flightDate ?? "Unknown";
 
-                              // flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
-                              // flightStatus = snapshot.data!.response![index].status ?? "Unknown";
-                              // departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
-                              // arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
-                              // departureCityShortName = snapshot.data!.response![index].depIcao ?? "Unknown";
-                              // arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
-                              // departureCityTime = snapshot.data!.response![index].lat ?? "Unknown";
-                              // arrivalCityTime = snapshot.data!.response![index].lng ?? "Unknown";
+                              flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
+                              flightStatus = snapshot.data!.response![index].status ?? "Unknown";
+                              departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
+                              arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
+                              departureCityShortName = snapshot.data!.response![index].depIcao ?? "Unknown";
+                              arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
+                              departureCityTime = snapshot.data!.response![index].lat ?? "Unknown";
+                              arrivalCityTime = snapshot.data!.response![index].lng ?? "Unknown";
 
-                              print("departureairport ${widget.departureAirport}");
-                              print("arrivalairport ${widget.arrivalAirport}");
+                              print("departureairport ${widget.flightCode}");
                               print("departurecity $departureCity");
                               print("arrivalcity $arrivalCity");
 
                               return
-                                widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity ?
-                                InkWell(
-                                  onTap: ()  {
-                                    setState(() {
-                                      cardExpand =! cardExpand;
-                                    });
-                                  },
-                                  child:  Card(
+                                widget.flightCode == flightCode ?
+                                Container(
+                                  padding: EdgeInsets.all(15),
+                                  child: Card(
                                     elevation: 10,
                                     child: Column(
                                       children: [
                                         Container(
                                           padding: EdgeInsets.all(15),
-                                          color: Colors.grey.shade200,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: Colors.grey.shade500,
+                                                      width: 3
+                                                  )
+                                              )
+                                          ),
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
@@ -138,22 +131,9 @@ class _SearchButtonScreenState extends State<SearchButtonScreen> {
                                             ],
                                           ),
                                         ),
-                                        cardExpand == true ? Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(width: w * 0.3),
-                                            TextButton(onPressed: (){
-
-                                              print(departureCity);
-                                              print(arrivalCity);
-                                            }, child: Text("DETAILS")),
-                                            TextButton(onPressed: (){}, child: Text("TRACK FLIGHT")),
-                                          ],
-                                        ) : Container(),
                                       ],
                                     ),
                                   ),
-
                                 )
                                     : Container();
                             },

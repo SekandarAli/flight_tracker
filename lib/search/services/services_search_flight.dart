@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 class ServicesSearchFlights{
   Future<ModelSearchFlights> GetAllPosts() async{
 
-    // var url = Uri.parse("http://api.aviationstack.com/v1/flights?access_key=ed3e285c34b3abc963152a5c290145ab");
     var url = Uri.parse("https://airlabs.co/api/v9/flights?api_key=725f85e9-850a-4e4e-bbb6-cc8371d0ab54");
 
     var response = await http.get(url);

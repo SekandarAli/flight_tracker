@@ -63,7 +63,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                   future: futureList,
                   builder: (context,snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.data!.isNotEmpty) {
+                      if (snapshot.data!.response!.isNotEmpty) {
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -71,16 +71,16 @@ class _AirlineScreenState extends State<AirlineScreen> {
                               Flexible(
                                 child: ListView.builder(
                                   padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.data!.length,
+                                  itemCount: snapshot.data!.response!.length,
                                   itemBuilder: (context, index) {
-                                    String? airlineName = snapshot.data!.data![index].airlineName ?? "Unknown";
-                                    String? countryShortName = snapshot.data!.data![index].countryIso2 ?? "Unknown";
+                                    String? airlineName = snapshot.data!.response![index].name ?? "Unknown";
+                                    String? countryShortName = snapshot.data!.response![index].iataCode ?? "Unknown";
                                     String? airportImage;
                                     return airlineName.toLowerCase().contains(searchAirlineController.text) ?
                                     InkWell(
                                         onTap: () async {
                                           Navigator.push(context, MaterialPageRoute(builder: (context){
-                                            return AirlineScreenDetails();
+                                            return AirlineScreenDetails(airlineName: airlineName);
                                           }));
                                         },
                                         child: ListTile(

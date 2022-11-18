@@ -10,116 +10,326 @@ String modelAirportToJson(ModelAirport data) => json.encode(data.toJson());
 
 class ModelAirport {
   ModelAirport({
-    this.pagination,
-    this.data,
+    this.request,
+    this.response,
+    this.terms,
   });
 
-  Pagination? pagination;
-  List<Datum>? data;
+  Request? request;
+  List<Response>? response;
+  String? terms;
 
   factory ModelAirport.fromJson(Map<String, dynamic> json) => ModelAirport(
-    pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
-    data: json["data"] == null ? null : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    request: json["request"] == null ? null : Request.fromJson(json["request"]),
+    response: json["response"] == null ? null : List<Response>.from(json["response"].map((x) => Response.fromJson(x))),
+    terms: json["terms"] == null ? null : json["terms"],
   );
 
   Map<String, dynamic> toJson() => {
-    "pagination": pagination == null ? null : pagination!.toJson(),
-    "data": data == null ? null : List<dynamic>.from(data!.map((x) => x.toJson())),
+    "request": request == null ? null : request!.toJson(),
+    "response": response == null ? null : List<dynamic>.from(response!.map((x) => x.toJson())),
+    "terms": terms == null ? null : terms,
   };
 }
 
-class Datum {
-  Datum({
+class Request {
+  Request({
+    this.lang,
+    this.currency,
+    this.time,
     this.id,
-    this.gmt,
-    this.airportId,
-    this.iataCode,
-    this.cityIataCode,
-    this.icaoCode,
-    this.countryIso2,
-    this.geonameId,
-    this.latitude,
-    this.longitude,
-    this.airportName,
-    this.countryName,
-    this.phoneNumber,
+    this.server,
+    this.host,
+    this.pid,
+    this.key,
+    this.params,
+    this.version,
+    this.method,
+    this.client,
+  });
+
+  String? lang;
+  String? currency;
+  int? time;
+  String? id;
+  String? server;
+  String? host;
+  int? pid;
+  Key? key;
+  Params? params;
+  int? version;
+  String? method;
+  Client? client;
+
+  factory Request.fromJson(Map<String, dynamic> json) => Request(
+    lang: json["lang"] == null ? null : json["lang"],
+    currency: json["currency"] == null ? null : json["currency"],
+    time: json["time"] == null ? null : json["time"],
+    id: json["id"] == null ? null : json["id"],
+    server: json["server"] == null ? null : json["server"],
+    host: json["host"] == null ? null : json["host"],
+    pid: json["pid"] == null ? null : json["pid"],
+    key: json["key"] == null ? null : Key.fromJson(json["key"]),
+    params: json["params"] == null ? null : Params.fromJson(json["params"]),
+    version: json["version"] == null ? null : json["version"],
+    method: json["method"] == null ? null : json["method"],
+    client: json["client"] == null ? null : Client.fromJson(json["client"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "lang": lang == null ? null : lang,
+    "currency": currency == null ? null : currency,
+    "time": time == null ? null : time,
+    "id": id == null ? null : id,
+    "server": server == null ? null : server,
+    "host": host == null ? null : host,
+    "pid": pid == null ? null : pid,
+    "key": key == null ? null : key!.toJson(),
+    "params": params == null ? null : params!.toJson(),
+    "version": version == null ? null : version,
+    "method": method == null ? null : method,
+    "client": client == null ? null : client!.toJson(),
+  };
+}
+
+class Client {
+  Client({
+    this.ip,
+    this.geo,
+    this.connection,
+    this.device,
+    this.agent,
+    this.karma,
+  });
+
+  String? ip;
+  Geo? geo;
+  Connection? connection;
+  Agent? device;
+  Agent? agent;
+  Karma? karma;
+
+  factory Client.fromJson(Map<String, dynamic> json) => Client(
+    ip: json["ip"] == null ? null : json["ip"],
+    geo: json["geo"] == null ? null : Geo.fromJson(json["geo"]),
+    connection: json["connection"] == null ? null : Connection.fromJson(json["connection"]),
+    device: json["device"] == null ? null : Agent.fromJson(json["device"]),
+    agent: json["agent"] == null ? null : Agent.fromJson(json["agent"]),
+    karma: json["karma"] == null ? null : Karma.fromJson(json["karma"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "ip": ip == null ? null : ip,
+    "geo": geo == null ? null : geo!.toJson(),
+    "connection": connection == null ? null : connection!.toJson(),
+    "device": device == null ? null : device!.toJson(),
+    "agent": agent == null ? null : agent!.toJson(),
+    "karma": karma == null ? null : karma!.toJson(),
+  };
+}
+
+class Agent {
+  Agent();
+
+  factory Agent.fromJson(Map<String, dynamic> json) => Agent(
+  );
+
+  Map<String, dynamic> toJson() => {
+  };
+}
+
+class Connection {
+  Connection({
+    this.type,
+    this.ispCode,
+    this.ispName,
+  });
+
+  String? type;
+  int? ispCode;
+  String? ispName;
+
+  factory Connection.fromJson(Map<String, dynamic> json) => Connection(
+    type: json["type"] == null ? null : json["type"],
+    ispCode: json["isp_code"] == null ? null : json["isp_code"],
+    ispName: json["isp_name"] == null ? null : json["isp_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "type": type == null ? null : type,
+    "isp_code": ispCode == null ? null : ispCode,
+    "isp_name": ispName == null ? null : ispName,
+  };
+}
+
+class Geo {
+  Geo({
+    this.countryCode,
+    this.country,
+    this.continent,
+    this.city,
+    this.lat,
+    this.lng,
     this.timezone,
   });
 
-  String? id;
-  String? gmt;
-  String? airportId;
-  String? iataCode;
-  String? cityIataCode;
-  String? icaoCode;
-  String? countryIso2;
-  String? geonameId;
-  String? latitude;
-  String? longitude;
-  String? airportName;
-  String? countryName;
-  dynamic phoneNumber;
+  String? countryCode;
+  String? country;
+  String? continent;
+  String? city;
+  double? lat;
+  double? lng;
   String? timezone;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    id: json["id"] == null ? null : json["id"],
-    gmt: json["gmt"] == null ? null : json["gmt"],
-    airportId: json["airport_id"] == null ? null : json["airport_id"],
-    iataCode: json["iata_code"] == null ? null : json["iata_code"],
-    cityIataCode: json["city_iata_code"] == null ? null : json["city_iata_code"],
-    icaoCode: json["icao_code"] == null ? null : json["icao_code"],
-    countryIso2: json["country_iso2"] == null ? null : json["country_iso2"],
-    geonameId: json["geoname_id"] == null ? null : json["geoname_id"],
-    latitude: json["latitude"] == null ? null : json["latitude"],
-    longitude: json["longitude"] == null ? null : json["longitude"],
-    airportName: json["airport_name"] == null ? null : json["airport_name"],
-    countryName: json["country_name"] == null ? null : json["country_name"],
-    phoneNumber: json["phone_number"],
+  factory Geo.fromJson(Map<String, dynamic> json) => Geo(
+    countryCode: json["country_code"] == null ? null : json["country_code"],
+    country: json["country"] == null ? null : json["country"],
+    continent: json["continent"] == null ? null : json["continent"],
+    city: json["city"] == null ? null : json["city"],
+    lat: json["lat"] == null ? null : json["lat"].toDouble(),
+    lng: json["lng"] == null ? null : json["lng"].toDouble(),
     timezone: json["timezone"] == null ? null : json["timezone"],
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id == null ? null : id,
-    "gmt": gmt == null ? null : gmt,
-    "airport_id": airportId == null ? null : airportId,
-    "iata_code": iataCode == null ? null : iataCode,
-    "city_iata_code": cityIataCode == null ? null : cityIataCode,
-    "icao_code": icaoCode == null ? null : icaoCode,
-    "country_iso2": countryIso2 == null ? null : countryIso2,
-    "geoname_id": geonameId == null ? null : geonameId,
-    "latitude": latitude == null ? null : latitude,
-    "longitude": longitude == null ? null : longitude,
-    "airport_name": airportName == null ? null : airportName,
-    "country_name": countryName == null ? null : countryName,
-    "phone_number": phoneNumber,
+    "country_code": countryCode == null ? null : countryCode,
+    "country": country == null ? null : country,
+    "continent": continent == null ? null : continent,
+    "city": city == null ? null : city,
+    "lat": lat == null ? null : lat,
+    "lng": lng == null ? null : lng,
     "timezone": timezone == null ? null : timezone,
   };
 }
 
-class Pagination {
-  Pagination({
-    this.offset,
-    this.limit,
-    this.count,
-    this.total,
+class Karma {
+  Karma({
+    this.isBlocked,
+    this.isCrawler,
+    this.isBot,
+    this.isFriend,
+    this.isRegular,
   });
 
-  int? offset;
-  int? limit;
-  int? count;
-  int? total;
+  bool? isBlocked;
+  bool? isCrawler;
+  bool? isBot;
+  bool? isFriend;
+  bool? isRegular;
 
-  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-    offset: json["offset"] == null ? null : json["offset"],
-    limit: json["limit"] == null ? null : json["limit"],
-    count: json["count"] == null ? null : json["count"],
-    total: json["total"] == null ? null : json["total"],
+  factory Karma.fromJson(Map<String, dynamic> json) => Karma(
+    isBlocked: json["is_blocked"] == null ? null : json["is_blocked"],
+    isCrawler: json["is_crawler"] == null ? null : json["is_crawler"],
+    isBot: json["is_bot"] == null ? null : json["is_bot"],
+    isFriend: json["is_friend"] == null ? null : json["is_friend"],
+    isRegular: json["is_regular"] == null ? null : json["is_regular"],
   );
 
   Map<String, dynamic> toJson() => {
-    "offset": offset == null ? null : offset,
-    "limit": limit == null ? null : limit,
-    "count": count == null ? null : count,
-    "total": total == null ? null : total,
+    "is_blocked": isBlocked == null ? null : isBlocked,
+    "is_crawler": isCrawler == null ? null : isCrawler,
+    "is_bot": isBot == null ? null : isBot,
+    "is_friend": isFriend == null ? null : isFriend,
+    "is_regular": isRegular == null ? null : isRegular,
+  };
+}
+
+class Key {
+  Key({
+    this.id,
+    this.apiKey,
+    this.type,
+    this.expired,
+    this.registered,
+    this.limitsByHour,
+    this.limitsByMinute,
+    this.limitsByMonth,
+    this.limitsTotal,
+  });
+
+  int? id;
+  String? apiKey;
+  String? type;
+  DateTime? expired;
+  DateTime? registered;
+  int? limitsByHour;
+  int? limitsByMinute;
+  int? limitsByMonth;
+  int? limitsTotal;
+
+  factory Key.fromJson(Map<String, dynamic> json) => Key(
+    id: json["id"] == null ? null : json["id"],
+    apiKey: json["api_key"] == null ? null : json["api_key"],
+    type: json["type"] == null ? null : json["type"],
+    expired: json["expired"] == null ? null : DateTime.parse(json["expired"]),
+    registered: json["registered"] == null ? null : DateTime.parse(json["registered"]),
+    limitsByHour: json["limits_by_hour"] == null ? null : json["limits_by_hour"],
+    limitsByMinute: json["limits_by_minute"] == null ? null : json["limits_by_minute"],
+    limitsByMonth: json["limits_by_month"] == null ? null : json["limits_by_month"],
+    limitsTotal: json["limits_total"] == null ? null : json["limits_total"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id == null ? null : id,
+    "api_key": apiKey == null ? null : apiKey,
+    "type": type == null ? null : type,
+    "expired": expired == null ? null : expired!.toIso8601String(),
+    "registered": registered == null ? null : registered!.toIso8601String(),
+    "limits_by_hour": limitsByHour == null ? null : limitsByHour,
+    "limits_by_minute": limitsByMinute == null ? null : limitsByMinute,
+    "limits_by_month": limitsByMonth == null ? null : limitsByMonth,
+    "limits_total": limitsTotal == null ? null : limitsTotal,
+  };
+}
+
+class Params {
+  Params({
+    this.lang,
+  });
+
+  String? lang;
+
+  factory Params.fromJson(Map<String, dynamic> json) => Params(
+    lang: json["lang"] == null ? null : json["lang"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "lang": lang == null ? null : lang,
+  };
+}
+
+class Response {
+  Response({
+    this.name,
+    this.iataCode,
+    this.icaoCode,
+    this.lat,
+    this.lng,
+    this.countryCode,
+  });
+
+  String? name;
+  String? iataCode;
+  String? icaoCode;
+  double? lat;
+  double? lng;
+  String? countryCode;
+
+  factory Response.fromJson(Map<String, dynamic> json) => Response(
+    name: json["name"] == null ? null : json["name"],
+    iataCode: json["iata_code"] == null ? null : json["iata_code"],
+    icaoCode: json["icao_code"] == null ? null : json["icao_code"],
+    lat: json["lat"] == null ? null : json["lat"].toDouble(),
+    lng: json["lng"] == null ? null : json["lng"].toDouble(),
+    countryCode: json["country_code"] == null ? null : json["country_code"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name == null ? null : name,
+    "iata_code": iataCode == null ? null : iataCode,
+    "icao_code": icaoCode == null ? null : icaoCode,
+    "lat": lat == null ? null : lat,
+    "lng": lng == null ? null : lng,
+    "country_code": countryCode == null ? null : countryCode,
   };
 }

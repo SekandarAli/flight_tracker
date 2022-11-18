@@ -82,7 +82,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                       .copyWith(color: Colors.grey)),
                             ],
                           ),
-                          Text("86°C",
+                          Text("86°F",
                               style: ThemeTexts.textStyleTitle1
                                   .copyWith(fontWeight: FontWeight.normal)),
                         ],
@@ -112,7 +112,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                   ? Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(20),
+                          padding: EdgeInsets.all(10),
                           color: Colors.white,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +126,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                         Container(
                           height: h * 0.7,
                           child: ListView.builder(
-                            padding: EdgeInsets.all(20),
+                            padding: EdgeInsets.all(10),
                             itemCount: 20,
                             itemBuilder: (context, index) {
                               return InkWell(

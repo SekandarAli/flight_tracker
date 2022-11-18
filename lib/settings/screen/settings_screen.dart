@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         print("aaa");
       },
       child: Container(
-        padding: EdgeInsets.only(left: 50, top: 30),
+        padding: EdgeInsets.only(left: 50, top: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

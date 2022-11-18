@@ -2,7 +2,6 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
-import 'package:flight_tracker/delete.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
@@ -17,10 +16,10 @@ void main() async{
   await Hive.initFlutter();
 
   Hive.registerAdapter<ModelMyFlightsUpcoming>(ModelMyFlightsUpcomingAdapter());
-  await Hive.openBox<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   Hive.registerAdapter<ModelMyFlightsCreateTrip>(ModelMyFlightsCreateTripAdapter());
-  await Hive.openBox<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   Hive.registerAdapter<ModelSearch>(ModelSearchAdapter());
+  await Hive.openBox<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
+  await Hive.openBox<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   await Hive.openBox<ModelSearch>("modelSearch");
 
   runApp(MyApp());
@@ -37,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "FLIGHT TRACK",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: ColorsTheme.primaryColor),
       home: BottomNavBarScreen(),

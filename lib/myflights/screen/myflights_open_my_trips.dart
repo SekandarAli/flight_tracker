@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flight_tracker/app_theme/color.dart';
-import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
-import 'package:flight_tracker/search/screen/search_tab/search_tab_by_flightcode/search_tab_by_flightcode.dart';
-import 'package:flight_tracker/search/screen/search_tab/search_tab_by_route/search_tab_by_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 

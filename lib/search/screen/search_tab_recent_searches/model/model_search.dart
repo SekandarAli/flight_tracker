@@ -6,13 +6,16 @@ part 'model_search.g.dart';
 @HiveType(typeId: 2)
 class ModelSearch extends HiveObject {
   @HiveField(0)
-  String arrivalCity;
+  String? arrivalCity;
 
   @HiveField(1)
-  String departureCity;
+  String? departureCity;
 
   @HiveField(2)
   String? airlineName;
 
-  ModelSearch({required this.arrivalCity,required this.departureCity,this.airlineName});
+  @HiveField(3)
+  String? flightCode;
+
+  ModelSearch({ this.arrivalCity, this.departureCity,this.airlineName,this.flightCode});
 }

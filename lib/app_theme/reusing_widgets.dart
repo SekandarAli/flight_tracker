@@ -217,12 +217,9 @@ class ReusingWidgets {
 
   static Widget optionalAirlineContainer({
     required String airlineTitle,
-    // required String arrivalTitle,
-    // required BuildContext context,
-    // required onTapDepartureTitle,
-    // required onTapArrivalTitle,
-    // required onTapClearDepartureTitle,
-    // required onTapClearArrivalTitle,
+    required BuildContext context,
+    required Function() onTapAirlineOptional,
+    required TextStyle airlineStyle,
   }) {
     return Container(
         margin: EdgeInsets.all(0),
@@ -234,15 +231,20 @@ class ReusingWidgets {
             Radius.circular(3),
           ),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.line_style_outlined, color: ColorsTheme.textColor),
-            SizedBox(width: 20),
-            Text(
-              airlineTitle,
-              style: ThemeTexts.textStyleValueGrey,
-            )
-          ],
+        child: InkWell(
+          onTap: (){
+            onTapAirlineOptional();
+          },
+          child: Row(
+            children: [
+              Icon(Icons.line_style_outlined, color: ColorsTheme.textColor),
+              SizedBox(width: 20),
+              Text(
+                airlineTitle,
+                style: airlineStyle,
+              )
+            ],
+          ),
         ));
   }
 
@@ -354,6 +356,37 @@ class ReusingWidgets {
 
 /// Airport Detail ///
 
+  Widget searchModuleTabBar({
+    required Function() onTap,
+    required BuildContext context,
+    required String text,
+    required Color textColor,
+    required Color borderColor,
+    required double borderWidth,
+  }) {
+    return InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 50.0,
+          width: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+              color: ColorsTheme.primaryColor,
+              border: Border(
+                  bottom: BorderSide(
+                    color: borderColor,
+                    width: borderWidth,
+                  )
+              )
+          ),
+          alignment: Alignment.center,
+          child: Text(
+              text,
+              style: ThemeTexts.textStyleTitle3.copyWith(color: textColor,fontWeight: FontWeight.w500)
+          ),
+        ));
+  }
 
 
 

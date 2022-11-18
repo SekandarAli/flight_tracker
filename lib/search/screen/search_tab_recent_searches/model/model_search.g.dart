@@ -17,22 +17,25 @@ class ModelSearchAdapter extends TypeAdapter<ModelSearch> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ModelSearch(
-      arrivalCity: fields[0] as String,
-      departureCity: fields[1] as String,
+      arrivalCity: fields[0] as String?,
+      departureCity: fields[1] as String?,
       airlineName: fields[2] as String?,
+      flightCode: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelSearch obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.arrivalCity)
       ..writeByte(1)
       ..write(obj.departureCity)
       ..writeByte(2)
-      ..write(obj.airlineName);
+      ..write(obj.airlineName)
+      ..writeByte(3)
+      ..write(obj.flightCode);
   }
 
   @override

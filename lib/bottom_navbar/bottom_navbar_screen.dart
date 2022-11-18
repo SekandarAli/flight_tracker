@@ -98,7 +98,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
           isBannerAdLoaded ? SizedBox(
             width: _bannerAd.size.width.toDouble() * 0.7,
-            height: _bannerAd.size.height.toDouble(),
+            height: _bannerAd.size.height.toDouble() * 0.7,
             child: AdWidget(ad: _bannerAd),
           ) : SizedBox(),
 

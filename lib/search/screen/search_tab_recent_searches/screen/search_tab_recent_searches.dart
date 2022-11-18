@@ -19,7 +19,7 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: h * 0.4,
+      height: h * 0.45,
       width: w,
       child: ValueListenableBuilder<Box<ModelSearch>>(
         valueListenable:
