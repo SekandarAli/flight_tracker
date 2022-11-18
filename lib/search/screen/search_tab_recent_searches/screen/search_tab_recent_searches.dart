@@ -19,7 +19,7 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: h * 0.45,
+      height: h * 0.4,
       width: w,
       child: ValueListenableBuilder<Box<ModelSearch>>(
         valueListenable:
@@ -55,10 +55,10 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
                                       text: TextSpan(
                                         style: TextStyle(color: Colors.black, fontSize: 60),
                                         children: [
-                                          TextSpan(text: 'From  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal)),
-                                          TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleTitle1),
-                                          TextSpan(text: '  to  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal)),
-                                          TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleTitle1),
+                                          TextSpan(text: 'From  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                          TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
+                                          TextSpan(text: '  to  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                          TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
                                         ],
                                       ),
                                       textScaleFactor: 0.5,

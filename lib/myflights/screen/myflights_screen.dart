@@ -253,8 +253,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                     cityTime: currentTask.departureCityTime,
                                                     crossAlignment:
                                                     CrossAxisAlignment.start),
-                                                Icon(Icons.flight_land_rounded,
-                                                    size: 50),
+                                                RotatedBox(
+                                                  quarterTurns: 1,
+                                                  child: Icon(
+                                                    Icons.flight,
+                                                    size: 50,
+                                                    color: Colors.grey,),
+                                                ),
                                                 flightDetails(
                                                     cityName: currentTask.arrivalCity,
                                                     cityShortCode: currentTask.arrivalCityShortCode,

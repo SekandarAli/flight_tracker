@@ -17,12 +17,17 @@ class MyFlightsUpcomingScreen extends StatefulWidget {
 class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
 
   Box<ModelMyFlightsCreateTrip>? dataBox;
+  Box<ModelMyFlightsUpcoming>? dataBoxUpcoming;
   ModelMyFlightsCreateTrip? modelMyFlights;
+  bool isEdit = false;
+  List<bool> isChecked = List.generate(10, (index) => true);
+
 
   @override
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
+    dataBoxUpcoming = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   }
   @override
   Widget build(BuildContext context) {
@@ -30,14 +35,36 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar:AppBar(
+      appBar: isEdit == false ?
+      AppBar(
         title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
             .copyWith(fontWeight: FontWeight.normal)),
         actions: [
-          TextButton(onPressed: (){}, child: Text("EDIT",style: ThemeTexts.textStyleTitle3,))
+          TextButton(onPressed: (){
+            setState(() {
+              isEdit =! isEdit;
+            });
+          }, child: Text("EDIT",style: ThemeTexts.textStyleTitle3,))
+        ],
+      )
+          :
+      AppBar(
+        backgroundColor: Colors.white,
+        title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
+            .copyWith(fontWeight: FontWeight.normal,color: Colors.grey)),
+        leading: IconButton(onPressed: (){
+          setState(() {
+            isEdit =! isEdit;
+          });
+        },
+        icon: Icon(Icons.arrow_back,color: Colors.grey,),),
+        actions: [
+          IconButton(onPressed: (){
+            openDialogue();
+          }, icon: Icon(Icons.delete,color: Colors.grey))
         ],
       ),
-      body:ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
+      body: isEdit == false ? ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
         valueListenable:
         Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
         builder: (context, box, _) {
@@ -129,7 +156,10 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                   setState(() {
                                     currentTask.delete();
                                   });
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content:
+                                      Text('Flight Removed Successfully'),
+                                          duration: Duration(milliseconds: 700),));
                                 },
                                 child: Card(
                                   child: Column(
@@ -179,7 +209,13 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                                 crossAlignment:
                                                 CrossAxisAlignment.start),
 
-                                            Icon(Icons.flight_land_rounded, size: 50),
+                                            RotatedBox(
+                                              quarterTurns: 1,
+                                              child: Icon(
+                                                Icons.flight,
+                                                size: 50,
+                                                color: Colors.grey,),
+                                            ),
 
                                             flightDetails(
                                                 cityName: currentTask.arrivalCity,
@@ -202,6 +238,154 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                 }
               },
             );
+          }
+        },
+      ) :
+      ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
+        valueListenable:
+        Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming")
+            .listenable(),
+        builder: (context, box, _) {
+          final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
+
+          if (items.isEmpty) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.flight,
+                      size: w * 0.4,
+                      color: Colors.grey,
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "No Flights Found",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: w * 0.1,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Flex(direction: Axis.vertical, children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: box.values.length,
+                  itemBuilder: (context, index) {
+                    ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+                    return InkWell(
+                      child: Card(
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              onChanged: (bool? checked) {
+                                setState(() {
+                                  isChecked[index] = checked!;
+                                  print(isChecked[index]);
+                                },
+                                );
+                              },
+                              value: isChecked[index],
+                            ),
+                            Spacer(),
+                            SizedBox(
+                              width: w * 0.84,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: ColorsTheme.primaryColor,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(currentTask!.flightCode,
+                                            style: ThemeTexts.textStyleTitle3
+                                                .copyWith(color: Colors.white)),
+                                        Text("Scheduled",
+                                            style: ThemeTexts.textStyleTitle3
+                                                .copyWith(color: Colors.white))
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(15),
+                                    color: Colors.grey.shade200,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            "🗓️ ${currentTask.departureCityDate}",
+                                            style: ThemeTexts.textStyleTitle3.copyWith(
+                                                color: Colors.black87)),
+                                        Text(
+                                            "🗓️ ${currentTask.arrivalCityDate}",
+                                            style: ThemeTexts.textStyleTitle3.copyWith(
+                                                color: Colors.black87)),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade100,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        flightDetails(
+                                          cityName: currentTask.departureCity,
+                                          cityShortCode: currentTask.departureCityShortCode,
+                                          cityTime: currentTask.departureCityTime,
+                                          crossAlignment: CrossAxisAlignment.start,
+                                        ),
+                                        RotatedBox(
+                                          quarterTurns: 1,
+                                          child: Icon(
+                                            Icons.flight,
+                                            size: 50,
+                                            color: Colors.grey,),
+                                        ),
+                                        flightDetails(
+                                          cityName: currentTask.arrivalCity,
+                                          cityShortCode: currentTask.arrivalCityShortCode,
+                                          cityTime: currentTask.arrivalCityTime,
+                                          crossAlignment: CrossAxisAlignment.end,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ]);
           }
         },
       ),
@@ -230,4 +414,28 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
       ],
     );
   }
+
+  Future<String?> openDialogue() => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure to delete all the items?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    dataBoxUpcoming!.clear();
+                    isEdit =! isEdit;
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Text('OK')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('CANCEL')),
+          ],
+        );
+      });
 }

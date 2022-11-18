@@ -4,11 +4,9 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_date.dart';
-import 'package:flight_tracker/search/model/model_search_flights.dart';
 import 'package:flight_tracker/search/screen/search_tab_by_flightcode/search_button_by_flight_code.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/screen/search_tab_recent_searches.dart';
-import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 

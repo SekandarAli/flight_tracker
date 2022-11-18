@@ -31,6 +31,8 @@ dependencies:
 
   qr_code_scanner: ^1.0.1
 
+  google_fonts: ^3.0.1
+
 
 dev_dependencies:
   flutter_test:
@@ -49,9 +51,11 @@ flutter:
   assets:
     - assets/images/
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: MontserratRegular
+      fonts:
+        - asset: assets/fonts/MontserratRegular.ttf
+
+    - family: OpenSansRegular
+      fonts:
+        - asset: assets/fonts/OpenSansRegular.ttf

@@ -2,10 +2,12 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
+import 'package:flight_tracker/delete.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -38,9 +40,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "FLIGHT TRACK",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: ColorsTheme.primaryColor),
+      theme: ThemeData(
+          primarySwatch: ColorsTheme.primaryColor,
+        fontFamily: "OpenSansRegular"
+        // textTheme: GoogleFonts.montserratTextTheme(
+        //   Theme.of(context).textTheme,),
+      ),
       home: BottomNavBarScreen(),
-      // home: HomePage(),
+      // home: DynamicallyCheckbox(),
     );
   }
 }

@@ -6,11 +6,11 @@ import '../app_theme_work/theme_colors.dart';
 class ThemeTexts {
   ThemeTexts._();
 
-  static const String GilroyExtraBold = "Gilroy-ExtraBold";
-  static const String GilroyLight = "Gilroy-Light";
-  static const String GilroyMedium = "Gilroy-Medium";
-  static const String GilroyRegular = "Gilroy-Regular";
-  static const String GilroySemibold = "Gilroy-Semibold";
+  // static const String GilroyExtraBold = "Gilroy-ExtraBold";
+  // static const String GilroyLight = "Gilroy-Light";
+  // static const String GilroyMedium = "Gilroy-Medium";
+  // static const String GilroyRegular = "Gilroy-Regular";
+  // static const String GilroySemibold = "Gilroy-Semibold";
 
   static const textStyleTitle1 = TextStyle(
       fontSize: 25,
@@ -19,7 +19,8 @@ class ThemeTexts {
       letterSpacing: 0,
       height: 1,
       decoration: TextDecoration.none,
-      fontFamily: GilroySemibold);
+      // fontFamily: GilroySemibold
+  );
 
   static const textStyleTitle2 = TextStyle(
     fontSize: 15,
@@ -27,7 +28,7 @@ class ThemeTexts {
     fontWeight: FontWeight.bold,
     letterSpacing: 1,
     decoration: TextDecoration.none,
-    fontFamily: GilroyMedium,
+    // fontFamily: GilroyMedium,
   );
 
   static const textStyleTitle3 = TextStyle(
@@ -36,7 +37,7 @@ class ThemeTexts {
     fontWeight: FontWeight.normal,
     letterSpacing: 1,
     decoration: TextDecoration.none,
-    fontFamily: GilroyMedium,
+    // fontFamily: GilroyMedium,
   );
 
   static const textStyleValueBlack =  TextStyle(
@@ -45,7 +46,7 @@ class ThemeTexts {
     fontWeight: FontWeight.w500,
     letterSpacing: 1.5,
     decoration: TextDecoration.none,
-    fontFamily: GilroySemibold,
+    // fontFamily: GilroySemibold,
   );
 
   static const textStyleValueBlack2 =  TextStyle(
@@ -54,7 +55,7 @@ class ThemeTexts {
     fontWeight: FontWeight.normal,
     letterSpacing: 1.5,
     decoration: TextDecoration.none,
-    fontFamily: GilroySemibold,
+    // fontFamily: GilroySemibold,
   );
 
   static const textStyleValueGrey =  TextStyle(
@@ -63,7 +64,7 @@ class ThemeTexts {
     fontWeight: FontWeight.w500,
     letterSpacing: 1.5,
     decoration: TextDecoration.none,
-    fontFamily: GilroySemibold,
+    // fontFamily: GilroySemibold,
   );
 
   static var appbar_text_style =
@@ -76,7 +77,7 @@ class ThemeTexts {
 
   static var snakbar_text = textStyleTitle2.copyWith(
     color: Colors.white,
-    fontFamily: GilroyRegular,
+    // fontFamily: GilroyRegular,
   );
 
   static const textCupertinoTitleStyle = textStyleTitle1;

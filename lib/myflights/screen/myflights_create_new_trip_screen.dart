@@ -4,7 +4,6 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
-import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -24,7 +23,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
 
   String noOfFlights = '0 Flight';
   String tripImage = "Image";
-  bool isSelected = true;
   List<bool> isChecked = List.generate(10, (index) => false);
 
   @override
@@ -124,84 +122,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   itemCount: box.values.length,
                   itemBuilder: (context, index) {
                     ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-
-                    // ModelMyFlightsCreateTrip modelCreateTrip = box.getAt(index);
                     return InkWell(
-                      // onTap: (){
-
-                      // setState(() {
-                      //   selectedContacts[index].isSelected =! selectedContacts![index].isSelected;
-                      //   if (selectedContacts[index].isSelected == true) {
-                      //     selectedContacts.add(ModelMyFlightsCreateTrip(
-                      //
-                      //       tripName: widget.tripName,
-                      //           noOfFlights: noOfFlights,
-                      //           tripImage: tripImage,
-                      //           modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
-                      //
-                      //             flightCode: currentTask!.flightCode,
-                      //             departureCity: currentTask.departureCity,
-                      //             departureCityDate: currentTask.departureCityDate,
-                      //             departureCityShortCode: currentTask.departureCityShortCode,
-                      //             departureCityTime: currentTask.departureCityTime,
-                      //             arrivalCity: currentTask.arrivalCity,
-                      //             arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                      //             arrivalCityTime: currentTask.arrivalCityTime,
-                      //             arrivalCityDate: currentTask.arrivalCityDate,
-                      //
-                      //           )
-                      //
-                      //     ));
-                      //   } else if (selectedContacts[index].isSelected == false) {
-                      //     selectedContacts
-                      //         .removeWhere((element) => element.tripName == selectedContacts[index].tripName);
-                      //   }
-                      // });},
-
-                      ///hhhhhhhh
-                      //   onTap: (){
-                      //
-                      //     setState((){
-                      //       // modelMyFlights!.isSelected =! modelMyFlights!.isSelected;
-                      //       // if(modelMyFlights!.isSelected == true) {
-                      //
-                      //
-                      //      /// var list = [];
-                      //      /// if(isSelected == true){
-                      //      ///   list.add(modelMyFlights);
-                      //      /// }
-                      //      ///
-                      //      /// else{
-                      //      ///   list.removeWhere((element) => element.tripName == list[index].tripName);
-                      //      /// }
-                      //
-                      //       isSelected =! isSelected;
-                      //
-                      //         modelMyFlights = ModelMyFlightsCreateTrip(
-                      //         tripName: widget.tripName,
-                      //         noOfFlights: noOfFlights,
-                      //         tripImage: tripImage,
-                      //         modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
-                      //           flightCode: currentTask.flightCode,
-                      //           departureCity: currentTask.departureCity,
-                      //           departureCityDate:
-                      //               currentTask.departureCityDate,
-                      //           departureCityShortCode:
-                      //               currentTask.departureCityShortCode,
-                      //           departureCityTime:
-                      //               currentTask.departureCityTime,
-                      //           arrivalCity: currentTask.arrivalCity,
-                      //           arrivalCityShortCode:
-                      //               currentTask.arrivalCityShortCode,
-                      //           arrivalCityTime: currentTask.arrivalCityTime,
-                      //           arrivalCityDate: currentTask.arrivalCityDate,
-                      //         ),
-                      //             // isSelected: modelMyFlights!.isSelected
-                      //         );
-                      // });
-                      //
-                      //
-                      // },
 
                       child: Card(
                         child: Row(
@@ -323,8 +244,13 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           cityTime: currentTask.departureCityTime,
                                           crossAlignment: CrossAxisAlignment.start,
                                         ),
-                                        Icon(Icons.flight_land_rounded,
-                                            size: 50),
+                                        RotatedBox(
+                                          quarterTurns: 1,
+                                          child: Icon(
+                                            Icons.flight,
+                                            size: 50,
+                                            color: Colors.grey,),
+                                        ),
                                         flightDetails(
                                           cityName: currentTask.arrivalCity,
                                           cityShortCode: currentTask.arrivalCityShortCode,
