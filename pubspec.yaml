@@ -15,23 +15,19 @@ dependencies:
 
   google_place: ^0.4.7
   google_maps_flutter: ^2.1.8
+  google_fonts: ^3.0.1
+  google_mobile_ads: ^2.2.0
 
   intl: ^0.17.0
 
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+
   path_provider: ^2.0.11
-
-  shared_preferences: ^2.0.15
   provider: ^6.0.4
-
-  syncfusion_flutter_gauges: ^20.3.56
-
-  google_mobile_ads: ^2.2.0
+  shared_preferences: ^2.0.15
 
   qr_code_scanner: ^1.0.1
-
-  google_fonts: ^3.0.1
 
 
 dev_dependencies:

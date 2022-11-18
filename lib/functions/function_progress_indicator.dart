@@ -2,7 +2,6 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class FunctionProgressIndicator extends StatefulWidget {
   const FunctionProgressIndicator({Key? key}) : super(key: key);
