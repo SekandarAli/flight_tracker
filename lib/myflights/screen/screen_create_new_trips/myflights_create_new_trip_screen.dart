@@ -204,7 +204,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                         Text(currentTask!.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
-                                        Text(currentTask.flightStatus,
+                                        Text(currentTask.flightStatus!,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white))
                                       ],

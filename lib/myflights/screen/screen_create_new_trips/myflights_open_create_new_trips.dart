@@ -167,7 +167,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Text(currentTask.modelMyFlightsUpcoming!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                                    Text(currentTask.modelMyFlightsUpcoming!.flightStatus, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                    Text(currentTask.modelMyFlightsUpcoming!.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                                   ],
                                                 ),
                                               ),

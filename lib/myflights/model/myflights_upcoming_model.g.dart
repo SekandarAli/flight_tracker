@@ -27,7 +27,7 @@ class ModelMyFlightsUpcomingAdapter
       arrivalCityShortCode: fields[6] as String,
       arrivalCityTime: fields[7] as String,
       arrivalCityDate: fields[8] as String,
-      flightStatus: fields[9] as String,
+      flightStatus: fields[9] as String?,
     );
   }
 

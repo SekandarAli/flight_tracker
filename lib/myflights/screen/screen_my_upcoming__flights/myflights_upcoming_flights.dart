@@ -171,7 +171,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                            Text(currentTask.flightStatus, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                            Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                           ],
                                         ),
                                       ),
@@ -315,7 +315,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                         Text(currentTask!.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
-                                        Text(currentTask.flightStatus,
+                                        Text(currentTask.flightStatus!,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white))
                                       ],
