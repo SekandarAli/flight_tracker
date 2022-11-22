@@ -12,15 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 
-class AirportTrackFlight extends StatefulWidget {
-   AirportTrackFlight({super.key, this.flight_iata});
-   String? flight_iata;
+class AirlineTrackFlight extends StatefulWidget {
+   AirlineTrackFlight({super.key});
 
   @override
-  State<AirportTrackFlight> createState() => _AirportTrackFlightState();
+  State<AirlineTrackFlight> createState() => _AirlineTrackFlightState();
 }
 
-class _AirportTrackFlightState extends State<AirportTrackFlight> {
+class _AirlineTrackFlightState extends State<AirlineTrackFlight> {
 
   bool trackFlight = true;
   Box<ModelMyFlightsUpcoming>? dataBox;
@@ -58,7 +57,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
-    futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata!);
+    // futureList = ServicesAirportsTrackScreen().GetAllPosts();
 
   }
 
@@ -214,7 +213,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
 
   Widget CustomScrollViewContent() {
     return Card(
-      color: Colors.white,
+      color: Colors.white70,
       elevation: 12.0,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -433,7 +432,6 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
 
   Widget CustomSeatAircraftInfo({required BuildContext context}) {
     return Card(
-      elevation: 10,
       color: Colors.white,
       child: Column(
         children: [
@@ -487,7 +485,6 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Card(
-      elevation: 10,
       child: Column(
         children: [
           SizedBox(

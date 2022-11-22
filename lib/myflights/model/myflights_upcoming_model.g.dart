@@ -27,13 +27,14 @@ class ModelMyFlightsUpcomingAdapter
       arrivalCityShortCode: fields[6] as String,
       arrivalCityTime: fields[7] as String,
       arrivalCityDate: fields[8] as String,
+      flightStatus: fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelMyFlightsUpcoming obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.flightCode)
       ..writeByte(1)
@@ -51,7 +52,9 @@ class ModelMyFlightsUpcomingAdapter
       ..writeByte(7)
       ..write(obj.arrivalCityTime)
       ..writeByte(8)
-      ..write(obj.arrivalCityDate);
+      ..write(obj.arrivalCityDate)
+      ..writeByte(9)
+      ..write(obj.flightStatus);
   }
 
   @override

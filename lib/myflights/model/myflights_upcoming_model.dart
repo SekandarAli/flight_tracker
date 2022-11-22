@@ -33,6 +33,9 @@ class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(8)
   String arrivalCityDate;
 
+  @HiveField(9)
+  String flightStatus;
+
   ModelMyFlightsUpcoming({
       required this.flightCode,
       required this.departureCityDate,
@@ -42,6 +45,7 @@ class ModelMyFlightsUpcoming extends HiveObject {
       required this.arrivalCity,
       required this.arrivalCityShortCode,
       required this.arrivalCityTime,
-      required this.arrivalCityDate
+      required this.arrivalCityDate,
+      required this.flightStatus,
   });
 }

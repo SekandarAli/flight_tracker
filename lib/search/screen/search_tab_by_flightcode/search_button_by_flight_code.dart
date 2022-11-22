@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
+import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/model/model_search_flights.dart';
 import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
+import '../../../app_theme/color.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
    SearchButtonByFlightCode({required this.flightCode}) : super();
@@ -17,23 +20,18 @@ class SearchButtonByFlightCode extends StatefulWidget {
 
 class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
 
-  String? flightCode;
-  var flightStatus;
-  String? departureCity;
-  String? arrivalCity;
-  String? departureCityShortName;
-  String? arrivalCityShortName;
-  var departureCityTime;
-  var arrivalCityTime;
-
   Future<ModelSearchFlights>? futureList;
 
+  bool cardExpand = false;
+  Box<ModelMyFlightsUpcoming>? dataBox;
+  ModelMyFlightsUpcoming? modelMyFlights;
 
   @override
   void initState() {
     super.initState();
 
     futureList = ServicesSearchFlights().GetAllPosts();
+    dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   }
 
   @override
@@ -64,14 +62,16 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                             itemCount: snapshot.data!.response!.length,
                             itemBuilder: (context, index) {
 
-                              flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
-                              flightStatus = snapshot.data!.response![index].status ?? "Unknown";
-                              departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
-                              arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
-                              departureCityShortName = snapshot.data!.response![index].depIcao ?? "Unknown";
-                              arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
-                              departureCityTime = snapshot.data!.response![index].lat ?? "Unknown";
-                              arrivalCityTime = snapshot.data!.response![index].lng ?? "Unknown";
+                              String flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
+                              String flightStatus = snapshot.data!.response![index].status.toString() ?? "Unknown";
+                              String departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
+                              String arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
+                              String departureCityShortName = snapshot.data!.response![index].depIcao ?? "Unknown";
+                              String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
+                              String departureCityTime = snapshot.data!.response![index].lat.toString() ?? "Unknown";
+                              String arrivalCityTime = snapshot.data!.response![index].lng.toString() ?? "Unknown";
+                              String departureCityDate = 'Nov 08, 2022';
+                              String arrivalCityDate = 'Nov 09, 2022';
 
                               print("departureairport ${widget.flightCode}");
                               print("departurecity $departureCity");
@@ -79,59 +79,95 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
 
                               return
                                 widget.flightCode == flightCode ?
-                                Container(
-                                  padding: EdgeInsets.all(15),
-                                  child: Card(
-                                    elevation: 10,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(15),
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: Colors.grey.shade500,
-                                                      width: 3
-                                                  )
-                                              )
+                                InkWell(
+                                  onTap: (){
+                                    setState((){
+                                      cardExpand =! cardExpand;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: Card(
+                                      elevation: 10,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(15),
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade300,
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: Colors.grey.shade500,
+                                                        width: 3
+                                                    )
+                                                )
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
+                                                Text(flightStatus.toString(),
+                                                    style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black))
+                                              ],
+                                            ),
                                           ),
-                                          child: Row(
+                                          Padding(
+                                            padding: EdgeInsets.all(15),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+
+                                                flightDetails(
+                                                  cityName: departureCity,
+                                                  cityShortCode: departureCityShortName,
+                                                  cityTime: departureCityTime.toString(),
+                                                  crossAlignment: CrossAxisAlignment.start,
+                                                ),
+
+                                                RotatedBox(quarterTurns: 1,
+                                                    child: Icon(Icons.flight, size: 35,color: Colors.grey,)),
+
+                                                flightDetails(
+                                                  cityName: arrivalCity,
+                                                  cityShortCode: arrivalCityShortName,
+                                                  cityTime: arrivalCityTime.toString(),
+                                                  crossAlignment: CrossAxisAlignment.end,
+                                                ),
+
+                                              ],
+                                            ),
+                                          ),
+                                          cardExpand == true ? Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-                                              Text(flightStatus.toString(),
-                                                  style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black))
+                                              SizedBox(width: w * 0.3),
+                                              TextButton(onPressed: () {  }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                              TextButton(onPressed: () {
+
+                                                modelMyFlights = ModelMyFlightsUpcoming(
+                                                  flightCode: flightCode,
+                                                  departureCityDate: departureCityDate,
+                                                  departureCity: departureCity,
+                                                  departureCityShortCode: departureCityShortName,
+                                                  departureCityTime: departureCityTime,
+                                                  arrivalCityDate: arrivalCityDate,
+                                                  arrivalCity: arrivalCity,
+                                                  arrivalCityShortCode: arrivalCityShortName,
+                                                  arrivalCityTime: arrivalCityTime,
+                                                  flightStatus: flightStatus,
+                                                );
+                                                dataBox!.add(modelMyFlights!);
+
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(content: Text('Flight Successfully Tracked'),
+                                                        duration: Duration(milliseconds: 1500)));
+
+                                              }, child: Text("TRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                                             ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(15),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-
-                                              flightDetails(
-                                                cityName: departureCity!,
-                                                cityShortCode: departureCityShortName!,
-                                                cityTime: departureCityTime.toString(),
-                                                crossAlignment: CrossAxisAlignment.start,
-                                              ),
-
-                                              Icon(Icons.flight_land_rounded, size: 30),
-
-                                              flightDetails(
-                                                cityName: arrivalCity!,
-                                                cityShortCode: arrivalCityShortName!,
-                                                cityTime: arrivalCityTime.toString(),
-                                                crossAlignment: CrossAxisAlignment.end,
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                          ) : Container()
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 )

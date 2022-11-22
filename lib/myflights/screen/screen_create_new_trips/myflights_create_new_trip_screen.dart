@@ -21,7 +21,8 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
   ModelMyFlightsCreateTrip? modelMyFlights;
   ModelMyFlightsCreateTrip? modelMyFlightsDummy;
 
-  String noOfFlights = '0 Flight';
+  int count = 0;
+  String noOfFlights = '0';
   String tripImage = "Image";
   List<bool> isChecked = List.generate(10, (index) => false);
 
@@ -67,6 +68,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                         arrivalCityShortCode: "",
                         arrivalCityTime: "",
                         arrivalCityDate: "",
+                        flightStatus: "",
                       ),
                     );
 
@@ -132,15 +134,15 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                 setState(() {
 
                                   isChecked[index] = checked!;
+                                  count = int.parse(noOfFlights);
+                                  count++;
 
                                   isChecked[index] == true
-
-
                                       ? modelMyFlights =
                                       ModelMyFlightsCreateTrip(
 
                                         tripName: widget.tripName,
-                                        noOfFlights: noOfFlights,
+                                        noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
                                           flightCode: currentTask!.flightCode,
@@ -152,6 +154,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           arrivalCityShortCode: currentTask.arrivalCityShortCode,
                                           arrivalCityTime: currentTask.arrivalCityTime,
                                           arrivalCityDate: currentTask.arrivalCityDate,
+                                          flightStatus: currentTask.flightStatus,
 
                                         ),
                                       )
@@ -159,7 +162,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                   modelMyFlightsDummy =
                                       ModelMyFlightsCreateTrip(
                                         tripName: widget.tripName,
-                                        noOfFlights: noOfFlights,
+                                        noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
                                           flightCode: "",
@@ -171,6 +174,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           arrivalCityShortCode: "",
                                           arrivalCityTime: "",
                                           arrivalCityDate: "",
+                                          flightStatus: '',
                                         ),
                                       );
                                   print(isChecked[index]);
@@ -200,7 +204,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                         Text(currentTask!.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
-                                        Text("Scheduled",
+                                        Text(currentTask.flightStatus,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white))
                                       ],

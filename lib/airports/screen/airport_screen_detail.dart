@@ -1,15 +1,20 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
+import 'package:flight_tracker/airports/model/model_airport_dep_arr.dart';
 import 'package:flight_tracker/airports/screen/airport_track_flight.dart';
+import 'package:flight_tracker/airports/services/services_airport_arrival.dart';
+import 'package:flight_tracker/airports/services/services_airport_departure.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AirportScreenDetail extends StatefulWidget {
-   AirportScreenDetail({Key? key,required this.airportName}) : super(key: key);
+   AirportScreenDetail({required this.airportName,required this.iataValue}) : super();
 
    String airportName;
+   String iataValue;
 
   @override
   State<AirportScreenDetail> createState() => _AirportScreenDetailState();
@@ -17,7 +22,21 @@ class AirportScreenDetail extends StatefulWidget {
 
 class _AirportScreenDetailState extends State<AirportScreenDetail> {
 
-  int index = 1;
+  Future<ModelAirportDepArr>? futureListDeparture;
+  Future<ModelAirportDepArr>? futureListArrival;
+
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      futureListDeparture = ServicesAirportsDeparture().GetAllPosts(widget.iataValue);
+      futureListArrival = ServicesAirportsArrival().GetAllPosts(widget.iataValue);
+    });
+  }
+
+
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -109,6 +128,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
               ),
               selectTabs(),
               index == 1
+              /// ARRIVAL
                   ? Column(
                       children: [
                         Container(
@@ -117,7 +137,8 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("TIME           "),
+                              Text("TIME"),
+                              SizedBox(width: w * 0.3),
                               Text("DESTINATION"),
                               Text("FLIGHT #"),
                             ],
@@ -125,35 +146,182 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                         ),
                         Container(
                           height: h * 0.7,
-                          child: ListView.builder(
-                            padding: EdgeInsets.all(10),
-                            itemCount: 20,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () async {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    return AirportTrackFlight();
-                                  }));
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 20,top: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("11:06 AM"),
-                                      Text("Dubai, DXB"),
-                                      Text("PK 247"),
-                                    ],
+                          child: FutureBuilder(
+                            future: futureListDeparture,
+                            builder: (context,snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data!.response!.isNotEmpty) {
+                                  return Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Flexible(
+                                          child: ListView.builder(
+                                            padding: EdgeInsets.all(5),
+                                            itemCount: snapshot.data!.response!.length,
+                                            itemBuilder: (context, index) {
+
+                                              String arrivalTime = snapshot.data!.response![index].arrTime  ?? "Unknown";
+                                              String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
+                                              String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                              String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
+
+                                              return
+                                                InkWell(
+                                                    onTap: () async {
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                        return AirportTrackFlight(flight_iata: flight_iata,);
+                                                      }));
+                                                    },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(bottom: 20,top: 20),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Text(arrivalTime),
+                                                        Text(arrivalDestination),
+                                                        Text(arrivalFlightNo),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: Text(
+                                      "error 1${snapshot.error}",
+                                    ),
+                                  );
+                                }
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text(
+                                    "error 2${snapshot.error}",
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 50),
+                                    FunctionProgressIndicator(),
+                                  ],
+                                );
+                              }
                             },
+
                           ),
                         ),
                       ],
                     )
-                  : Container(),
+              /// DEPARTURE
+                  : Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("TIME"),
+                        SizedBox(width: w * 0.3),
+                        Text("DESTINATION"),
+                        Text("FLIGHT #"),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: h * 0.7,
+                    child: FutureBuilder(
+                      future: futureListArrival,
+                      builder: (context,snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data!.response!.isNotEmpty) {
+                            return Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.all(5),
+                                      itemCount: snapshot.data!.response!.length,
+                                      itemBuilder: (context, index) {
+
+                                        String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
+                                        String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
+                                        String departureFlightNo = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
+                                        // String departureCity = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String departureCityDate = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String departureCityShortCode = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String departureCityTime = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String departureLat = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String departureLng = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalCity = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalCityShortCode = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalCityTime = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalCityDate = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalLat = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                        // String arrivalLng = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+
+                                        return
+                                          InkWell(
+                                            onTap: () async {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                return AirportTrackFlight(flight_iata: flight_iata,);
+                                              }));
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(bottom: 20,top: 20),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(departureTime),
+                                                  Text(departureDestination),
+                                                  Text(departureFlightNo),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                "error 1${snapshot.error}",
+                              ),
+                            );
+                          }
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "error 2${snapshot.error}",
+                            ),
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              SizedBox(height: 50),
+                              FunctionProgressIndicator(),
+                            ],
+                          );
+                        }
+                      },
+
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -192,14 +360,14 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
           ReusingWidgets().airlineTapBar(
               onTap: () {
                 setState(() {
-                  index = 2;
+                  index = 0;
                 });
               },
               context: context,
               text: "DEPARTURES",
-              textColor: index == 2 ? ColorsTheme.primaryColor : Colors.grey,
-              borderColor: index == 2 ? ColorsTheme.primaryColor : Colors.grey,
-              borderWidth: index == 2 ? 3 : 1),
+              textColor: index == 0 ? ColorsTheme.primaryColor : Colors.grey,
+              borderColor: index == 0 ? ColorsTheme.primaryColor : Colors.grey,
+              borderWidth: index == 0 ? 3 : 1),
           ReusingWidgets().airlineTapBar(
               onTap: () {
                 setState(() {

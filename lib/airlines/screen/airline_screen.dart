@@ -76,15 +76,17 @@ class _AirlineScreenState extends State<AirlineScreen> {
                                     String? airlineName = snapshot.data!.response![index].name ?? "Unknown";
                                     String? countryShortName = snapshot.data!.response![index].iataCode ?? "Unknown";
                                     String? airportImage;
+                                    String? iataValue = snapshot.data!.response![index].iataCode ?? "Unknown";
+
                                     return airlineName.toLowerCase().contains(searchAirlineController.text) ?
                                     InkWell(
                                         onTap: () async {
                                           Navigator.push(context, MaterialPageRoute(builder: (context){
-                                            return AirlineScreenDetails(airlineName: airlineName);
+                                            return AirlineScreenDetails(airlineName: airlineName,iataValue: iataValue,);
                                           }));
                                         },
                                         child: ListTile(
-                                          title: Text(airlineName,style: ThemeTexts.textStyleValueBlack,),
+                                          title: Text(airlineName,style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold),),
                                           subtitle: Text(countryShortName,style: ThemeTexts.textStyleValueBlack2),
                                           trailing: FlutterLogo(
                                             size: 40,

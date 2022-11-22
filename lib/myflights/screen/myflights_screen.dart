@@ -4,11 +4,13 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
-import 'package:flight_tracker/myflights/screen/myflights_create_new_trip_screen.dart';
-import 'package:flight_tracker/myflights/screen/myflights_open_my_trips.dart';
-import 'package:flight_tracker/myflights/screen/myflights_upcoming_flights.dart';
+import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
+import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_open_create_new_trips.dart';
+import 'package:flight_tracker/myflights/screen/screen_my_upcoming__flights/myflights_upcoming_flights.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+
+import 'screen_my_upcoming__flights/myflights_open_upcoming_flights.dart';
 
 class MyFlightsScreen extends StatefulWidget {
   const MyFlightsScreen({Key? key}) : super(key: key);
@@ -72,14 +74,14 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                   InkWell(
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                        return MyFlightsOpenMyTrips(
+                                        return MyFlightsOpenCreateNewTrips(
                                           noOfFlights: currentTask.noOfFlights,
                                           tripName: currentTask.tripName,
                                         );
                                       }));
                                     },
                                     onLongPress: () {
-                                      currentTask.delete();
+                                      deleteDialogue(currentTask: currentTask);
                                     },
                                     child: SizedBox(
                                       height: w * 0.4,
@@ -188,88 +190,110 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                 itemCount: box.values.length,
                                 itemBuilder: (context, index) {
                                   ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                  return Dismissible(
-                                    key: Key(UniqueKey().toString()),
-                                    background: Container(
-                                      margin: EdgeInsets.all(5),
-                                      padding: EdgeInsets.all(15),
-                                      color: Colors.red.shade800,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Icon(Icons.delete,color: Colors.white,),
-                                          Icon(Icons.delete,color: Colors.white,),
-                                        ],
-                                      ),
-                                    ),
-                                    onDismissed: (direction){
-                                      setState(() {
-                                        currentTask.delete();
-                                      });
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                  return InkWell(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return MyFlightsOpenUpComingFlights(
+                                          flightCode: currentTask.flightCode,
+                                          departureCityDate: currentTask.departureCityDate,
+                                          departureCity: currentTask.departureCity,
+                                          departureCityTime: currentTask.departureCityTime,
+                                          departureCityShortCode: currentTask.departureCityShortCode,
+                                          arrivalCityDate: currentTask.arrivalCityDate,
+                                          arrivalCity: currentTask.arrivalCity,
+                                          arrivalCityShortCode: currentTask.arrivalCityShortCode,
+                                          arrivalCityTime: currentTask.arrivalCityTime,
+                                          departureLat: currentTask.departureCityTime,
+                                          departureLng: currentTask.departureCityTime,
+                                          arrivalLat: currentTask.arrivalCityTime,
+                                          arrivalLng: currentTask.arrivalCityTime,
+                                          flightStatus: currentTask.flightStatus!,
+                                        );
+                                      }));
                                     },
-                                    child: Card(
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(15),
-                                            color: ColorsTheme.primaryColor,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                                Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
-                                              ],
+                                    child: Dismissible(
+                                      key: Key(UniqueKey().toString()),
+                                      background: Container(
+                                        margin: EdgeInsets.all(5),
+                                        padding: EdgeInsets.all(15),
+                                        color: Colors.red.shade800,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(Icons.delete,color: Colors.white,),
+                                            Icon(Icons.delete,color: Colors.white,),
+                                          ],
+                                        ),
+                                      ),
+                                      onDismissed: (direction){
+                                        setState(() {
+                                          currentTask.delete();
+                                        });
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                      },
+                                      child: Card(
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(15),
+                                              color: ColorsTheme.primaryColor,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                  Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            padding: EdgeInsets.all(15),
-                                            color: Colors.grey.shade100,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("🗓️ ${currentTask.departureCityDate}",
-                                                    style: ThemeTexts.textStyleTitle3
-                                                        .copyWith(
-                                                        color: Colors.black87)),
-                                                Text("🗓️ ${currentTask.arrivalCityDate}",
-                                                    style: ThemeTexts.textStyleTitle3
-                                                        .copyWith(
-                                                        color: Colors.black87)),
-                                              ],
+                                            Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.all(15),
+                                              color: Colors.grey.shade100,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("🗓️ ${currentTask.departureCityDate}",
+                                                      style: ThemeTexts.textStyleTitle3
+                                                          .copyWith(
+                                                          color: Colors.black87)),
+                                                  Text("🗓️ ${currentTask.arrivalCityDate}",
+                                                      style: ThemeTexts.textStyleTitle3
+                                                          .copyWith(
+                                                          color: Colors.black87)),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                flightDetails(
-                                                    cityName: currentTask.departureCity,
-                                                    cityShortCode: currentTask.departureCityShortCode,
-                                                    cityTime: currentTask.departureCityTime,
-                                                    crossAlignment:
-                                                    CrossAxisAlignment.start),
-                                                RotatedBox(
-                                                  quarterTurns: 1,
-                                                  child: Icon(
-                                                    Icons.flight,
-                                                    size: 50,
-                                                    color: Colors.grey,),
-                                                ),
-                                                flightDetails(
-                                                    cityName: currentTask.arrivalCity,
-                                                    cityShortCode: currentTask.arrivalCityShortCode,
-                                                    cityTime: currentTask.arrivalCityTime,
-                                                    crossAlignment:
-                                                    CrossAxisAlignment.end),
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                            Padding(
+                                              padding: EdgeInsets.all(15),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  flightDetails(
+                                                      cityName: currentTask.departureCity,
+                                                      cityShortCode: currentTask.departureCityShortCode,
+                                                      cityTime: currentTask.departureCityTime,
+                                                      crossAlignment:
+                                                      CrossAxisAlignment.start),
+                                                  RotatedBox(
+                                                    quarterTurns: 1,
+                                                    child: Icon(
+                                                      Icons.flight,
+                                                      size: 50,
+                                                      color: Colors.grey,),
+                                                  ),
+                                                  flightDetails(
+                                                      cityName: currentTask.arrivalCity,
+                                                      cityShortCode: currentTask.arrivalCityShortCode,
+                                                      cityTime: currentTask.arrivalCityTime,
+                                                      crossAlignment:
+                                                      CrossAxisAlignment.end),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
@@ -421,4 +445,27 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
       ],
     );
   }
+
+  Future<String?> deleteDialogue({required var currentTask}) => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to Delete this Trip?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    currentTask.delete();
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text('OK')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('CANCEL')),
+          ],
+        );
+      });
 }

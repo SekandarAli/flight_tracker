@@ -6,30 +6,24 @@ import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart'
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import '../model/myflights_upcoming_model.dart';
-
-class MyFlightsOpenMyTrips extends StatefulWidget {
-   MyFlightsOpenMyTrips({Key? key,required this.noOfFlights,required this.tripName}) : super(key: key);
+class MyFlightsOpenCreateNewTrips extends StatefulWidget {
+   MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName}) : super(key: key);
 
    String noOfFlights;
    String tripName;
 
   @override
-  State<MyFlightsOpenMyTrips> createState() => _MyFlightsOpenMyTripsState();
+  State<MyFlightsOpenCreateNewTrips> createState() => _MyFlightsOpenCreateNewTripsState();
 }
 
-class _MyFlightsOpenMyTripsState extends State<MyFlightsOpenMyTrips> {
+class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrips> {
 
-  int? length;
   ModelMyFlightsCreateTrip? modelMyFlightsCreateTrip;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    setState(() {
-      length = length;
-    });
+    setState(() {});
   }
 
   @override
@@ -93,7 +87,6 @@ class _MyFlightsOpenMyTripsState extends State<MyFlightsOpenMyTrips> {
                       children: [
                         Icon(Icons.flight),
                         SizedBox(width: 10,),
-                        // Text(length != null ? "${length!.toString()} Flights" :  " Flights"),
                         Text("Flights"),
                       ],
                     ),
@@ -107,7 +100,6 @@ class _MyFlightsOpenMyTripsState extends State<MyFlightsOpenMyTrips> {
                       builder: (context, box, _) {
 
                         final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-                        length =  box.values.length;
 
                         if (items.isEmpty) {
                           return Column(
@@ -175,7 +167,7 @@ class _MyFlightsOpenMyTripsState extends State<MyFlightsOpenMyTrips> {
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Text(currentTask.modelMyFlightsUpcoming!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                                    Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                    Text(currentTask.modelMyFlightsUpcoming!.flightStatus, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                                   ],
                                                 ),
                                               ),
@@ -212,7 +204,14 @@ class _MyFlightsOpenMyTripsState extends State<MyFlightsOpenMyTrips> {
                                                         cityTime: currentTask.modelMyFlightsUpcoming!.departureCityTime,
                                                         crossAlignment: CrossAxisAlignment.start),
 
-                                                    Icon(Icons.flight_land_rounded, size: 50),
+                                                    RotatedBox(
+                                                      quarterTurns: 1,
+                                                      child: Icon(
+                                                        Icons.flight,
+                                                        size: 50,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
 
                                                     flightDetails(
                                                         cityName: currentTask.modelMyFlightsUpcoming!.arrivalCity,

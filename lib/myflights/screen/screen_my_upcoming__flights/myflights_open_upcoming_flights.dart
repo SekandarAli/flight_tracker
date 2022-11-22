@@ -1,70 +1,65 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flight_tracker/airlines/model/model_airlines.dart';
-import 'package:flight_tracker/airports/model/model_airport_track_screen.dart';
-import 'package:flight_tracker/airports/services/services_airports_track_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/dummy/polygon_main.dart';
-import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 
-class AirportTrackFlight extends StatefulWidget {
-   AirportTrackFlight({super.key, this.flight_iata});
-   String? flight_iata;
+class MyFlightsOpenUpComingFlights extends StatefulWidget {
+   MyFlightsOpenUpComingFlights({
+    super.key,
+     required this.flightCode,
+     required this.departureCityDate,
+     required this.departureCity,
+     required this.departureCityTime,
+     required this.departureCityShortCode,
+     required this.arrivalCityDate,
+     required this.arrivalCity,
+     required this.arrivalCityShortCode,
+     required this.arrivalCityTime,
+     required this.departureLat,
+     required this.departureLng,
+     required this.arrivalLat,
+     required this.arrivalLng,
+     required this.flightStatus,
+  });
+
+  String flightCode;
+  String departureCityDate;
+  String departureCity;
+  String departureCityShortCode;
+  String departureCityTime;
+  String arrivalCity;
+  String arrivalCityShortCode;
+  String arrivalCityTime;
+  String arrivalCityDate;
+  String departureLat = "24.8607";
+  String departureLng = "67.0011";
+  String arrivalLat;
+  String arrivalLng;
+  String flightStatus;
 
   @override
-  State<AirportTrackFlight> createState() => _AirportTrackFlightState();
+  State<MyFlightsOpenUpComingFlights> createState() => _MyFlightsOpenUpComingFlightsState();
 }
 
-class _AirportTrackFlightState extends State<AirportTrackFlight> {
+class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlights> {
 
   bool trackFlight = true;
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
-  Future<ModelAirportTrackScreen>? futureList;
-
-  String flightCode = "PK 3309";
-  String departureCityDate = 'Nov 08, 2022';
-  String departureCity = "Islamabad";
-  String departureCityShortCode = "ISL";
-  String departureCityTime = '09:30 AM';
-  String arrivalCity = "Lahore";
-  String arrivalCityShortCode = "LHR";
-  String arrivalCityTime = "12:50 PM";
-  String arrivalCityDate = 'Nov 09, 2022';
-  String departureLat = "24.8607";
-  String departureLng = "67.0011";
-  String arrivalLat = "31.5204";
-  String arrivalLng = "74.3587";
-  String departureTerminal = "0";
-  String arrivalTerminal = "0";
-  String departureGate = "1";
-  String arrivalGate = "1";
-  String distance = "1234mi";
-  String duration = "3h 23min";
-  String flightTimeLeft = "---";
-  String baggage = "---";
-  String departureAirport = "---";
-  String arrivalAirport = "---";
-  String flightStatus = "---";
-
-
   @override
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
-    futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata!);
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       bottomNavigationBar: Container(
           alignment: Alignment.center,
@@ -79,21 +74,21 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
                         color: ColorsTheme.primaryColor,
                         fontWeight: FontWeight.normal)),
                 onPressed: () {
-                   setState(() {
+                  setState(() {
                     trackFlight = !trackFlight;
 
                     if (trackFlight == false) {
                       modelMyFlights = ModelMyFlightsUpcoming(
-                        flightCode: flightCode,
-                        departureCityDate: departureCityDate,
-                        departureCity: departureCity,
-                        departureCityShortCode: departureCityShortCode,
-                        departureCityTime: departureCityTime,
-                        arrivalCityDate: departureCityDate,
-                        arrivalCity: arrivalCity,
-                        arrivalCityShortCode: arrivalCityShortCode,
-                        arrivalCityTime: arrivalCityTime,
-                        flightStatus: flightStatus
+                        flightCode: widget.flightCode,
+                        departureCityDate: widget.departureCityDate,
+                        departureCity: widget.departureCity,
+                        departureCityShortCode: widget.departureCityShortCode,
+                        departureCityTime: widget.departureCityTime,
+                        arrivalCityDate: widget.departureCityDate,
+                        arrivalCity: widget.arrivalCity,
+                        arrivalCityShortCode: widget.arrivalCityShortCode,
+                        arrivalCityTime: widget.arrivalCityTime,
+                        flightStatus: widget.flightStatus
                       );
 
                       dataBox!.add(modelMyFlights!);
@@ -115,78 +110,27 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
               ),
             ],
           )),
-      body: FutureBuilder(
-        future: futureList,
-        builder: (context,snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data!.response != "") {
-              flightCode = snapshot.data!.response!.flightNumber ?? "---";
-              departureCity = snapshot.data!.response!.depCity ?? "---";
-              arrivalCity = snapshot.data!.response!.arrCity ?? "---";
-              departureCityShortCode = snapshot.data!.response!.depCountry ?? "---";
-              arrivalCityShortCode = snapshot.data!.response!.arrCountry ?? "---";
-              // departureCityTime = snapshot.data!.response!.arrCountry ?? "---";
-              // arrivalCityTime = snapshot.data!.response!.arrCountry ?? "---";
-              departureCityDate = snapshot.data!.response!.depTime ?? "---";
-              arrivalCityDate = snapshot.data!.response!.arrTime ?? "---";
-              // departureLat = snapshot.data!.response!.arrTime ?? "---";
-              // departureLng = snapshot.data!.response!.arrTime ?? "---";
-              // arrivalLat = snapshot.data!.response!.arrTime ?? "---";
-              // arrivalLng = snapshot.data!.response!.arrTime ?? "---";
-              departureTerminal = snapshot.data!.response!.depTerminal ?? "---";
-              arrivalTerminal = snapshot.data!.response!.arrTerminal ?? "---";
-              departureGate = snapshot.data!.response!.depGate ?? "---";
-              arrivalGate = snapshot.data!.response!.arrGate ?? "---";
-              distance = snapshot.data!.response!.updated.toString() ?? "---";
-              duration = snapshot.data!.response!.duration.toString() ?? "---";
-              flightTimeLeft = snapshot.data!.response!.flag ?? "---";
-              baggage = snapshot.data!.response!.arrBaggage ?? "---";
-              departureAirport = snapshot.data!.response!.depName ?? "---";
-              arrivalAirport = snapshot.data!.response!.arrName ?? "---";
-              flightStatus = snapshot.data!.response!.status ?? "---";
-
-              return Stack(
-                children: [
-                  CustomGoogleMaps(
-                    departureLng: double.parse(departureLng),
-                    departureLat: double.parse(departureLat),
-                    arrivalLat: double.parse(arrivalLat),
-                    arrivalLng: double.parse(arrivalLng),
-                  ),
-                  CustomMapsButton(),
-                  DraggableScrollableSheet(
-                    initialChildSize: 0.45,
-                    minChildSize: 0.15,
-                    snap: true,
-                    builder: (BuildContext context,
-                        ScrollController scrollController) {
-                      return SingleChildScrollView(
-                        controller: scrollController,
-                        child: CustomScrollViewContent(),
-                      );
-                    },
-                  ),
-                ],
+      body: Stack(
+        children: [
+          CustomGoogleMaps(
+            departureLat: double.parse(widget.departureLat),
+            departureLng:double.parse(widget.departureLng),
+            arrivalLat: double.parse(widget.arrivalLat),
+            arrivalLng: double.parse(widget.arrivalLng),
+          ),
+          CustomMapsButton(),
+          DraggableScrollableSheet(
+            initialChildSize: 0.45,
+            minChildSize: 0.15,
+            snap: true,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                child: CustomScrollViewContent(),
               );
-            }
-            else {
-              return Center(
-                child: Text(
-                  "error 1${snapshot.error}",
-                ),
-              );
-            }
-          }
-          else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                "error 2${snapshot.error}",
-              ),
-            );
-          } else {
-            return Center(child: FunctionProgressIndicator());
-          }
-        }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -235,17 +179,15 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
             SizedBox(height: 16),
             CustomFlightCountryNameRow(),
             SizedBox(height: 24),
-            CustomTerminalGate(),
-            SizedBox(height: 24),
             CustomDistanceDurationRow(),
-            SizedBox(height: 24),
-            CustomBaggageClaim(baggage: baggage),
             SizedBox(height: 24),
             CustomSeatAircraftInfo(context: context),
             SizedBox(height: 20),
-            CustomAirportDetails(context: context,airportName: departureAirport,depOrArr: "Departure Airport",time: departureCityDate),
+            CustomSeatAircraftInfo(context: context),
             SizedBox(height: 20),
-            CustomAirportDetails(context: context,airportName: arrivalAirport,depOrArr: "Arrival Airport",time: arrivalCityDate)
+            CustomAirportDetails(context: context),
+            SizedBox(height: 20),
+            CustomAirportDetails(context: context)
           ],
         ),
       ),
@@ -268,22 +210,21 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
         Container(
           padding: EdgeInsets.all(5),
           color: ColorsTheme.primaryColor,
-          child: Text(flightCode,
+          child: Text(widget.flightCode,
               style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
         ),
-        Text(flightStatus,
+        Text(widget.flightStatus,
             style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
       ],
     );
   }
 
   Widget CustomFlightCountryName({
-      required String cityName,
-      required String cityShortCode,
-      required String cityTime,
-      required String cityDate,
-      required CrossAxisAlignment crossAlignment
-  }) {
+    required String cityName,
+    required String cityShortCode,
+    required String cityTime,
+    required String cityDate,
+    required CrossAxisAlignment crossAlignment}) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAlignment,
@@ -298,7 +239,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
             style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
         Text("🗓️ $cityDate",
-            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey,fontSize: 8)),
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
       ],
     );
@@ -311,79 +252,30 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomFlightCountryName(
-              cityName: departureCity,
-              cityShortCode: departureCityShortCode,
-              cityTime: departureCityTime,
-              cityDate: departureCityDate,
+              cityName: widget.departureCity,
+              cityShortCode: widget.departureCityShortCode,
+              cityTime: widget.departureCityTime,
+              cityDate: widget.departureCityDate,
               crossAlignment: CrossAxisAlignment.start),
           Icon(Icons.flight_land_rounded, size: 50),
           CustomFlightCountryName(
-              cityName: arrivalCity,
-              cityShortCode: arrivalCityShortCode,
-              cityTime: arrivalCityTime,
-              cityDate: arrivalCityDate,
+              cityName: widget.arrivalCity,
+              cityShortCode: widget.arrivalCityShortCode,
+              cityTime: widget.arrivalCityTime,
+              cityDate: widget.arrivalCityDate,
               crossAlignment: CrossAxisAlignment.end),
         ],
       ),
     );
   }
 
-  Widget CustomTerminalGate() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              CustomTerminalgateRow(text: "Terminal",container: departureTerminal ),
-              SizedBox(width: 10),
-              CustomTerminalgateRow(text: "Gate",container: departureGate ),
-            ],
-          ),
-          Row(
-            children: [
-              CustomTerminalgateRow(text: "Terminal",container: arrivalTerminal ),
-              SizedBox(width: 10),
-              CustomTerminalgateRow(text: "Gate",container: arrivalGate ),
-            ],
-          ),
-
-        ],
-      ),
-    );
-  }
-
-  Widget CustomTerminalgateRow({
-    required String text,
-    required String container,
-}) {
+  Widget CustomDistanceDuration() {
     return Column(
       children: [
-        Text(text,
+        Text("Distance",
             style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18,vertical: 7),
-          color: Colors.grey,
-          child:  Text(container,
-              style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-        )
-      ],
-    );
-  }
-
-
-  Widget CustomDistanceDuration({
-    required String text,
-    required String detail,
-}) {
-    return Column(
-      children: [
-        Text(text,
-            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
-        SizedBox(height: 10),
-        Text(detail,
+        Text("977 mi",
             style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black)),
       ],
     );
@@ -391,49 +283,20 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
 
   Widget CustomDistanceDurationRow() {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomDistanceDuration(text: "Distance",detail: distance),
-          CustomDistanceDuration(text: "Duration",detail: duration),
-          CustomDistanceDuration(text: "Flag",detail: flightTimeLeft),
+          CustomDistanceDuration(),
+          CustomDistanceDuration(),
+          CustomDistanceDuration(),
         ],
-      ),
-    );
-  }
-
-  Widget CustomBaggageClaim(
-  {
-  required String baggage,
-}
-      ) {
-    return Container(
-      // height: double.infinity / 2,
-      color: ColorsTheme.primaryColor,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Baggage Claim",
-                style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 40,vertical: 7),
-              color: Colors.white,
-              child:  Text(baggage,
-                  style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-            )
-          ],
-        ),
       ),
     );
   }
 
   Widget CustomSeatAircraftInfo({required BuildContext context}) {
     return Card(
-      elevation: 10,
       color: Colors.white,
       child: Column(
         children: [
@@ -441,7 +304,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
               height: MediaQuery.of(context).size.height * 0.25,
               width: MediaQuery.of(context).size.width,
               child:
-                  Image.asset("assets/images/airline.png", fit: BoxFit.cover)),
+              Image.asset("assets/images/airline.png", fit: BoxFit.cover)),
           Divider(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
@@ -478,16 +341,10 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
     );
   }
 
-  Widget CustomAirportDetails({
-    required BuildContext context,
-    required String airportName,
-    required String depOrArr,
-    required String time,
-  }) {
+  Widget CustomAirportDetails({required BuildContext context}) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Card(
-      elevation: 10,
       child: Column(
         children: [
           SizedBox(
@@ -503,7 +360,7 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(airportName,
+                Text("Airport Name",
                     style: ThemeTexts.textStyleTitle2
                         .copyWith(color: Colors.black)),
                 SizedBox(height: 5),
@@ -526,10 +383,10 @@ class _AirportTrackFlightState extends State<AirportTrackFlight> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(depOrArr,
+                          Text("Departure Airport",
                               style: ThemeTexts.textStyleTitle2
                                   .copyWith(color: Colors.grey)),
-                          Text("Local Time: $time",
+                          Text("Local Time: Wed 02:56 PM",
                               style: ThemeTexts.textStyleTitle3
                                   .copyWith(color: Colors.grey)),
                         ],

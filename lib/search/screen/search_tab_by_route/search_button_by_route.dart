@@ -64,12 +64,12 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                             itemCount: snapshot.data!.response!.length,
                             itemBuilder: (context, index) {
 
-                              String flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
-                              var flightStatus = snapshot.data!.response![index].status ?? "Unknown";
-                              String departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
-                              String arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
-                              String departureCityShortName = snapshot.data!.response![index].depIcao ?? "Unknown";
-                              String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
+                              String flightCode = snapshot.data!.response![index].flightNumber ?? "---";
+                              String flightStatus = snapshot.data!.response![index].status.toString() ?? "Unknown";
+                              String departureCity = snapshot.data!.response![index].depIata ?? "---";
+                              String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
+                              String departureCityShortName = snapshot.data!.response![index].depIcao ?? "---";
+                              String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "---";
                               String departureCityTime = snapshot.data!.response![index].lat.toString() ?? "Unknown";
                               String arrivalCityTime = snapshot.data!.response![index].lng.toString() ?? "Unknown";
                               String departureCityDate = 'Nov 08, 2022';
@@ -153,6 +153,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                   arrivalCity: arrivalCity,
                                                   arrivalCityShortCode: arrivalCityShortName,
                                                   arrivalCityTime: arrivalCityTime,
+                                                  flightStatus: flightStatus,
                                                 );
                                                 dataBox!.add(modelMyFlights!);
 

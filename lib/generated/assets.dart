@@ -4,7 +4,9 @@ class Assets {
 
   static const String fontsMontserratRegular = 'assets/fonts/MontserratRegular.ttf';
   static const String fontsOpenSansRegular = 'assets/fonts/OpenSansRegular.ttf';
+  static const String imagesAeroplane = 'assets/images/aeroplane.png';
   static const String imagesAirline = 'assets/images/airline.png';
   static const String imagesAirport = 'assets/images/airport.jpg';
+  static const String imagesFlight = 'assets/images/flight.jpg';
 
 }

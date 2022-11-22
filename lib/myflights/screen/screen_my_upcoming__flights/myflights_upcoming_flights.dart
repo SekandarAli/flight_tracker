@@ -171,7 +171,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                            Text("Scheduled", style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                            Text(currentTask.flightStatus, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                           ],
                                         ),
                                       ),
@@ -315,7 +315,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
                                         Text(currentTask!.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
-                                        Text("Scheduled",
+                                        Text(currentTask.flightStatus,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white))
                                       ],
@@ -419,7 +419,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Are you sure to delete all the items?'),
+          title: Text('Are you sure to you want to Delete all the Items?'),
           actions: [
             TextButton(
                 onPressed: () {
