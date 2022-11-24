@@ -7,14 +7,14 @@ import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class MyFlightsUpcomingScreen extends StatefulWidget {
-  const MyFlightsUpcomingScreen({Key? key}) : super(key: key);
+class MyFlightsUpcomingShowAllScreen extends StatefulWidget {
+  const MyFlightsUpcomingShowAllScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyFlightsUpcomingScreen> createState() => _MyFlightsUpcomingScreenState();
+  State<MyFlightsUpcomingShowAllScreen> createState() => _MyFlightsUpcomingShowAllScreenState();
 }
 
-class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
+class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAllScreen> {
 
   Box<ModelMyFlightsCreateTrip>? dataBox;
   Box<ModelMyFlightsUpcoming>? dataBoxUpcoming;
@@ -248,6 +248,9 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
         builder: (context, box, _) {
           final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
+          // var itemsss = box.values.where((element) => element.created < twoMonthAgo).toList();
+
+
           if (items.isEmpty) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -424,6 +427,7 @@ class _MyFlightsUpcomingScreenState extends State<MyFlightsUpcomingScreen> {
             TextButton(
                 onPressed: () {
                   setState(() {
+                    // dataBoxUpcoming!.delete();
                     dataBoxUpcoming!.clear();
                     isEdit =! isEdit;
                     Navigator.of(context).pop();

@@ -8,5 +8,6 @@ class Assets {
   static const String imagesAirline = 'assets/images/airline.png';
   static const String imagesAirport = 'assets/images/airport.jpg';
   static const String imagesFlight = 'assets/images/flight.jpg';
+  static const String jsonsServicesAirport = 'assets/jsons/services_airport.json';
 
 }

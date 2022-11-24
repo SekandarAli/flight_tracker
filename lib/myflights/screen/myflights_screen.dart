@@ -2,11 +2,12 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/myflights/model/modelnew.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_open_create_new_trips.dart';
-import 'package:flight_tracker/myflights/screen/screen_my_upcoming__flights/myflights_upcoming_flights.dart';
+import 'package:flight_tracker/myflights/screen/screen_my_upcoming__flights/myflights_upcoming_show_all.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -56,10 +57,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                     height: w * 0.37,
                     width: w * 0.58,
                     child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
+                    // child: ValueListenableBuilder<Box<ModelNew>>(
                       valueListenable:
                       Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
+                      // Hive.box<ModelNew>("modelNew").listenable(),
                       builder: (context, box, _) {
                         final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+                        // final items = box.values.toList().cast<ModelNew>();
 
                         if (items.isEmpty) {
                           return Container();
@@ -69,6 +73,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             itemCount: box.values.length,
                             itemBuilder: (context, index) {
                               ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+                              // ModelNew? currentTask = box.getAt(index);
                               return Row(
                                 children: [
                                   InkWell(
@@ -76,7 +81,10 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                                         return MyFlightsOpenCreateNewTrips(
                                           noOfFlights: currentTask.noOfFlights,
+                                          // noOfFlights:  "null",
                                           tripName: currentTask.tripName,
+                                          // tripName:  "null",
+                                          // task: currentTask,
                                         );
                                       }));
                                     },
@@ -100,6 +108,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             SizedBox(height: 10),
                                             Text(
                                               currentTask!.tripName,
+                                              // "null",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600,
@@ -108,6 +117,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             SizedBox(height: 5),
                                             Text(
                                               currentTask.noOfFlights,
+                                               // "null",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.grey,
                                                   letterSpacing: 0),
@@ -141,7 +151,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                   myUpComingFlightsText(text: "SHOW ALL",color: ColorsTheme.primaryColor,
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return MyFlightsUpcomingScreen();
+                        return MyFlightsUpcomingShowAllScreen();
                       }));
                     },),
                 ],

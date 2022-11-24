@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
+import 'package:flight_tracker/myflights/model/modelnew.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
@@ -18,9 +19,11 @@ void main() async{
   Hive.registerAdapter<ModelMyFlightsUpcoming>(ModelMyFlightsUpcomingAdapter());
   Hive.registerAdapter<ModelMyFlightsCreateTrip>(ModelMyFlightsCreateTripAdapter());
   Hive.registerAdapter<ModelSearch>(ModelSearchAdapter());
+  // Hive.registerAdapter<ModelNew>(ModelNewAdapter());
   await Hive.openBox<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   await Hive.openBox<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   await Hive.openBox<ModelSearch>("modelSearch");
+  // await Hive.openBox<ModelNew>("modelNew");
 
   runApp(MyApp());
 }

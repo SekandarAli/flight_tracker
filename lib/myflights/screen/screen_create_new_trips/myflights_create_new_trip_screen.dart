@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/myflights/model/modelnew.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
@@ -21,15 +22,29 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
   ModelMyFlightsCreateTrip? modelMyFlights;
   ModelMyFlightsCreateTrip? modelMyFlightsDummy;
 
+  // ModelNew? newTask;
+
+  List<ModelMyFlightsUpcoming> selectedItems = [];
+  List<ModelMyFlightsUpcoming> getSelectedItems() => selectedItems;
+
   int count = 0;
   String noOfFlights = '0';
   String tripImage = "Image";
   List<bool> isChecked = List.generate(10, (index) => false);
 
+
+  var finalItemsList = [];
+
+  ModelMyFlightsCreateTrip? modelMyFlightsCreateTrip;
+
+  // Box<ModelNew>? taskBox;
+
   @override
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
+    // taskBox = Hive.box<ModelNew>('modelNew');
+
   }
 
   @override
@@ -53,24 +68,32 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
           IconButton(
               onPressed: () async {
 
-                modelMyFlightsDummy =
-                    ModelMyFlightsCreateTrip(
-                      tripName: widget.tripName,
-                      noOfFlights: noOfFlights,
-                      tripImage: tripImage,
-                      modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
-                        flightCode: "",
-                        departureCity: "",
-                        departureCityDate: "",
-                        departureCityShortCode: "",
-                        departureCityTime: "",
-                        arrivalCity: "",
-                        arrivalCityShortCode: "",
-                        arrivalCityTime: "",
-                        arrivalCityDate: "",
-                        flightStatus: "",
-                      ),
-                    );
+
+                                                                  /// ///
+
+                                         ///////////////////////////////////////////////////////
+
+                                                                  /// ///
+
+                modelMyFlightsDummy = ModelMyFlightsCreateTrip(
+                  tripName: widget.tripName,
+                  noOfFlights: noOfFlights,
+                  tripImage: tripImage,
+                  modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
+                    flightCode: "",
+                    departureCity: "",
+                    departureCityDate: "",
+                    departureCityShortCode: "",
+                    departureCityTime: "",
+                    arrivalCity: "",
+                    arrivalCityShortCode: "",
+                    arrivalCityTime: "",
+                    arrivalCityDate: "",
+                    flightStatus: "",
+                  ),
+                );
+
+
 
                 modelMyFlights == null
                     ? dataBox!.add(modelMyFlightsDummy!)
@@ -78,7 +101,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
 
                 Navigator.pop(context);
                 Navigator.pop(context);
-              },
+                },
               icon: Icon(
                 Icons.check,
                 color: Colors.grey.shade600,
@@ -127,6 +150,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                     return InkWell(
 
                       child: Card(
+                        key: ValueKey(currentTask!.key),
                         child: Row(
                           children: [
                             Checkbox(
@@ -134,9 +158,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                 setState(() {
 
                                   isChecked[index] = checked!;
-                                  count = int.parse(noOfFlights);
-                                  count++;
-
                                   isChecked[index] == true
                                       ? modelMyFlights =
                                       ModelMyFlightsCreateTrip(
@@ -145,7 +166,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                         noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming: ModelMyFlightsUpcoming(
-                                          flightCode: currentTask!.flightCode,
+                                          flightCode: currentTask.flightCode,
                                           departureCity: currentTask.departureCity,
                                           departureCityDate: currentTask.departureCityDate,
                                           departureCityShortCode: currentTask.departureCityShortCode,
@@ -183,6 +204,43 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                               },
                               value: isChecked[index],
                             ),
+                            // IconButton(onPressed: (){
+                            //   setState(() {
+                            //     currentTask.isSelected =! currentTask.isSelected!;
+                            //     if (currentTask.isSelected == true) {
+                            //       selectedItems.add(
+                            //         ModelMyFlightsUpcoming(
+                            //               flightCode: currentTask.flightCode,
+                            //               departureCity: currentTask.departureCity,
+                            //               departureCityDate: currentTask.departureCityDate,
+                            //               departureCityShortCode: currentTask.departureCityShortCode,
+                            //               departureCityTime: currentTask.departureCityTime,
+                            //               arrivalCity: currentTask.arrivalCity,
+                            //               arrivalCityShortCode: currentTask.arrivalCityShortCode,
+                            //               arrivalCityTime: currentTask.arrivalCityTime,
+                            //               arrivalCityDate: currentTask.arrivalCityDate,
+                            //               flightStatus: currentTask.flightStatus,
+                            //
+                            //             ),
+                            //       );
+                            //       print(selectedItems.length);
+                            //       print(selectedItems.map((e) => e.flightCode));
+                            //     }
+                            //     else if (currentTask.isSelected == false) {
+                            //       selectedItems.removeWhere((element) =>
+                            //       element.flightCode == currentTask.flightCode);
+                            //       print(selectedItems.length);
+                            //       print(selectedItems.map((e) => e.flightCode));
+                            //     }
+                            //     else{
+                            //       getSelectedItems();
+                            //     }
+                            //   });
+                            // },
+                            //     icon: currentTask.isSelected! ?
+                            //     Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
+                            //     Icon(Icons.check_box_outline_blank)
+                            // ),
                             Spacer(),
                             SizedBox(
                               width: w * 0.84,
@@ -201,7 +259,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(currentTask!.flightCode,
+                                        Text(currentTask.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
                                         Text(currentTask.flightStatus!,

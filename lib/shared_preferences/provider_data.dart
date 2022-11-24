@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderData with ChangeNotifier {
@@ -65,4 +66,27 @@ class ProviderData with ChangeNotifier {
   //   return _totalPrice;
   // }
 
+}
+
+
+class Preferences {
+  static const _preferencesBox = '_preferencesBox';
+  static const _counterKey = '_counterKey';
+  final Box<dynamic> _box;
+
+  Preferences._(this._box);
+
+  static Future<Preferences> getInstance() async {
+    final box = await Hive.openBox<dynamic>(_preferencesBox);
+    return Preferences._(box);
+  }
+
+  int getCounter() => _getValue(_counterKey, defaultValue: 0);
+
+  Future<void> setCounter(int counter) => _setValue(_counterKey, counter);
+
+  T _getValue<T>(dynamic key, {required T defaultValue}) =>
+      _box.get(key, defaultValue: defaultValue) as T;
+
+  Future<void> _setValue<T>(dynamic key, T value) => _box.put(key, value);
 }

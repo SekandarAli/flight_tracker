@@ -36,6 +36,9 @@ class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(9)
   String? flightStatus;
 
+  @HiveField(10, defaultValue: false)
+  bool? isSelected;
+
   ModelMyFlightsUpcoming({
       required this.flightCode,
       required this.departureCityDate,
@@ -47,5 +50,6 @@ class ModelMyFlightsUpcoming extends HiveObject {
       required this.arrivalCityTime,
       required this.arrivalCityDate,
        this.flightStatus,
+    this.isSelected
   });
 }

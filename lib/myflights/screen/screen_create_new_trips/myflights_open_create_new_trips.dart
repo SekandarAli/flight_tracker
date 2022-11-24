@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class MyFlightsOpenCreateNewTrips extends StatefulWidget {
-   MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName}) : super(key: key);
+  MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName}) : super(key: key);
 
-   String noOfFlights;
-   String tripName;
+  String noOfFlights;
+  String tripName;
 
   @override
   State<MyFlightsOpenCreateNewTrips> createState() => _MyFlightsOpenCreateNewTripsState();

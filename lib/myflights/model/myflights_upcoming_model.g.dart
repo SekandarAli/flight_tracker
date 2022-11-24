@@ -28,13 +28,14 @@ class ModelMyFlightsUpcomingAdapter
       arrivalCityTime: fields[7] as String,
       arrivalCityDate: fields[8] as String,
       flightStatus: fields[9] as String?,
+      isSelected: fields[10] == null ? false : fields[10] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelMyFlightsUpcoming obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.flightCode)
       ..writeByte(1)
@@ -54,7 +55,9 @@ class ModelMyFlightsUpcomingAdapter
       ..writeByte(8)
       ..write(obj.arrivalCityDate)
       ..writeByte(9)
-      ..write(obj.flightStatus);
+      ..write(obj.flightStatus)
+      ..writeByte(10)
+      ..write(obj.isSelected);
   }
 
   @override

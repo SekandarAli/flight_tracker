@@ -161,14 +161,15 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                             itemCount: snapshot.data!.response!.length,
                                             itemBuilder: (context, index) {
 
-                                              String arrivalTime = snapshot.data!.response![index].arrTime  ?? "Unknown";
-                                              String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
-                                              String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                              String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
+                                              String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                              String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
+                                              String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
+                                              String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
 
                                               return
                                                 InkWell(
                                                     onTap: () async {
+                                                      print("airportscreem $flight_iata");
                                                       Navigator.push(context, MaterialPageRoute(builder: (context){
                                                         return AirportTrackFlight(flight_iata: flight_iata,);
                                                       }));
