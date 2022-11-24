@@ -248,9 +248,6 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
         builder: (context, box, _) {
           final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
-          // var itemsss = box.values.where((element) => element.created < twoMonthAgo).toList();
-
-
           if (items.isEmpty) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,

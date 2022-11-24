@@ -166,6 +166,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                   builder: (context, box, _) {
                     final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
+
                     if (items.isEmpty) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -204,20 +205,11 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                                         return MyFlightsOpenUpComingFlights(
-                                          flightCode: currentTask.flightCode,
-                                          departureCityDate: currentTask.departureCityDate,
-                                          departureCity: currentTask.departureCity,
-                                          departureCityTime: currentTask.departureCityTime,
-                                          departureCityShortCode: currentTask.departureCityShortCode,
-                                          arrivalCityDate: currentTask.arrivalCityDate,
-                                          arrivalCity: currentTask.arrivalCity,
-                                          arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                                          arrivalCityTime: currentTask.arrivalCityTime,
-                                          departureLat: currentTask.departureCityTime,
-                                          departureLng: currentTask.departureCityTime,
-                                          arrivalLat: currentTask.arrivalCityTime,
-                                          arrivalLng: currentTask.arrivalCityTime,
-                                          flightStatus: currentTask.flightStatus!,
+                                          // departureLat: currentTask.departureCityTime,
+                                          // departureLng: currentTask.departureCityTime,
+                                          // arrivalLat: currentTask.arrivalCityTime,
+                                          // arrivalLng: currentTask.arrivalCityTime,
+                                          modelMyFlightsUpcoming: currentTask,
                                         );
                                       }));
                                     },
@@ -239,7 +231,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                         setState(() {
                                           currentTask.delete();
                                         });
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('Flight Removed Successfully'),
+                                                duration: Duration(milliseconds: 700)));
                                       },
                                       child: Card(
                                         child: Column(

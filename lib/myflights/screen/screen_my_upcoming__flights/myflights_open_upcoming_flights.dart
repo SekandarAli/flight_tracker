@@ -6,41 +6,12 @@ import 'package:flight_tracker/dummy/polygon_main.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-
+import '../../../app_theme/reusing_widgets.dart';
 
 class MyFlightsOpenUpComingFlights extends StatefulWidget {
-   MyFlightsOpenUpComingFlights({
-    super.key,
-     required this.flightCode,
-     required this.departureCityDate,
-     required this.departureCity,
-     required this.departureCityTime,
-     required this.departureCityShortCode,
-     required this.arrivalCityDate,
-     required this.arrivalCity,
-     required this.arrivalCityShortCode,
-     required this.arrivalCityTime,
-     required this.departureLat,
-     required this.departureLng,
-     required this.arrivalLat,
-     required this.arrivalLng,
-     required this.flightStatus,
-  });
+    MyFlightsOpenUpComingFlights({super.key, required this.modelMyFlightsUpcoming});
 
-  String flightCode;
-  String departureCityDate;
-  String departureCity;
-  String departureCityShortCode;
-  String departureCityTime;
-  String arrivalCity;
-  String arrivalCityShortCode;
-  String arrivalCityTime;
-  String arrivalCityDate;
-  String departureLat = "24.8607";
-  String departureLng = "67.0011";
-  String arrivalLat;
-  String arrivalLng;
-  String flightStatus;
+    ModelMyFlightsUpcoming modelMyFlightsUpcoming;
 
   @override
   State<MyFlightsOpenUpComingFlights> createState() => _MyFlightsOpenUpComingFlightsState();
@@ -69,36 +40,38 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
             children: [
               TextButton(
                 child: Text(
-                    trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+                    // trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+                    "TRACK FLIGHT",
                     style: ThemeTexts.textStyleTitle3.copyWith(
                         color: ColorsTheme.primaryColor,
                         fontWeight: FontWeight.normal)),
                 onPressed: () {
-                  setState(() {
-                    trackFlight = !trackFlight;
-
-                    if (trackFlight == false) {
-                      modelMyFlights = ModelMyFlightsUpcoming(
-                        flightCode: widget.flightCode,
-                        departureCityDate: widget.departureCityDate,
-                        departureCity: widget.departureCity,
-                        departureCityShortCode: widget.departureCityShortCode,
-                        departureCityTime: widget.departureCityTime,
-                        arrivalCityDate: widget.departureCityDate,
-                        arrivalCity: widget.arrivalCity,
-                        arrivalCityShortCode: widget.arrivalCityShortCode,
-                        arrivalCityTime: widget.arrivalCityTime,
-                        flightStatus: widget.flightStatus
-                      );
-
-                      dataBox!.add(modelMyFlights!);
-                      print(modelMyFlights!.arrivalCity);
-                    }
-
-                    else {
-                      modelMyFlights!.delete();
-                    }
-                  });
+                  ReusingWidgets().snackBar(context: context, text: 'Flight is Already Tracked');
+                  // setState(() {
+                  //   trackFlight = !trackFlight;
+                  //
+                  //   if (trackFlight == false) {
+                  //     modelMyFlights = ModelMyFlightsUpcoming(
+                  //       flightCode: widget.modelMyFlightsUpcoming.flightCode,
+                  //       departureCityDate: widget.modelMyFlightsUpcoming.departureCityDate,
+                  //       departureCity: widget.modelMyFlightsUpcoming.departureCity,
+                  //       departureCityShortCode: widget.modelMyFlightsUpcoming.departureCityShortCode,
+                  //       departureCityTime: widget.modelMyFlightsUpcoming.departureCityTime,
+                  //       arrivalCityDate: widget.modelMyFlightsUpcoming.departureCityDate,
+                  //       arrivalCity: widget.modelMyFlightsUpcoming.arrivalCity,
+                  //       arrivalCityShortCode: widget.modelMyFlightsUpcoming.arrivalCityShortCode,
+                  //       arrivalCityTime: widget.modelMyFlightsUpcoming.arrivalCityTime,
+                  //       flightStatus: widget.modelMyFlightsUpcoming.flightStatus
+                  //     );
+                  //
+                  //     dataBox!.add(modelMyFlights!);
+                  //     print(modelMyFlights!.arrivalCity);
+                  //   }
+                  //
+                  //   else {
+                  //     modelMyFlights!.delete();
+                  //   }
+                  // });
                 },
               ),
               TextButton(
@@ -113,10 +86,10 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
       body: Stack(
         children: [
           CustomGoogleMaps(
-            departureLat: double.parse(widget.departureLat),
-            departureLng:double.parse(widget.departureLng),
-            arrivalLat: double.parse(widget.arrivalLat),
-            arrivalLng: double.parse(widget.arrivalLng),
+            departureLat: double.parse(widget.modelMyFlightsUpcoming.departureLat!),
+            departureLng:double.parse(widget.modelMyFlightsUpcoming.departureLng!),
+            arrivalLat: double.parse(widget.modelMyFlightsUpcoming.arrivalLat!),
+            arrivalLng: double.parse(widget.modelMyFlightsUpcoming.arrivalLng!),
           ),
           CustomMapsButton(),
           DraggableScrollableSheet(
@@ -134,6 +107,7 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
       ),
     );
   }
+
 
   Widget CustomMapsButton() {
     return Padding(
@@ -179,15 +153,17 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
             SizedBox(height: 16),
             CustomFlightCountryNameRow(),
             SizedBox(height: 24),
+            CustomTerminalGate(),
+            SizedBox(height: 24),
             CustomDistanceDurationRow(),
+            SizedBox(height: 24),
+            CustomBaggageClaim(baggage: widget.modelMyFlightsUpcoming.baggage!),
             SizedBox(height: 24),
             CustomSeatAircraftInfo(context: context),
             SizedBox(height: 20),
-            CustomSeatAircraftInfo(context: context),
+            CustomAirportDetails(context: context,airportName: widget.modelMyFlightsUpcoming.departureAirport!,depOrArr: "Departure Airport",time: widget.modelMyFlightsUpcoming.departureCityDate),
             SizedBox(height: 20),
-            CustomAirportDetails(context: context),
-            SizedBox(height: 20),
-            CustomAirportDetails(context: context)
+            CustomAirportDetails(context: context,airportName: widget.modelMyFlightsUpcoming.arrivalAirport!,depOrArr: "Arrival Airport",time: widget.modelMyFlightsUpcoming.arrivalCityDate)
           ],
         ),
       ),
@@ -210,10 +186,10 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
         Container(
           padding: EdgeInsets.all(5),
           color: ColorsTheme.primaryColor,
-          child: Text(widget.flightCode,
+          child: Text(widget.modelMyFlightsUpcoming.flightCode,
               style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
         ),
-        Text(widget.flightStatus,
+        Text(widget.modelMyFlightsUpcoming.flightStatus!,
             style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
       ],
     );
@@ -224,7 +200,8 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
     required String cityShortCode,
     required String cityTime,
     required String cityDate,
-    required CrossAxisAlignment crossAlignment}) {
+    required CrossAxisAlignment crossAlignment
+  }) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAlignment,
@@ -239,7 +216,7 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
             style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
         Text("🗓️ $cityDate",
-            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey,fontSize: 8)),
         SizedBox(height: 10),
       ],
     );
@@ -252,30 +229,80 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomFlightCountryName(
-              cityName: widget.departureCity,
-              cityShortCode: widget.departureCityShortCode,
-              cityTime: widget.departureCityTime,
-              cityDate: widget.departureCityDate,
+              cityName: widget.modelMyFlightsUpcoming.departureCity,
+              cityShortCode: widget.modelMyFlightsUpcoming.departureCityShortCode,
+              cityTime: widget.modelMyFlightsUpcoming.departureLat!,
+              cityDate: widget.modelMyFlightsUpcoming.departureCityDate,
               crossAlignment: CrossAxisAlignment.start),
-          Icon(Icons.flight_land_rounded, size: 50),
+          RotatedBox(quarterTurns: 1,
+              child: Icon(Icons.flight, size: 40,color: Colors.grey,)),
           CustomFlightCountryName(
-              cityName: widget.arrivalCity,
-              cityShortCode: widget.arrivalCityShortCode,
-              cityTime: widget.arrivalCityTime,
-              cityDate: widget.arrivalCityDate,
+              cityName: widget.modelMyFlightsUpcoming.arrivalCity,
+              cityShortCode: widget.modelMyFlightsUpcoming.arrivalCityShortCode,
+              cityTime: widget.modelMyFlightsUpcoming.departureLng!,
+              cityDate: widget.modelMyFlightsUpcoming.arrivalCityDate,
               crossAlignment: CrossAxisAlignment.end),
         ],
       ),
     );
   }
 
-  Widget CustomDistanceDuration() {
+  Widget CustomTerminalGate() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CustomTerminalgateRow(text: "Terminal",container: widget.modelMyFlightsUpcoming.departureTerminal! ),
+              SizedBox(width: 10),
+              CustomTerminalgateRow(text: "Gate",container: widget.modelMyFlightsUpcoming.departureGate! ),
+            ],
+          ),
+          Row(
+            children: [
+              CustomTerminalgateRow(text: "Terminal",container: widget.modelMyFlightsUpcoming.arrivalTerminal! ),
+              SizedBox(width: 10),
+              CustomTerminalgateRow(text: "Gate",container: widget.modelMyFlightsUpcoming.arrivalGate! ),
+            ],
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  Widget CustomTerminalgateRow({
+    required String text,
+    required String container,
+  }) {
     return Column(
       children: [
-        Text("Distance",
+        Text(text,
             style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
-        Text("977 mi",
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18,vertical: 7),
+          color: Colors.grey,
+          child:  Text(container,
+              style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
+        )
+      ],
+    );
+  }
+
+
+  Widget CustomDistanceDuration({
+    required String text,
+    required String detail,
+  }) {
+    return Column(
+      children: [
+        Text(text,
+            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+        Text(detail,
             style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black)),
       ],
     );
@@ -283,20 +310,49 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
 
   Widget CustomDistanceDurationRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomDistanceDuration(),
-          CustomDistanceDuration(),
-          CustomDistanceDuration(),
+          CustomDistanceDuration(text: "Distance",detail: widget.modelMyFlightsUpcoming.distance!),
+          CustomDistanceDuration(text: "Duration",detail: widget.modelMyFlightsUpcoming.duration!),
+          CustomDistanceDuration(text: "Flag",detail: widget.modelMyFlightsUpcoming.flightTimeLeft!),
         ],
+      ),
+    );
+  }
+
+  Widget CustomBaggageClaim(
+      {
+        required String baggage,
+      }
+      ) {
+    return Container(
+      // height: double.infinity / 2,
+      color: ColorsTheme.primaryColor,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Baggage Claim",
+                style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 40,vertical: 7),
+              color: Colors.white,
+              child:  Text(baggage,
+                  style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget CustomSeatAircraftInfo({required BuildContext context}) {
     return Card(
+      elevation: 10,
       color: Colors.white,
       child: Column(
         children: [
@@ -341,10 +397,16 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
     );
   }
 
-  Widget CustomAirportDetails({required BuildContext context}) {
+  Widget CustomAirportDetails({
+    required BuildContext context,
+    required String airportName,
+    required String depOrArr,
+    required String time,
+  }) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Card(
+      elevation: 10,
       child: Column(
         children: [
           SizedBox(
@@ -360,7 +422,7 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Airport Name",
+                Text(airportName,
                     style: ThemeTexts.textStyleTitle2
                         .copyWith(color: Colors.black)),
                 SizedBox(height: 5),
@@ -383,10 +445,10 @@ class _MyFlightsOpenUpComingFlightsState extends State<MyFlightsOpenUpComingFlig
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Departure Airport",
+                          Text(depOrArr,
                               style: ThemeTexts.textStyleTitle2
                                   .copyWith(color: Colors.grey)),
-                          Text("Local Time: Wed 02:56 PM",
+                          Text("Local Time: $time",
                               style: ThemeTexts.textStyleTitle3
                                   .copyWith(color: Colors.grey)),
                         ],

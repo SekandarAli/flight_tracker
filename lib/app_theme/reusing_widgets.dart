@@ -278,6 +278,7 @@ class ReusingWidgets {
   static Widget searchButton({
     required Function() onPress,
     required BuildContext context,
+    required String text,
   }) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -300,7 +301,7 @@ class ReusingWidgets {
               fontWeight: FontWeight.normal),
         ),
         child: Text(
-          "SEARCH",
+          text,
           style: ThemeTexts.textStyleTitle2,
         ),
       ),
@@ -386,6 +387,16 @@ class ReusingWidgets {
               style: ThemeTexts.textStyleTitle3.copyWith(color: textColor,fontWeight: FontWeight.w500)
           ),
         ));
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar(
+      {
+        required BuildContext context,
+        required String text,
+      }){
+    return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(text),
+            duration: Duration(milliseconds: 1500)));
   }
 
 

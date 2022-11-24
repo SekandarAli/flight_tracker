@@ -145,7 +145,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       }
                     });
                   },
-                  context: context),
+                  context: context, text: 'SEARCH'),
             ],
           ),
         ),

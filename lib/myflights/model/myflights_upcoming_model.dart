@@ -34,9 +34,51 @@ class ModelMyFlightsUpcoming extends HiveObject {
   String arrivalCityDate;
 
   @HiveField(9)
+  String? departureLat;
+
+  @HiveField(10)
+  String? departureLng;
+
+  @HiveField(11)
+  String? arrivalLat;
+
+  @HiveField(12)
+  String? arrivalLng;
+
+  @HiveField(13)
+  String? departureTerminal;
+
+  @HiveField(14)
+  String? arrivalTerminal;
+
+  @HiveField(15)
+  String? departureGate;
+
+  @HiveField(16)
+  String? arrivalGate;
+
+  @HiveField(17)
+  String? distance;
+
+  @HiveField(18)
+  String? duration;
+
+  @HiveField(19)
+  String? flightTimeLeft;
+
+  @HiveField(20)
+  String? baggage;
+
+  @HiveField(21)
+  String? departureAirport;
+
+  @HiveField(22)
+  String? arrivalAirport;
+
+  @HiveField(23)
   String? flightStatus;
 
-  @HiveField(10, defaultValue: false)
+  @HiveField(24, defaultValue: false)
   bool? isSelected;
 
   ModelMyFlightsUpcoming({
@@ -49,7 +91,21 @@ class ModelMyFlightsUpcoming extends HiveObject {
       required this.arrivalCityShortCode,
       required this.arrivalCityTime,
       required this.arrivalCityDate,
-       this.flightStatus,
-    this.isSelected
+      this.departureLat,
+      this.departureLng,
+      this.arrivalLat,
+      this.arrivalLng,
+      this.departureTerminal,
+      this.arrivalTerminal,
+      this.departureGate,
+      this.arrivalGate,
+      this.distance,
+      this.duration,
+      this.flightTimeLeft,
+      this.baggage,
+      this.departureAirport,
+      this.arrivalAirport,
+      this.flightStatus,
+      this.isSelected
   });
 }

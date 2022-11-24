@@ -76,7 +76,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                                     String? airlineName = snapshot.data!.response![index].name ?? "Unknown";
                                     String? countryShortName = snapshot.data!.response![index].iataCode ?? "Unknown";
                                     String? airportImage;
-                                    String? iataValue = snapshot.data!.response![index].iataCode ?? "Unknown";
+                                    String? iataValue = snapshot.data!.response![index].icaoCode ?? "Unknown";
 
                                     return airlineName.toLowerCase().contains(searchAirlineController.text) ?
                                     InkWell(

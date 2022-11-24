@@ -1,4 +1,4 @@
-import 'package:flight_tracker/airports/model/model_airport_track_screen.dart';
+import 'package:flight_tracker/flight_detail/model/model_airport_track_screen.dart';
 import 'package:http/http.dart' as http;
 import '../../api_key/api_key.dart';
 

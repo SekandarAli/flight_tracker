@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flight_tracker/airports/model/model_airport_dep_arr.dart';
-import 'package:flight_tracker/airports/screen/airport_track_flight.dart';
 import 'package:flight_tracker/airports/services/services_airport_arrival.dart';
 import 'package:flight_tracker/airports/services/services_airport_departure.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -9,6 +8,8 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
+
+import '../../flight_detail/screen/flight_detail_airport_airline.dart';
 
 class AirportScreenDetail extends StatefulWidget {
    AirportScreenDetail({required this.airportName,required this.iataValue}) : super();
@@ -171,7 +172,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                                     onTap: () async {
                                                       print("airportscreem $flight_iata");
                                                       Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                        return AirportTrackFlight(flight_iata: flight_iata,);
+                                                        return FlightDetailAirportAirline(flight_iata: flight_iata,);
                                                       }));
                                                     },
                                                   child: Padding(
@@ -274,7 +275,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                           InkWell(
                                             onTap: () async {
                                               Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                return AirportTrackFlight(flight_iata: flight_iata,);
+                                                return FlightDetailAirportAirline(flight_iata: flight_iata,);
                                               }));
                                             },
                                             child: Padding(

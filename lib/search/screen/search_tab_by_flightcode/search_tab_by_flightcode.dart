@@ -94,7 +94,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                   // );
                   // dataBox!.add(modelMyFlights!);
 
-                }, context: context),
+                }, context: context,
+                    text: 'SEARCH'),
 
               ],
             ),
