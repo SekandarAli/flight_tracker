@@ -40,7 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   GestureDetector(
                     onTap: () async{
 
-                      var dialogueText = await openDialogue();
+                      var dialogueText = await ReusingWidgets().dialogueBoxSimple(
+                          context: context,
+                          titleText: "Enter UserName",
+                          hintText: "Enter Your Name",
+                          textEditingController: nameController);
                       if (dialogueText != null) {
                         setState(() {
                           editName = nameController.text.toString();
@@ -130,51 +134,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-  Future<String?> openDialogue() => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Username'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-            SizedBox(
-            width: MediaQuery.of(context).size.width/2,
-            child: TextFormField(
-              controller: nameController,
-              maxLength: 10,
-              keyboardType: TextInputType.text,
-              style: TextStyle(fontSize: 12),
-              decoration: InputDecoration(
-                counterText: "",
-                hintText: "Enter Your Name",
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 3,
-                    color: Colors.black,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 3,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          )],
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(onPressed: () {
-                  Navigator.of(context).pop(nameController.text.toString());
-                },
-                    child: Text('DONE')),
-              ],
-            ),
-          ],
-        );
-      });
+
 }

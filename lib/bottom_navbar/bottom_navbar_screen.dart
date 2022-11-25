@@ -4,6 +4,7 @@ import 'package:flight_tracker/ads/ad_mobs_implement.dart';
 import 'package:flight_tracker/airlines/screen/airline_screen.dart';
 import 'package:flight_tracker/airports/screen/airports_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flight_tracker/search/screen/search_tab/search_tab_screen.dart';
 import 'package:flight_tracker/settings/screen/settings_screen.dart';
@@ -96,10 +97,29 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
 
-          isBannerAdLoaded ? SizedBox(
-            width: _bannerAd.size.width.toDouble() * 0.7,
-            height: _bannerAd.size.height.toDouble() * 0.7,
-            child: AdWidget(ad: _bannerAd),
+          isBannerAdLoaded ? Stack(
+            alignment: AlignmentDirectional.topStart,
+            children: [
+              Container(width: _bannerAd.size.width.toDouble(),
+                height: _bannerAd.size.height.toDouble() * 0.7,
+                color: Colors.white,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      onPressed: () {
+                        ReusingWidgets().snackBar(context: context, text: "Go Premium");
+                      },
+                      icon: Icon(Icons.clear,color: ColorsTheme.primaryColor,),
+                    ),
+                ),
+              ),
+              SizedBox(
+                width: _bannerAd.size.width.toDouble() * 0.65,
+                height: _bannerAd.size.height.toDouble() * 0.7,
+                child: AdWidget(ad: _bannerAd),
+              ),
+
+            ],
           ) : SizedBox(),
 
           BottomNavigationBar(

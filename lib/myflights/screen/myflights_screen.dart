@@ -23,6 +23,9 @@ class MyFlightsScreen extends StatefulWidget {
 class _MyFlightsScreenState extends State<MyFlightsScreen> {
   TextEditingController createTripController = TextEditingController();
 
+  TextEditingController? editingController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -42,7 +45,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
           child: Column(
             children: [
 
-              /// CREATE NEW TRIP
+              /// CREATE NEW TRIP STARTS
 
               myUpComingFlightsText(text: "My Trips", icon: Icons.kitchen),
               Row(
@@ -76,14 +79,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                               // ModelNew? currentTask = box.getAt(index);
                               return Row(
                                 children: [
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: (){
+                                      print(currentTask.tripName);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                                         return MyFlightsOpenCreateNewTrips(
                                           noOfFlights: currentTask.noOfFlights,
-                                          // noOfFlights:  "null",
                                           tripName: currentTask.tripName,
-                                          // tripName:  "null",
                                           currentTask: currentTask,
                                         );
                                       }));
@@ -137,9 +139,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                 ],
               ),
 
-              /// CREATE NEW TRIP
+              /// CREATE NEW TRIP END
 
-              /// My Upcoming Flights
+              /// My Upcoming Flights Starts
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,10 +204,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                                         return MyFlightsOpenUpComingFlights(
-                                          // departureLat: currentTask.departureCityTime,
-                                          // departureLng: currentTask.departureCityTime,
-                                          // arrivalLat: currentTask.arrivalCityTime,
-                                          // arrivalLng: currentTask.arrivalCityTime,
                                           modelMyFlightsUpcoming: currentTask,
                                         );
                                       }));
@@ -447,5 +445,59 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
     );
   }
 
+  Future<String?> openDialogueNew({required var tripName}) => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Trip Name'),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width/2,
+                child: TextFormField(
+                  controller: editingController,
+                  maxLength: 10,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 12),
+                  decoration: InputDecoration(
+                    counterText: "",
+                    hintText: "Enter Trip Name",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 3,
+                        color: Colors.black,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 3,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              )],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(onPressed: () {
+                  setState(() {
+                    print("tripname $tripName");
+                    tripName = editingController!.text.toString();
+                    print("tripname $tripName");
+                    Navigator.of(context).pop(editingController!.text.toString());
+                    // Navigator.of(context).pop();
+                  });
+
+                },
+                    child: Text('DONE')),
+              ],
+            ),
+          ],
+        );
+      });
 
 }

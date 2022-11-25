@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flight_tracker/app_theme/color.dart';
+import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
+import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -20,12 +22,7 @@ class MyFlightsOpenCreateNewTrips extends StatefulWidget {
 class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrips> {
 
   ModelMyFlightsCreateTrip? modelMyFlightsCreateTrip;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setState(() {});
-  }
+  TextEditingController? editingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +56,8 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                         // child: IconButton(onPressed: (){
                         //
                         // }, icon: Icon(Icons.more_vert,color: Colors.white,))
-                      child: PopupMenuButton<int>(
+                      child: PopupMenuButton(
+                        color: Colors.white,
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
@@ -73,18 +71,18 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                               ],
                             ),
                           ),
-                          PopupMenuItem(
-                            value: 2,
-                            child: Row(
-                              children: [
-                                Icon(Icons.flight),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text("Add Flight")
-                              ],
-                            ),
-                          ),
+                          // PopupMenuItem(
+                          //   value: 2,
+                          //   child: Row(
+                          //     children: [
+                          //       Icon(Icons.flight),
+                          //       SizedBox(
+                          //         width: 10,
+                          //       ),
+                          //       Text("Add Flight")
+                          //     ],
+                          //   ),
+                          // ),
                           PopupMenuItem(
                             value: 3,
                             child: Row(
@@ -99,13 +97,29 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                           ),
                         ],
                         offset: Offset(0, 40),
-                        color: Colors.white,
                         elevation: 2,
-                        onSelected: (value) {
-                          if (value == 1) {
+                        onSelected: (value) async {
+                          if (value == 1)  {
+
+                              var dialogueText = await ReusingWidgets().dialogueBoxSimple(
+                                  context: context,
+                                  titleText: "Edit Trip Name",
+                                  hintText: "Enter Trip Name",
+                                  textEditingController: editingController!);
+                              if (dialogueText != null) {
+                                setState(() {
+                                  widget.currentTask.tripName = editingController!.text.toString();
+                                  widget.tripName = editingController!.text.toString();
+                                  widget.currentTask.save();
+                                });
+                              }
+                              else{
+                                // dialogueText = "Enter Flight Code";
+                              }
                           }
-                          else if (value == 2) {
-                          }
+                          // else if (value == 2) {
+                          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
+                          // }
                           else if (value == 3) {
                             deleteDialogue(currentTask: widget.currentTask);
                           }

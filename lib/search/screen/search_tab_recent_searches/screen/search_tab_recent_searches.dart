@@ -38,35 +38,44 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
                       itemCount: box.values.length,
                       itemBuilder: (context, index) {
                         ModelSearch? currentTask = box.getAt(index);
-                        return InkWell(
-                            onLongPress: () {
-                              currentTask.delete();
-                            },
-                            child: Container(
-                              width: w,
-                              padding: EdgeInsets.all(8),
-                              margin: EdgeInsets.all(8),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.history,color: Colors.grey,),
-                                  SizedBox(width: 20),
-                                  Flexible(
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(color: Colors.black, fontSize: 60),
-                                        children: [
-                                          TextSpan(text: 'From  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                          TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
-                                          TextSpan(text: '  to  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                          TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
-                                        ],
+                        return Container(
+                          width: w,
+                          padding: EdgeInsets.only(left: 6,bottom: 6),
+                          margin: EdgeInsets.only(left: 6,bottom: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: w * 0.7,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.history,color: Colors.grey,),
+                                    SizedBox(width: 10,),
+                                    Flexible(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(color: Colors.black, fontSize: 60),
+                                          children: [
+                                            TextSpan(text: 'From  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                            TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
+                                            TextSpan(text: '  to  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                            TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
+                                          ],
+                                        ),
+                                        textScaleFactor: 0.5,
                                       ),
-                                      textScaleFactor: 0.5,
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            )
+                              IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                onPressed: (){
+                                currentTask.delete();
+                                },
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),

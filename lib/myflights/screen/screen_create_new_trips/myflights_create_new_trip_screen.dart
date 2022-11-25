@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class MyFlightCreateNewTrip extends StatefulWidget {
-  MyFlightCreateNewTrip({Key? key, required this.tripName}) : super(key: key);
+  MyFlightCreateNewTrip({Key? key, this.tripName}) : super(key: key);
 
-  String tripName;
+  String? tripName;
 
   @override
   State<MyFlightCreateNewTrip> createState() => _MyFlightCreateNewTripState();
@@ -76,7 +76,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                                                   /// ///
 
                 modelMyFlightsDummy = ModelMyFlightsCreateTrip(
-                  tripName: widget.tripName,
+                  tripName: widget.tripName!,
                   noOfFlights: noOfFlights,
                   tripImage: tripImage,
                   modelMyFlightsUpcoming:
@@ -163,7 +163,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                       ? modelMyFlights =
                                       ModelMyFlightsCreateTrip(
 
-                                        tripName: widget.tripName,
+                                        tripName: widget.tripName!,
                                         noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:
@@ -198,7 +198,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                       :
                                   modelMyFlightsDummy =
                                       ModelMyFlightsCreateTrip(
-                                        tripName: widget.tripName,
+                                        tripName: widget.tripName!,
                                         noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:

@@ -79,8 +79,8 @@ class _SearchScreenState extends State<SearchScreen> {
     try {
       final qrCode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
-        'Back',
-        true,
+        'BACK',
+        false,
         ScanMode.DEFAULT,
       );
 

@@ -399,6 +399,59 @@ class ReusingWidgets {
             duration: Duration(milliseconds: 1500)));
   }
 
+  Future<String?> dialogueBoxSimple({
+  required BuildContext context,
+  required String titleText,
+  required String hintText,
+  required TextEditingController textEditingController,
+
+}) => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titleText),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width/2,
+                child: TextFormField(
+                  controller: textEditingController,
+                  maxLength: 10,
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 12),
+                  decoration: InputDecoration(
+                    counterText: "",
+                    hintText: hintText,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 3,
+                        color: Colors.black,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 3,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              )],
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(onPressed: () {
+                  Navigator.of(context).pop(textEditingController.text.toString());
+                },
+                    child: Text('DONE')),
+              ],
+            ),
+          ],
+        );
+      });
 
 
 
