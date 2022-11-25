@@ -28,11 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
                 children: [
                   selectTabs(),
-                  index == 1 ?
-                  SearchTabByRoute() :
-                      index == 2 ?
-                      SearchTabByFlightCode() :
-                          Container()
+                  index == 1 ? SearchTabByRoute() : index == 2 ? SearchTabByFlightCode() : Container()
                 ],
           ),
         ),
@@ -84,8 +80,8 @@ class _SearchScreenState extends State<SearchScreen> {
       final qrCode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
         'Back',
-        false,
-        ScanMode.QR,
+        true,
+        ScanMode.DEFAULT,
       );
 
       if (!mounted) return;

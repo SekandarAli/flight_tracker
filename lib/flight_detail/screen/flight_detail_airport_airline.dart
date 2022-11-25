@@ -58,6 +58,7 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
     super.initState();
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     widget.flight_iata != null ? futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata!) : null;
+    // dataBox!.deleteFromDisk();
   }
 
   @override

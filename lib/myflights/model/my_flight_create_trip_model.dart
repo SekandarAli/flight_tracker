@@ -17,7 +17,7 @@ class ModelMyFlightsCreateTrip extends HiveObject {
   String tripImage;
 
   @HiveField(3)
-  ModelMyFlightsUpcoming? modelMyFlightsUpcoming;
+  var modelMyFlightsUpcoming;
 
   // @HiveField(4)
   // bool isSelected;

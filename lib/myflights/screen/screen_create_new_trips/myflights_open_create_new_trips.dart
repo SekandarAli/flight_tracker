@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class MyFlightsOpenCreateNewTrips extends StatefulWidget {
-  MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName}) : super(key: key);
+  MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName,this.currentTask}) : super(key: key);
 
   String noOfFlights;
   String tripName;
+  var currentTask;
 
   @override
   State<MyFlightsOpenCreateNewTrips> createState() => _MyFlightsOpenCreateNewTripsState();
@@ -55,9 +56,61 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                     ),
                     Align(
                         alignment: Alignment.topRight,
-                        child: IconButton(onPressed: (){
-
-                        }, icon: Icon(Icons.more_vert,color: Colors.white,))
+                        // child: IconButton(onPressed: (){
+                        //
+                        // }, icon: Icon(Icons.more_vert,color: Colors.white,))
+                      child: PopupMenuButton<int>(
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Row(
+                              children: [
+                                Icon(Icons.drive_file_rename_outline),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Rename Trip")
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Row(
+                              children: [
+                                Icon(Icons.flight),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Add Flight")
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 3,
+                            child: Row(
+                              children: [
+                                Icon(Icons.delete),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text("Delete Trip")
+                              ],
+                            ),
+                          ),
+                        ],
+                        offset: Offset(0, 40),
+                        color: Colors.white,
+                        elevation: 2,
+                        onSelected: (value) {
+                          if (value == 1) {
+                          }
+                          else if (value == 2) {
+                          }
+                          else if (value == 3) {
+                            deleteDialogue(currentTask: widget.currentTask);
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -135,7 +188,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                     itemCount: box.values.length,
                                     itemBuilder: (context, index) {
                                       ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                                      return currentTask!.modelMyFlightsUpcoming!.flightCode.isNotEmpty ?
+                                      return currentTask!.modelMyFlightsUpcoming![index].flightCode.isNotEmpty ?
                                       Dismissible(
                                         key: Key(
                                             UniqueKey().toString()),
@@ -166,8 +219,8 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
-                                                    Text(currentTask.modelMyFlightsUpcoming!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                                    Text(currentTask.modelMyFlightsUpcoming!.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                    Text(currentTask.modelMyFlightsUpcoming![index].flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                    Text(currentTask.modelMyFlightsUpcoming![index].flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                                   ],
                                                 ),
                                               ),
@@ -180,11 +233,11 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                   MainAxisAlignment.spaceBetween,
                                                   children: [
 
-                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.departureCityDate}",
+                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming![index].departureCityDate}",
                                                         style: ThemeTexts.textStyleTitle3
                                                             .copyWith(
                                                             color: Colors.black87)),
-                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.arrivalCityDate}",
+                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming![index].arrivalCityDate}",
                                                         style: ThemeTexts.textStyleTitle3
                                                             .copyWith(
                                                             color: Colors.black87)),
@@ -199,9 +252,9 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                   children: [
 
                                                     flightDetails(
-                                                        cityName: currentTask.modelMyFlightsUpcoming!.departureCity,
-                                                        cityShortCode: currentTask.modelMyFlightsUpcoming!.departureCityShortCode,
-                                                        cityTime: currentTask.modelMyFlightsUpcoming!.departureCityTime,
+                                                        cityName: currentTask.modelMyFlightsUpcoming![index].departureCity,
+                                                        cityShortCode: currentTask.modelMyFlightsUpcoming![index].departureCityShortCode,
+                                                        cityTime: currentTask.modelMyFlightsUpcoming![index].departureCityTime,
                                                         crossAlignment: CrossAxisAlignment.start),
 
                                                     RotatedBox(
@@ -214,9 +267,9 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                     ),
 
                                                     flightDetails(
-                                                        cityName: currentTask.modelMyFlightsUpcoming!.arrivalCity,
-                                                        cityShortCode: currentTask.modelMyFlightsUpcoming!.arrivalCityShortCode,
-                                                        cityTime: currentTask.modelMyFlightsUpcoming!.arrivalCityTime,
+                                                        cityName: currentTask.modelMyFlightsUpcoming![index].arrivalCity,
+                                                        cityShortCode: currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode,
+                                                        cityTime: currentTask.modelMyFlightsUpcoming![index].arrivalCityTime,
                                                         crossAlignment: CrossAxisAlignment.end),
 
                                                   ],
@@ -288,5 +341,29 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
       ],
     );
   }
+
+  Future<String?> deleteDialogue({required var currentTask}) => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to Delete this Trip?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    currentTask.delete();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text('OK')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('CANCEL')),
+          ],
+        );
+      });
 
 }

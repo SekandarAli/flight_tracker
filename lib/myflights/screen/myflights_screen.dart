@@ -84,12 +84,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                           // noOfFlights:  "null",
                                           tripName: currentTask.tripName,
                                           // tripName:  "null",
-                                          // task: currentTask,
+                                          currentTask: currentTask,
                                         );
                                       }));
-                                    },
-                                    onLongPress: () {
-                                      deleteDialogue(currentTask: currentTask);
                                     },
                                     child: SizedBox(
                                       height: w * 0.4,
@@ -450,26 +447,5 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
     );
   }
 
-  Future<String?> deleteDialogue({required var currentTask}) => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Are you sure you want to Delete this Trip?'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  setState(() {
-                    currentTask.delete();
-                    Navigator.pop(context);
-                  });
-                },
-                child: Text('OK')),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('CANCEL')),
-          ],
-        );
-      });
+
 }

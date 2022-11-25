@@ -21,7 +21,7 @@ class ModelMyFlightsCreateTripAdapter
       tripName: fields[0] as String,
       noOfFlights: fields[1] as String,
       tripImage: fields[2] as String,
-      modelMyFlightsUpcoming: fields[3] as ModelMyFlightsUpcoming?,
+      modelMyFlightsUpcoming: fields[3] as dynamic,
     );
   }
 

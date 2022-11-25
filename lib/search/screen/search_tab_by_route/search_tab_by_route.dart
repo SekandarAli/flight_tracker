@@ -66,7 +66,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 onTapArrivalTitle: () async {
                   final List<dynamic> newValue = await Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
-                    return SearchTabArrivalDepartureAirport();
+                        return SearchTabArrivalDepartureAirport();
                   }));
 
                   setState(() {
@@ -76,12 +76,8 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 context: context,
                 departureTitle: departureAirport,
                 arrivalTitle: arrivalAirport,
-                depStyle: departureAirport == "Departure Airport"
-                    ? ThemeTexts.textStyleValueGrey
-                    : ThemeTexts.textStyleValueBlack,
-                arrStyle: arrivalAirport == "Arrival Airport"
-                    ? ThemeTexts.textStyleValueGrey
-                    : ThemeTexts.textStyleValueBlack,
+                depStyle: departureAirport == "Departure Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
+                arrStyle: arrivalAirport == "Arrival Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
               ),
               SizedBox(height: 10),
               PickDate(),
@@ -100,9 +96,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     airlineOptional = newValue[0];
                   });
                 },
-                airlineStyle: airlineOptional == "Airline(Optional)"
-                    ? ThemeTexts.textStyleValueGrey
-                    : ThemeTexts.textStyleValueBlack,
+                airlineStyle: airlineOptional == "Airline(Optional)" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
               )
                   : Container(),
               ReusingWidgets.hideAirlineText(
@@ -124,16 +118,15 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       // showAlertDialog(context);
 
                       /// If search exist
-                      if(departureAirport == "Departure Airport" && arrivalAirport == "Arrival Airport  cxzczc"){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please Select Airport'),
-                                duration: Duration(milliseconds: 1500)));
+                      if(departureAirport == "Departure Airport" && arrivalAirport == "Arrival Airport"){
+                        ReusingWidgets().snackBar(context: context, text: 'Please Select Airport');
                       }
                       else {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                           return SearchButtonByRoute(
                             departureAirport: departureAirport,
                             arrivalAirport: arrivalAirport,
+                            airlineOptional: airlineOptional,
                           );
                         }));
 
