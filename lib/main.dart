@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import 'dummy/polygon_location_sevice.dart';
+
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: AirportTrackFlight(),
+      // home: dummy(),
     );
   }
 }

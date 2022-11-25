@@ -5,7 +5,7 @@ import 'package:flight_tracker/flight_detail/model/model_airport_track_screen.da
 import 'package:flight_tracker/flight_detail/services/services_airports_track_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/dummy/polygon_main.dart';
+import 'package:flight_tracker/maps/custom_google_maps.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';

@@ -2,7 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/dummy/polygon_main.dart';
+import 'package:flight_tracker/maps/custom_google_maps.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
