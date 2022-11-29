@@ -15,14 +15,14 @@ class _dummyState extends State<dummy> {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
+          return [
             SliverAppBar(
               expandedHeight: 200.0,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text("Collapsing Toolbar",
+                  title: const Text("Collapsing Toolbar",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
@@ -34,7 +34,7 @@ class _dummyState extends State<dummy> {
             ),
           ];
         },
-        body: Center(
+        body: const Center(
           child: Text("Sample Text"),
         ),
       ),

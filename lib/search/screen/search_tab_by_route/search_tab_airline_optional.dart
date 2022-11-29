@@ -76,10 +76,10 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                                     String? airportImage;
 
                                     return
-                                     airlineName.toLowerCase().contains(searchAirlineController.text) ?
+                                     airlineName.toLowerCase().contains(searchAirlineController.text) || countryShortName.toLowerCase().contains(searchAirlineController.text) ?
                                       InkWell(
                                           onTap: () async {
-                                            Navigator.pop(context,[airlineName]);
+                                            Navigator.pop(context,[airlineName,countryShortName]);
                                           },
                                           child: ListTile(
                                             title: Text(airlineName,style: ThemeTexts.textStyleValueBlack,),

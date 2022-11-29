@@ -73,25 +73,26 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                   itemCount: snapshot.data!.response!.length,
                                   itemBuilder: (context, index) {
 
-                                    String? cityName = snapshot.data!.response![index].iataCode  ?? "Unknown";
-                                    String? cityShortName = snapshot.data!.response![index].name  ?? "Unknown";
+                                    String? cityShortName = snapshot.data!.response![index].iataCode  ?? "Unknown";
+                                    // String? cityShortName = snapshot.data!.response![index].name  ?? "Unknown";
                                     String? countryShortName = snapshot.data!.response![index].countryCode ?? "Unknown";
                                     String? airportName = snapshot.data!.response![index].name ?? "Unknown";
 
                                     return
-                                      cityName.toLowerCase().contains(searchAirportController.text) ?
+                                      cityShortName.toLowerCase().contains(searchAirportController.text) ||
+                                          airportName.toLowerCase().contains(searchAirportController.text) ?
                                       InkWell(
                                           onTap: () async {
-                                            Navigator.pop(context,[cityName]);
+                                            Navigator.pop(context,[airportName,cityShortName]);
                                           },
                                           child: ListTile(
                                             title: Text(
-                                              "$cityName,"
+                                              "$cityShortName,"
                                                   " $countryShortName",
                                               style: ThemeTexts.textStyleValueBlack,
                                             ),
                                             // subtitle: Text("$cityShortName -  $airportName",
-                                            subtitle: Text(cityShortName,
+                                            subtitle: Text(airportName,
                                                 style: ThemeTexts.textStyleValueBlack2),
                                             trailing: FlutterLogo(
                                               size: 30,

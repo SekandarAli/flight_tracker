@@ -22,11 +22,13 @@ class SearchTabByRoute extends StatefulWidget {
 class _SearchTabByRouteState extends State<SearchTabByRoute> {
   bool hideAdvance = false;
 
-  // var departureAirport = "Tancredo Neves International Airport";
-  var departureAirport = "Departure Airport";
-  // var arrivalAirport = "Congonhas International Airport";
-  var arrivalAirport = "Arrival Airport";
+  var departureAirportShortName = "Departure Airport";
+  var arrivalAirportShortName = "Arrival Airport";
+  var airlineOptionalShortName = "Airline(Optional)";
   var airlineOptional = "Airline(Optional)";
+  var departureAirportName = "Departure Airport";
+  var arrivalAirportName = "Arrival Airport";
+
 
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
@@ -60,7 +62,12 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   }));
 
                   setState(() {
-                    departureAirport = newValue[0];
+                    departureAirportShortName = newValue[0];
+                    departureAirportName = newValue[1];
+
+                    // print("departureAirportName$departureAirportName");
+                    // print("departureAirportShortName$departureAirportShortName");
+
                   });
                 },
                 onTapArrivalTitle: () async {
@@ -70,14 +77,18 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   }));
 
                   setState(() {
-                    arrivalAirport = newValue[0];
+                    arrivalAirportShortName = newValue[0];
+                    arrivalAirportName = newValue[1];
+
+                    // print("arrivalAirportName$arrivalAirportName");
+                    // print("arrivalAirportShortName$arrivalAirportShortName");
                   });
                 },
                 context: context,
-                departureTitle: departureAirport,
-                arrivalTitle: arrivalAirport,
-                depStyle: departureAirport == "Departure Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
-                arrStyle: arrivalAirport == "Arrival Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
+                departureTitle: departureAirportShortName,
+                arrivalTitle: arrivalAirportShortName,
+                depStyle: departureAirportShortName == "Departure Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack.copyWith(overflow: TextOverflow.ellipsis),
+                arrStyle: arrivalAirportShortName == "Arrival Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
               ),
               SizedBox(height: 10),
               PickDate(),
@@ -94,6 +105,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
                   setState(() {
                     airlineOptional = newValue[0];
+                    airlineOptionalShortName = newValue[1];
                   });
                 },
                 airlineStyle: airlineOptional == "Airline(Optional)" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
@@ -118,27 +130,33 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       // showAlertDialog(context);
 
                       /// If search exist
-                      if(departureAirport == "Departure Airport" && arrivalAirport == "Arrival Airport"){
+                      if(departureAirportShortName == "Departure Airport" && arrivalAirportShortName == "Arrival Airport"){
                         ReusingWidgets().snackBar(context: context, text: 'Please Select Airport');
                       }
                       else {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                          print("departureAirportShortName$departureAirportName");
+                          print("arrivalAirportShortName$arrivalAirportName");
+
                           return SearchButtonByRoute(
-                            departureAirport: departureAirport,
-                            arrivalAirport: arrivalAirport,
+                            departureAirport: departureAirportName,
+                            arrivalAirport: arrivalAirportName,
                             airlineOptional: airlineOptional,
                           );
                         }));
 
                         modelMyFlights = ModelSearch(
-                          arrivalCity: arrivalAirport,
-                          departureCity: departureAirport,
+                          arrivalCity: arrivalAirportShortName,
+                          departureCity: departureAirportShortName,
                         );
+                        // dataBox!.put("modelSearch",modelMyFlights!);
                         dataBox!.add(modelMyFlights!);
                       }
                     });
                   },
-                  context: context, text: 'SEARCH'),
+                  context: context,
+                  text: 'SEARCH',
+              ),
             ],
           ),
         ),

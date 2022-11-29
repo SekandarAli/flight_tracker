@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
 import '../../../app_theme/color.dart';
+import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
    SearchButtonByFlightCode({required this.flightCode}) : super();
@@ -70,6 +71,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                               String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "Unknown";
                               String departureCityTime = snapshot.data!.response![index].lat.toString() ?? "Unknown";
                               String arrivalCityTime = snapshot.data!.response![index].lng.toString() ?? "Unknown";
+                              String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
                               String departureCityDate = 'Nov 08, 2022';
                               String arrivalCityDate = 'Nov 09, 2022';
 
@@ -142,7 +144,13 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(width: w * 0.3),
-                                              TextButton(onPressed: () {  }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                              TextButton(onPressed: () {
+
+                                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                }));
+
+                                              }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                                               TextButton(onPressed: () {
 
                                                 modelMyFlights = ModelMyFlightsUpcoming(

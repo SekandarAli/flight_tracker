@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/flight_detail/screen/flight_detail_airport_airline.dart';
 import 'package:flight_tracker/myflights/model/modelnew.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
@@ -174,7 +175,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                               alignment: Alignment.center,
                               child: Icon(
                                 Icons.flight,
-                                size: w * 0.4,
+                                size: w * 0.3,
                                 color: Colors.grey,
                               )),
                           SizedBox(
@@ -184,7 +185,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             "No Flights Found",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: w * 0.1,
+                              fontSize: w * 0.05,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
                             ),
@@ -207,6 +208,10 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                           modelMyFlightsUpcoming: currentTask,
                                         );
                                       }));
+
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                      //   return FlightDetailAirportAirline(flight_iata: currentTask.flightCode,);
+                                      // }));
                                     },
                                     child: Dismissible(
                                       key: Key(UniqueKey().toString()),

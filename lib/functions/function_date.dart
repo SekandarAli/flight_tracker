@@ -38,7 +38,7 @@ class _PickDateState extends State<PickDate> {
             Text(
               "Departing ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
               // DateFormat.yMMMEd().format(DateTime.now()),
-              style: ThemeTexts.textStyleValueBlack,
+              style: ThemeTexts.textStyleValueGrey,
             )
           ],
         ),

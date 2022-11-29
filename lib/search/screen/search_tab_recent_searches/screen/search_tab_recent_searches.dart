@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class SearchTabRecentSearches extends StatefulWidget {
-  const SearchTabRecentSearches({Key? key}) : super(key: key);
+   SearchTabRecentSearches({Key? key,this.departureAirportName,this.arrivalAirportName}) : super(key: key);
+
+   String? departureAirportName = "Departure Airport";
+   String? arrivalAirportName = "Arrival Airport";
 
   @override
   State<SearchTabRecentSearches> createState() => _SearchTabRecentSearchesState();
@@ -45,33 +48,43 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
-                                width: w * 0.7,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(Icons.history,color: Colors.grey,),
-                                    SizedBox(width: 10,),
-                                    Flexible(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(color: Colors.black, fontSize: 60),
-                                          children: [
-                                            TextSpan(text: 'From  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                            TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
-                                            TextSpan(text: '  to  ',style: ThemeTexts.textStyleTitle1.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                            TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleTitle1.copyWith(fontFamily: "OpenSansRegular")),
-                                          ],
+                              GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    print("${widget.departureAirportName}");
+                                    print(currentTask.departureCity!);
+                                    widget.departureAirportName = currentTask.departureCity!;
+                                    widget.arrivalAirportName = currentTask.arrivalCity!;
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: w * 0.7,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.history,color: Colors.grey,),
+                                      SizedBox(width: 10,),
+                                      Flexible(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(color: Colors.black, fontSize: 60),
+                                            children: [
+                                              TextSpan(text: 'From  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                              TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                              TextSpan(text: '  to  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                              TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                            ],
+                                          ),
+                                          textScaleFactor: 1,
                                         ),
-                                        textScaleFactor: 0.5,
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               IconButton(icon: Icon(Icons.clear),color: Colors.grey,
                                 onPressed: (){
-                                currentTask.delete();
+                                  currentTask.delete();
                                 },
                               ),
                             ],

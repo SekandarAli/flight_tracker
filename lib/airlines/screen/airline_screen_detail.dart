@@ -34,26 +34,50 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                height: h * 0.25,
-                width: w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/airline.png'),
-                      fit: BoxFit.fill),
-                ),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(onPressed: (){
-                    Navigator.pop(context);
-                  }, icon: Icon(Icons.arrow_back,color: Colors.white,))
+      // backgroundColor: Colors.red,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              expandedHeight: h * 0.25,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(widget.airlineName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
+                background: Container(
+                  width: w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(0),
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/airport.jpg'),
+                        fit: BoxFit.fill),
+                  ),
                 ),
               ),
+
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Container(
+              //   height: h * 0.25,
+              //   width: w,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(0),
+              //     image: DecorationImage(
+              //         image: AssetImage('assets/images/airline.png'),
+              //         fit: BoxFit.fill),
+              //   ),
+              //   child: Align(
+              //     alignment: Alignment.topLeft,
+              //     child: IconButton(onPressed: (){
+              //       Navigator.pop(context);
+              //     }, icon: Icon(Icons.arrow_back,color: Colors.white,))
+              //   ),
+              // ),
               Container(
                 padding: EdgeInsets.all(15),
                 // height: h * 0.1,
@@ -94,125 +118,125 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                 ),
               ),
               Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("TIME"),
-                              Text("DEP/ARR"),
-                              Text("FLIGHT/DATE"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: h * 0.7,
-                          child: FutureBuilder(
-                            future: futureList,
-                            builder: (context,snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.response!.isNotEmpty) {
-                                  return Container(
-                                    color: Colors.white,
-                                    child: Column(
-                                      children: [
-                                        Flexible(
-                                          child: ListView.builder(
-                                            itemCount: snapshot.data!.response!.length,
-                                            itemBuilder: (context, index) {
-
-                                              String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
-                                              String departureTime = snapshot.data!.response![index].depTime  ?? "---";
-                                              String arrivalDestination = snapshot.data!.response![index].arrIata ?? "---";
-                                              String departureDestination = snapshot.data!.response![index].depIata ?? "---";
-                                              String arrivalDestinationShortCode = snapshot.data!.response![index].arrIcao ?? "---";
-                                              String departureDestinationShortCode = snapshot.data!.response![index].depIcao ?? "---";
-                                              String flightNo = snapshot.data!.response![index].flightNumber  ?? "---";
-                                              Object airlineIcao = snapshot.data!.response![index].aircraftIcao  ?? "---";
-                                              Object date = snapshot.data!.response![index].updated  ?? "---";
-                                              String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
-
-                                              String dateNow = DateTime.now().toString().substring(0,10);
-                                              String dateAirline = date.toString().substring(0,10);
-
-                                              return dateNow == dateAirline ?
-                                                InkWell(
-                                                onTap: () async {
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                    return FlightDetailAirportAirline(flight_iata: flight_iata,);
-                                                  }));
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(20),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text("$departureTime\n$arrivalTime"),
-                                                      Text("$departureDestination\n$arrivalDestination"),
-                                                      Text("$flightNo\n$dateAirline"),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ) : Container();
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text(
-                                      "error 1${snapshot.error}",
-                                    ),
-                                  );
-                                }
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                  child: Text(
-                                    "error 2${snapshot.error}",
-                                  ),
-                                );
-                              } else {
-                                return Center(child: FunctionProgressIndicator());
-                              }
-                            },
-
-                          ),
-                        ),
-
-                        // Container(
-                        //   height: h * 0.7,
-                        //   width: w,
-                        //   child: ListView.builder(
-                        //     padding: EdgeInsets.all(20),
-                        //     itemCount: 50,
-                        //     itemBuilder: (context, index) {
-                        //       return InkWell(
-                        //         onTap: () async {
-                        //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AirlineTrackFlight()));
-                        //         },
-                        //         child: Padding(
-                        //           padding: EdgeInsets.only(bottom: 20,top: 20),
-                        //           child: Row(
-                        //             mainAxisAlignment:
-                        //             MainAxisAlignment.spaceBetween,
-                        //             children: [
-                        //               Text("11:06 AM"),
-                        //               Text("Dubai, DXB/Karachi, DVC"),
-                        //               Text("PK 247"),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
+                        Text("TIME"),
+                        Text("DEP/ARR"),
+                        Text("FLIGHT/DATE"),
                       ],
                     ),
+                  ),
+                  Container(
+                    height: h * 0.7,
+                    child: FutureBuilder(
+                      future: futureList,
+                      builder: (context,snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data!.response!.isNotEmpty) {
+                            return Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data!.response!.length,
+                                      itemBuilder: (context, index) {
+
+                                        String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                        String departureTime = snapshot.data!.response![index].depTime  ?? "---";
+                                        String arrivalDestination = snapshot.data!.response![index].arrIata ?? "---";
+                                        String departureDestination = snapshot.data!.response![index].depIata ?? "---";
+                                        String arrivalDestinationShortCode = snapshot.data!.response![index].arrIcao ?? "---";
+                                        String departureDestinationShortCode = snapshot.data!.response![index].depIcao ?? "---";
+                                        String flightNo = snapshot.data!.response![index].flightNumber  ?? "---";
+                                        Object airlineIcao = snapshot.data!.response![index].aircraftIcao  ?? "---";
+                                        Object date = snapshot.data!.response![index].updated  ?? "---";
+                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
+
+                                        String dateNow = DateTime.now().toString().substring(0,10);
+                                        String dateAirline = date.toString().substring(0,10);
+
+                                        return dateNow == dateAirline ?
+                                        InkWell(
+                                          onTap: () async {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                                              return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                            }));
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("$departureTime\n$arrivalTime"),
+                                                Text("$departureDestination\n$arrivalDestination"),
+                                                Text("$flightNo\n$dateAirline"),
+                                              ],
+                                            ),
+                                          ),
+                                        ) : Container();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: Text(
+                                "error 1${snapshot.error}",
+                              ),
+                            );
+                          }
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "error 2${snapshot.error}",
+                            ),
+                          );
+                        } else {
+                          return Center(child: FunctionProgressIndicator());
+                        }
+                      },
+
+                    ),
+                  ),
+
+                  // Container(
+                  //   height: h * 0.7,
+                  //   width: w,
+                  //   child: ListView.builder(
+                  //     padding: EdgeInsets.all(20),
+                  //     itemCount: 50,
+                  //     itemBuilder: (context, index) {
+                  //       return InkWell(
+                  //         onTap: () async {
+                  //           Navigator.push(context, MaterialPageRoute(builder: (context)=>AirlineTrackFlight()));
+                  //         },
+                  //         child: Padding(
+                  //           padding: EdgeInsets.only(bottom: 20,top: 20),
+                  //           child: Row(
+                  //             mainAxisAlignment:
+                  //             MainAxisAlignment.spaceBetween,
+                  //             children: [
+                  //               Text("11:06 AM"),
+                  //               Text("Dubai, DXB/Karachi, DVC"),
+                  //               Text("PK 247"),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+                ],
+              ),
             ],
           ),
         ),

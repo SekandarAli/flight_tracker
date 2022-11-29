@@ -9,6 +9,7 @@ import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
+import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
 import '../../../flight_detail/services/services_airports_track_screen.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
@@ -26,12 +27,12 @@ class SearchButtonByRoute extends StatefulWidget {
 class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
   Future<ModelSearchFlights>? futureList;
-  // var futureLista;
 
   bool cardExpand = false;
 
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
+
 
   @override
   void initState() {
@@ -39,7 +40,6 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     futureList = ServicesSearchFlights().GetAllPosts();
-    // futureLista = ServicesAirportsTrackScreen().GetAllPosts();
   }
 
   @override
@@ -73,10 +73,12 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String flightStatus = snapshot.data!.response![index].status.toString() ?? "Unknown";
                               String departureCity = snapshot.data!.response![index].depIata ?? "---";
                               String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
+                              String airlineCityOptional = snapshot.data!.response![index].airlineIata ?? "---";
                               String departureCityShortName = snapshot.data!.response![index].depIcao ?? "---";
                               String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "---";
-                              String departureCityTime = snapshot.data!.response![index].lat.toString() ?? "Unknown";
-                              String arrivalCityTime = snapshot.data!.response![index].lng.toString() ?? "Unknown";
+                              String departureCityTime = snapshot.data!.response![index].lat.toString();
+                              String arrivalCityTime = snapshot.data!.response![index].lng.toString();
+                              String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
                               String departureCityDate = 'Nov 08, 2022';
                               String arrivalCityDate = 'Nov 09, 2022';
                               String departureLat = "24.8607";
@@ -94,8 +96,13 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String departureAirport = "---";
                               String arrivalAirport = "---";
 
+                              print("${widget.departureAirport}");
+                              print("${departureCity}");
+
                               return
-                                // widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity ?
+                                widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity
+                                    // || widget.airlineOptional == airlineCityOptional
+                                    ?
                                 InkWell(
                                   onTap: (){
                                     setState((){
@@ -159,7 +166,13 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(width: w * 0.3),
-                                              TextButton(onPressed: () {  }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                              TextButton(onPressed: () {
+
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                    return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                  }));
+
+                                              }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                                               TextButton(onPressed: () {
 
                                                 modelMyFlights = ModelMyFlightsUpcoming(
@@ -199,8 +212,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                       ),
                                     ),
                                   ),
-                                );
-                                    // : Container();
+                                )
+                                    : Container();
                             },
                           ),
                         ),

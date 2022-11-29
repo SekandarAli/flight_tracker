@@ -76,7 +76,7 @@ class _CustomGoogleMapsState extends State<CustomGoogleMaps> {
 
   void customMarker() {
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(), 'assets/images/flight.jpg',)
+            ImageConfiguration(), 'assets/images/aeroplane.png',)
         .then((value) => {
           customIcon = value
         });

@@ -42,290 +42,303 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
+      // backgroundColor: Colors.red,
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              expandedHeight: h * 0.25,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(widget.airportName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
+                  background: Container(
+                    width: w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0),
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/airport.jpg'),
+                          fit: BoxFit.fill),
+                    ),
+                  ),
+              ),
+
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
           child: Column(
-            children: [
-              Container(
-                height: h * 0.25,
-                width: w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/airport.jpg'),
-                      fit: BoxFit.fill),
+              children: [
+                // Container(
+                //   height: h * 0.25,
+                //   width: w,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(0),
+                //     image: DecorationImage(
+                //         image: AssetImage('assets/images/airport.jpg'),
+                //         fit: BoxFit.fill),
+                //   ),
+                //   child: Align(
+                //       alignment: Alignment.topLeft,
+                //       child: IconButton(onPressed: (){
+                //         Navigator.pop(context);
+                //       }, icon: Icon(Icons.arrow_back,color: Colors.white,))
+                //   ),
+                // ),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  // height: h * 0.1,
+                  width: w,
+                  color: ColorsTheme.primaryColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.airportName, style: ThemeTexts.textStyleTitle2),
+                      SizedBox(height: 5),
+                      Text("Airport", style: ThemeTexts.textStyleTitle3),
+                    ],
+                  ),
                 ),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(onPressed: (){
-                    Navigator.pop(context);
-                  }, icon: Icon(Icons.arrow_back,color: Colors.white,))
+                Container(
+                  width: w,
+                  color: ColorsTheme.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Local Time",
+                                    style: ThemeTexts.textStyleTitle2
+                                        .copyWith(color: Colors.grey)),
+                                Text("Wed 02:56 PM",
+                                    style: ThemeTexts.textStyleTitle3
+                                        .copyWith(color: Colors.grey)),
+                              ],
+                            ),
+                            Text("86°F",
+                                style: ThemeTexts.textStyleTitle1
+                                    .copyWith(fontWeight: FontWeight.normal)),
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          container(icon: Icons.info, text: "INFO"),
+                          container(
+                              icon: Icons.assistant_navigation, text: "NAV"),
+                          container(
+                              icon: Icons.sports_baseball_rounded,
+                              text: "WEBSITE"),
+                        ],
+                      ),
+                      Container(
+                        color: ColorsTheme.primaryColor,
+                        height: 15,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(15),
-                // height: h * 0.1,
-                width: w,
-                color: ColorsTheme.primaryColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                selectTabs(),
+                index == 1
+                /// ARRIVAL
+                    ? Column(
                   children: [
-                    Text(widget.airportName, style: ThemeTexts.textStyleTitle2),
-                    SizedBox(height: 5),
-                    Text("Airport", style: ThemeTexts.textStyleTitle3),
-                  ],
-                ),
-              ),
-              Container(
-                width: w,
-                color: ColorsTheme.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(15),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Local Time",
-                                  style: ThemeTexts.textStyleTitle2
-                                      .copyWith(color: Colors.grey)),
-                              Text("Wed 02:56 PM",
-                                  style: ThemeTexts.textStyleTitle3
-                                      .copyWith(color: Colors.grey)),
-                            ],
-                          ),
-                          Text("86°F",
-                              style: ThemeTexts.textStyleTitle1
-                                  .copyWith(fontWeight: FontWeight.normal)),
+                          Text("TIME"),
+                          SizedBox(width: w * 0.3),
+                          Text("DESTINATION"),
+                          Text("FLIGHT #"),
                         ],
                       ),
                     ),
-                    Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        container(icon: Icons.info, text: "INFO"),
-                        container(
-                            icon: Icons.assistant_navigation, text: "NAV"),
-                        container(
-                            icon: Icons.sports_baseball_rounded,
-                            text: "WEBSITE"),
-                      ],
-                    ),
                     Container(
-                      color: ColorsTheme.primaryColor,
-                      height: 15,
-                    ),
-                  ],
-                ),
-              ),
-              selectTabs(),
-              index == 1
-              /// ARRIVAL
-                  ? Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("TIME"),
-                              SizedBox(width: w * 0.3),
-                              Text("DESTINATION"),
-                              Text("FLIGHT #"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: h * 0.7,
-                          child: FutureBuilder(
-                            future: futureListDeparture,
-                            builder: (context,snapshot) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data!.response!.isNotEmpty) {
-                                  return Container(
-                                    color: Colors.white,
-                                    child: Column(
-                                      children: [
-                                        Flexible(
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.all(5),
-                                            itemCount: snapshot.data!.response!.length,
-                                            itemBuilder: (context, index) {
-
-                                              String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
-                                              String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
-                                              String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
-                                              String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
-
-                                              return
-                                                InkWell(
-                                                    onTap: () async {
-                                                      print("airportscreem $flight_iata");
-                                                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                        return FlightDetailAirportAirline(flight_iata: flight_iata,);
-                                                      }));
-                                                    },
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(bottom: 20,top: 20),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Text(arrivalTime),
-                                                        Text(arrivalDestination),
-                                                        Text(arrivalFlightNo),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text(
-                                      "error 1${snapshot.error}",
-                                    ),
-                                  );
-                                }
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                  child: Text(
-                                    "error 2${snapshot.error}",
-                                  ),
-                                );
-                              } else {
-                                return Column(
+                      height: h * 0.7,
+                      child: FutureBuilder(
+                        future: futureListDeparture,
+                        builder: (context,snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.response!.isNotEmpty) {
+                              return Container(
+                                color: Colors.white,
+                                child: Column(
                                   children: [
-                                    SizedBox(height: 50),
-                                    FunctionProgressIndicator(),
-                                  ],
-                                );
-                              }
-                            },
+                                    Flexible(
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.all(5),
+                                        itemCount: snapshot.data!.response!.length,
+                                        itemBuilder: (context, index) {
 
-                          ),
-                        ),
-                      ],
-                    )
-              /// DEPARTURE
-                  : Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("TIME"),
-                        SizedBox(width: w * 0.3),
-                        Text("DESTINATION"),
-                        Text("FLIGHT #"),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: h * 0.7,
-                    child: FutureBuilder(
-                      future: futureListArrival,
-                      builder: (context,snapshot) {
-                        if (snapshot.hasData) {
-                          if (snapshot.data!.response!.isNotEmpty) {
-                            return Container(
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Flexible(
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.all(5),
-                                      itemCount: snapshot.data!.response!.length,
-                                      itemBuilder: (context, index) {
+                                          String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                          String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
+                                          String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
+                                          String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
 
-                                        String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
-                                        String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
-                                        String departureFlightNo = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
-                                        // String departureCity = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String departureCityDate = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String departureCityShortCode = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String departureCityTime = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String departureLat = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String departureLng = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalCity = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalCityShortCode = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalCityTime = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalCityDate = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalLat = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-                                        // String arrivalLng = snapshot.data!.response![index].flightNumber  ?? "Unknown";
-
-                                        return
-                                          InkWell(
-                                            onTap: () async {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                return FlightDetailAirportAirline(flight_iata: flight_iata,);
-                                              }));
-                                            },
-                                            child: Padding(
-                                              padding: EdgeInsets.only(bottom: 20,top: 20),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(departureTime),
-                                                  Text(departureDestination),
-                                                  Text(departureFlightNo),
-                                                ],
+                                          return
+                                            InkWell(
+                                              onTap: () async {
+                                                print("airportscreem $flight_iata");
+                                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                }));
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.only(bottom: 20,top: 20),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(arrivalTime),
+                                                    Text(arrivalDestination),
+                                                    Text(arrivalFlightNo),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                      },
+                                            );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                  "error 1${snapshot.error}",
+                                ),
+                              );
+                            }
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                "error 2${snapshot.error}",
                               ),
                             );
                           } else {
-                            return Center(
-                              child: Text(
-                                "error 1${snapshot.error}",
-                              ),
+                            return Column(
+                              children: [
+                                SizedBox(height: 50),
+                                FunctionProgressIndicator(),
+                              ],
                             );
                           }
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              "error 2${snapshot.error}",
-                            ),
-                          );
-                        } else {
-                          return Column(
-                            children: [
-                              SizedBox(height: 50),
-                              FunctionProgressIndicator(),
-                            ],
-                          );
-                        }
-                      },
+                        },
 
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                )
+                /// DEPARTURE
+                    : Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("TIME"),
+                          SizedBox(width: w * 0.3),
+                          Text("DESTINATION"),
+                          Text("FLIGHT #"),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: h * 0.7,
+                      child: FutureBuilder(
+                        future: futureListArrival,
+                        builder: (context,snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data!.response!.isNotEmpty) {
+                              return Container(
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    Flexible(
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.all(5),
+                                        itemCount: snapshot.data!.response!.length,
+                                        itemBuilder: (context, index) {
+
+                                          String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
+                                          String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
+                                          String departureFlightNo = snapshot.data!.response![index].flightNumber  ?? "Unknown";
+                                          String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
+
+                                          return
+                                            InkWell(
+                                              onTap: () async {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                }));
+                                              },
+                                              child: Padding(
+                                                padding: EdgeInsets.only(bottom: 20,top: 20),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(departureTime),
+                                                    Text(departureDestination),
+                                                    Text(departureFlightNo),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                  "error 1${snapshot.error}",
+                                ),
+                              );
+                            }
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                "error 2${snapshot.error}",
+                              ),
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                SizedBox(height: 50),
+                                FunctionProgressIndicator(),
+                              ],
+                            );
+                          }
+                        },
+
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
         ),
       ),
     );

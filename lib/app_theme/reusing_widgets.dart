@@ -174,7 +174,7 @@ class ReusingWidgets {
                       Icon(Icons.flight_takeoff, color: ColorsTheme.black),
                       SizedBox(width: 20),
                       Text(
-                        departureTitle,
+                        departureTitle.length > 25 ? '${departureTitle.substring(0, 25)}...' : departureTitle,
                         style: depStyle,
                       )
                     ],
@@ -197,7 +197,8 @@ class ReusingWidgets {
                       Icon(Icons.flight_land, color: ColorsTheme.black),
                       SizedBox(width: 20),
                       Text(
-                        arrivalTitle,
+                        // arrivalTitle,
+                        arrivalTitle.length > 25 ? '${arrivalTitle.substring(0, 25)}...' : arrivalTitle,
                         style: arrStyle,
                       )
                     ],
@@ -237,7 +238,7 @@ class ReusingWidgets {
           },
           child: Row(
             children: [
-              Icon(Icons.line_style_outlined, color: ColorsTheme.textColor),
+              Icon(Icons.line_style_outlined, color: ColorsTheme.black),
               SizedBox(width: 20),
               Text(
                 airlineTitle,
