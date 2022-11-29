@@ -8,6 +8,8 @@ import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflight
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
+
 class MyFlightsOpenCreateNewTrips extends StatefulWidget {
   MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName,this.currentTask}) : super(key: key);
 
@@ -202,94 +204,101 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                     itemCount: box.values.length,
                                     itemBuilder: (context, index) {
                                       ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                                      return currentTask!.modelMyFlightsUpcoming![index].flightCode.isNotEmpty ?
-                                      Dismissible(
-                                        key: Key(
-                                            UniqueKey().toString()),
-                                        background: Container(
-                                          margin: EdgeInsets.all(5),
-                                          padding: EdgeInsets.all(15),
-                                          color: Colors.red.shade800,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Icon(Icons.delete,color: Colors.white,),
-                                              Icon(Icons.delete,color: Colors.white,),
-                                            ],
+                                      return currentTask!.modelMyFlightsUpcoming!.flightCode.isNotEmpty ?
+                                      InkWell(
+                                        // onTap: (){
+                                        //   Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        //     return FlightDetailAirportAirline(flight_iata: widget.currentTask.modelMyFlightsUpcoming!.flightIata);
+                                        //   }));
+                                        // },
+                                        child: Dismissible(
+                                          key: Key(
+                                              UniqueKey().toString()),
+                                          background: Container(
+                                            margin: EdgeInsets.all(5),
+                                            padding: EdgeInsets.all(15),
+                                            color: Colors.amberAccent,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Icon(Icons.delete,color: Colors.white,),
+                                                Icon(Icons.delete,color: Colors.white,),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        onDismissed: (direction){
-                                          setState(() {
-                                            currentTask.delete();
-                                          });
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
-                                        },
-                                        child: Card(
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(15),
-                                                color: ColorsTheme.primaryColor,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(currentTask.modelMyFlightsUpcoming![index].flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                                    Text(currentTask.modelMyFlightsUpcoming![index].flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
-                                                  ],
+                                          onDismissed: (direction){
+                                            setState(() {
+                                              currentTask.delete();
+                                            });
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Flight Removed Successfully'),duration: Duration(milliseconds: 700)));
+                                          },
+                                          child: Card(
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(15),
+                                                  color: ColorsTheme.primaryColor,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(currentTask.modelMyFlightsUpcoming!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                      Text(currentTask.modelMyFlightsUpcoming!.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              Container(
-                                                width: double.infinity,
-                                                padding: EdgeInsets.all(15),
-                                                color: Colors.grey.shade100,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.all(15),
+                                                  color: Colors.grey.shade100,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: [
 
-                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming![index].departureCityDate}",
-                                                        style: ThemeTexts.textStyleTitle3
-                                                            .copyWith(
-                                                            color: Colors.black87)),
-                                                    Text("🗓️ ${currentTask.modelMyFlightsUpcoming![index].arrivalCityDate}",
-                                                        style: ThemeTexts.textStyleTitle3
-                                                            .copyWith(
-                                                            color: Colors.black87)),
-                                                  ],
+                                                      Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.departureCityDate}",
+                                                          style: ThemeTexts.textStyleTitle3
+                                                              .copyWith(
+                                                              color: Colors.black87)),
+                                                      Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.arrivalCityDate}",
+                                                          style: ThemeTexts.textStyleTitle3
+                                                              .copyWith(
+                                                              color: Colors.black87)),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(15),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
+                                                Padding(
+                                                  padding: EdgeInsets.all(15),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: [
 
-                                                    flightDetails(
-                                                        cityName: currentTask.modelMyFlightsUpcoming![index].departureCity,
-                                                        cityShortCode: currentTask.modelMyFlightsUpcoming![index].departureCityShortCode,
-                                                        cityTime: currentTask.modelMyFlightsUpcoming![index].departureCityTime,
-                                                        crossAlignment: CrossAxisAlignment.start),
+                                                      flightDetails(
+                                                          cityName: currentTask.modelMyFlightsUpcoming!.departureCity,
+                                                          cityShortCode: currentTask.modelMyFlightsUpcoming!.departureCityShortCode,
+                                                          cityTime: currentTask.modelMyFlightsUpcoming!.departureCityTime,
+                                                          crossAlignment: CrossAxisAlignment.start),
 
-                                                    RotatedBox(
-                                                      quarterTurns: 1,
-                                                      child: Icon(
-                                                        Icons.flight,
-                                                        size: 50,
-                                                        color: Colors.grey,
+                                                      RotatedBox(
+                                                        quarterTurns: 1,
+                                                        child: Icon(
+                                                          Icons.flight,
+                                                          size: 50,
+                                                          color: Colors.grey,
+                                                        ),
                                                       ),
-                                                    ),
 
-                                                    flightDetails(
-                                                        cityName: currentTask.modelMyFlightsUpcoming![index].arrivalCity,
-                                                        cityShortCode: currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode,
-                                                        cityTime: currentTask.modelMyFlightsUpcoming![index].arrivalCityTime,
-                                                        crossAlignment: CrossAxisAlignment.end),
+                                                      flightDetails(
+                                                          cityName: currentTask.modelMyFlightsUpcoming!.arrivalCity,
+                                                          cityShortCode: currentTask.modelMyFlightsUpcoming!.arrivalCityShortCode,
+                                                          cityTime: currentTask.modelMyFlightsUpcoming!.arrivalCityTime,
+                                                          crossAlignment: CrossAxisAlignment.end),
 
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ) : Container();

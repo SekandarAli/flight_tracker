@@ -7,6 +7,8 @@ import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
+
 class MyFlightsUpcomingShowAllScreen extends StatefulWidget {
   const MyFlightsUpcomingShowAllScreen({Key? key}) : super(key: key);
 
@@ -146,97 +148,104 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                             itemCount: box.values.length,
                             itemBuilder: (context, index) {
                               ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                              return Dismissible(
-                                key: Key(
-                                    UniqueKey().toString()),
-                                background: Container(
-                                  margin: EdgeInsets.all(5),
-                                  padding: EdgeInsets.all(15),
-                                  color: Colors.red.shade800,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.delete,color: Colors.white,),
-                                      Icon(Icons.delete,color: Colors.white,),
-                                    ],
-                                  ),
-                                ),
-                                onDismissed: (direction){
-                                  setState(() {
-                                    currentTask!.delete();
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content:
-                                      Text('Flight Removed Successfully'),
-                                          duration: Duration(milliseconds: 700),));
+                              return InkWell(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    return FlightDetailAirportAirline(flight_iata: currentTask.flightIata,);
+                                  }));
                                 },
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(15),
-                                        color: ColorsTheme.primaryColor,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                            Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
-                                          ],
+                                child: Dismissible(
+                                  key: Key(
+                                      UniqueKey().toString()),
+                                  background: Container(
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(15),
+                                    color: Colors.red.shade800,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(Icons.delete,color: Colors.white,),
+                                        Icon(Icons.delete,color: Colors.white,),
+                                      ],
+                                    ),
+                                  ),
+                                  onDismissed: (direction){
+                                    setState(() {
+                                      currentTask!.delete();
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content:
+                                        Text('Flight Removed Successfully'),
+                                            duration: Duration(milliseconds: 700),));
+                                  },
+                                  child: Card(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(15),
+                                          color: ColorsTheme.primaryColor,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                              Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        padding: EdgeInsets.all(15),
-                                        color: Colors.grey.shade100,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(15),
+                                          color: Colors.grey.shade100,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
 
-                                            Text("🗓️ ${currentTask.departureCityDate}",
-                                                style: ThemeTexts.textStyleTitle3
-                                                    .copyWith(
-                                                    color: Colors.black87)),
-                                            Text("🗓️ ${currentTask.arrivalCityDate}",
-                                                style: ThemeTexts.textStyleTitle3
-                                                    .copyWith(
-                                                    color: Colors.black87)),
-                                          ],
+                                              Text("🗓️ ${currentTask.departureCityDate}",
+                                                  style: ThemeTexts.textStyleTitle3
+                                                      .copyWith(
+                                                      color: Colors.black87)),
+                                              Text("🗓️ ${currentTask.arrivalCityDate}",
+                                                  style: ThemeTexts.textStyleTitle3
+                                                      .copyWith(
+                                                      color: Colors.black87)),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(15),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
 
-                                            flightDetails(
-                                                cityName: currentTask.departureCity,
-                                                cityShortCode: currentTask.departureCityShortCode,
-                                                cityTime: currentTask.departureCityTime,
-                                                crossAlignment:
-                                                CrossAxisAlignment.start),
+                                              flightDetails(
+                                                  cityName: currentTask.departureCity,
+                                                  cityShortCode: currentTask.departureCityShortCode,
+                                                  cityTime: currentTask.departureCityTime,
+                                                  crossAlignment:
+                                                  CrossAxisAlignment.start),
 
-                                            RotatedBox(
-                                              quarterTurns: 1,
-                                              child: Icon(
-                                                Icons.flight,
-                                                size: 50,
-                                                color: Colors.grey,),
-                                            ),
+                                              RotatedBox(
+                                                quarterTurns: 1,
+                                                child: Icon(
+                                                  Icons.flight,
+                                                  size: 50,
+                                                  color: Colors.grey,),
+                                              ),
 
-                                            flightDetails(
-                                                cityName: currentTask.arrivalCity,
-                                                cityShortCode: currentTask.arrivalCityShortCode,
-                                                cityTime: currentTask.arrivalCityTime,
-                                                crossAlignment:
-                                                CrossAxisAlignment.end),
+                                              flightDetails(
+                                                  cityName: currentTask.arrivalCity,
+                                                  cityShortCode: currentTask.arrivalCityShortCode,
+                                                  cityTime: currentTask.arrivalCityTime,
+                                                  crossAlignment:
+                                                  CrossAxisAlignment.end),
 
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -289,8 +298,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                   itemCount: box.values.length,
                   itemBuilder: (context, index) {
                      ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                    return InkWell(
-                      child: Card(
+                    return Card(
                         key: ValueKey(currentTask!.key),
                         child: Row(
                           children: [
@@ -360,10 +368,10 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(currentTask!.flightCode,
+                                        Text(currentTask.flightCode,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
-                                        Text(currentTask!.flightStatus!,
+                                        Text(currentTask.flightStatus!,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white))
                                       ],
@@ -378,7 +386,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                       MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                            "🗓️ ${currentTask!.departureCityDate}",
+                                            "🗓️ ${currentTask.departureCityDate}",
                                             style: ThemeTexts.textStyleTitle3.copyWith(
                                                 color: Colors.black87)),
                                         Text(
@@ -428,8 +436,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                             ),
                           ],
                         ),
-                      ),
-                    );
+                      );
                   },
                 ),
               ),

@@ -143,11 +143,14 @@ class ReusingWidgets {
     required Function() onTapArrivalTitle,
     required TextStyle depStyle,
     required TextStyle arrStyle,
-    // required onTapClearDepartureTitle,
-    // required onTapClearArrivalTitle,
+    required Function() onTapClearDepartureTitle,
+    required Function() onTapClearArrivalTitle,
+    required bool clearIconDeparture,
+    required bool clearIconArrival,
+    required Function() onTapSwapIcon,
   }) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.19,
         margin: EdgeInsets.all(0),
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
@@ -174,9 +177,12 @@ class ReusingWidgets {
                       Icon(Icons.flight_takeoff, color: ColorsTheme.black),
                       SizedBox(width: 20),
                       Text(
-                        departureTitle.length > 25 ? '${departureTitle.substring(0, 25)}...' : departureTitle,
+                        departureTitle.length > 20 ? '${departureTitle.substring(0, 20)}...' : departureTitle,
                         style: depStyle,
-                      )
+                      ),
+                      clearIconDeparture == true ? IconButton(onPressed: (){
+                        onTapClearDepartureTitle();
+                      }, icon: Icon(Icons.clear)) : Container()
                     ],
                   ),
                 ),
@@ -198,16 +204,21 @@ class ReusingWidgets {
                       SizedBox(width: 20),
                       Text(
                         // arrivalTitle,
-                        arrivalTitle.length > 25 ? '${arrivalTitle.substring(0, 25)}...' : arrivalTitle,
+                        arrivalTitle.length > 20 ? '${arrivalTitle.substring(0, 20)}...' : arrivalTitle,
                         style: arrStyle,
-                      )
+                      ),
+                      clearIconArrival == true ? IconButton(onPressed: (){
+                        onTapClearArrivalTitle();
+                      }, icon: Icon(Icons.clear)) : Container()
                     ],
                   ),
                 ),
               ],
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  onTapSwapIcon();
+                },
                 icon: Icon(
                   Icons.swap_vert,
                   size: 30,
@@ -320,16 +331,15 @@ class ReusingWidgets {
     required BuildContext context,
     required Function() onTapFlightCodeText,
     required TextStyle flightCodeStyle,
-    // required onTapArrivalTitle,
-    // required onTapClearDepartureTitle,
-    // required onTapClearArrivalTitle,
+    required bool clearIcon,
+    required Function() onTapClearIcon,
   }) {
     return GestureDetector(
       onTap: (){
         onTapFlightCodeText();
       },
       child: Container(
-          height: MediaQuery.of(context).size.height * 0.15,
+          height: MediaQuery.of(context).size.height * 0.17,
           margin: EdgeInsets.all(0),
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
@@ -341,13 +351,15 @@ class ReusingWidgets {
           ),
           child: Row(
             children: [
-              Icon(Icons.line_style_outlined, color: ColorsTheme.textColor),
+              Icon(Icons.numbers, color: ColorsTheme.black),
               SizedBox(width: 20),
               Text(
                 flightCodeText,
                 style: flightCodeStyle,
-
-              )
+              ),
+              clearIcon == true ? IconButton(onPressed: (){
+                onTapClearIcon();
+              }, icon: Icon(Icons.clear)) : Container()
             ],
           )),
     );

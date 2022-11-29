@@ -3,7 +3,6 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/flight_detail/screen/flight_detail_airport_airline.dart';
-import 'package:flight_tracker/myflights/model/modelnew.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
@@ -11,8 +10,6 @@ import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflight
 import 'package:flight_tracker/myflights/screen/screen_my_upcoming__flights/myflights_upcoming_show_all.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-
-import 'screen_my_upcoming__flights/myflights_open_upcoming_flights.dart';
 
 class MyFlightsScreen extends StatefulWidget {
   const MyFlightsScreen({Key? key}) : super(key: key);
@@ -203,15 +200,10 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                   ModelMyFlightsUpcoming? currentTask = box.getAt(index);
                                   return InkWell(
                                     onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                        return MyFlightsOpenUpComingFlights(
-                                          modelMyFlightsUpcoming: currentTask,
-                                        );
-                                      }));
 
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context){
-                                      //   return FlightDetailAirportAirline(flight_iata: currentTask.flightCode,);
-                                      // }));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                                        return FlightDetailAirportAirline(flight_iata: currentTask.flightIata,);
+                                      }));
                                     },
                                     child: Dismissible(
                                       key: Key(UniqueKey().toString()),

@@ -67,9 +67,13 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                           flightCode = alphabetsController.text.toString() + numberController.text.toString();
                         });
                       }
-                      else{
-                        // dialogueText = "Enter Flight Code";
-                      }
+                      else{}
+                    },
+                    clearIcon: flightCode == "Enter Flight Code" ? false : true,
+                    onTapClearIcon: () {
+                      setState(() {
+                        flightCode = "Enter Flight Code";
+                      });
                     }),
 
                 SizedBox(height: 10),

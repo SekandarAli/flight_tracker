@@ -45,41 +45,44 @@ class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(12)
   String? arrivalLng;
 
-  @HiveField(13)
-  String? departureTerminal;
-
-  @HiveField(14)
-  String? arrivalTerminal;
-
-  @HiveField(15)
-  String? departureGate;
-
-  @HiveField(16)
-  String? arrivalGate;
-
-  @HiveField(17)
-  String? distance;
-
-  @HiveField(18)
-  String? duration;
-
-  @HiveField(19)
-  String? flightTimeLeft;
-
-  @HiveField(20)
-  String? baggage;
-
-  @HiveField(21)
-  String? departureAirport;
-
-  @HiveField(22)
-  String? arrivalAirport;
+  // @HiveField(13)
+  // String? departureTerminal;
+  //
+  // @HiveField(14)
+  // String? arrivalTerminal;
+  //
+  // @HiveField(15)
+  // String? departureGate;
+  //
+  // @HiveField(16)
+  // String? arrivalGate;
+  //
+  // @HiveField(17)
+  // String? distance;
+  //
+  // @HiveField(18)
+  // String? duration;
+  //
+  // @HiveField(19)
+  // String? flightTimeLeft;
+  //
+  // @HiveField(20)
+  // String? baggage;
+  //
+  // @HiveField(21)
+  // String? departureAirport;
+  //
+  // @HiveField(22)
+  // String? arrivalAirport;
 
   @HiveField(23)
   String? flightStatus;
 
-  @HiveField(24, defaultValue: false)
+  @HiveField(24)
   bool? isSelected;
+
+  @HiveField(25)
+  String? flightIata;
 
   ModelMyFlightsUpcoming({
       required this.flightCode,
@@ -95,17 +98,18 @@ class ModelMyFlightsUpcoming extends HiveObject {
       this.departureLng,
       this.arrivalLat,
       this.arrivalLng,
-      this.departureTerminal,
-      this.arrivalTerminal,
-      this.departureGate,
-      this.arrivalGate,
-      this.distance,
-      this.duration,
-      this.flightTimeLeft,
-      this.baggage,
-      this.departureAirport,
-      this.arrivalAirport,
+      // this.departureTerminal,
+      // this.arrivalTerminal,
+      // this.departureGate,
+      // this.arrivalGate,
+      // this.distance,
+      // this.duration,
+      // this.flightTimeLeft,
+      // this.baggage,
+      // this.departureAirport,
+      // this.arrivalAirport,
       this.flightStatus,
-      this.isSelected
+      this.isSelected,
+      this.flightIata,
   });
 }

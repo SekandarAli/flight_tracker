@@ -80,7 +80,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   noOfFlights: noOfFlights,
                   tripImage: tripImage,
                   modelMyFlightsUpcoming:
-                  [ModelMyFlightsUpcoming(
+                  ModelMyFlightsUpcoming(
                     flightCode: "",
                     departureCity: "",
                     departureCityDate: "",
@@ -91,7 +91,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                     arrivalCityTime: "",
                     arrivalCityDate: "",
                     flightStatus: "",
-                  )],
+                  ),
                 );
 
 
@@ -167,20 +167,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                         noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:
-                                        [
                                           ModelMyFlightsUpcoming(
-                                          flightCode: currentTask.flightCode,
-                                          departureCity: currentTask.departureCity,
-                                          departureCityDate: currentTask.departureCityDate,
-                                          departureCityShortCode: currentTask.departureCityShortCode,
-                                          departureCityTime: currentTask.departureCityTime,
-                                          arrivalCity: currentTask.arrivalCity,
-                                          arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                                          arrivalCityTime: currentTask.arrivalCityTime,
-                                          arrivalCityDate: currentTask.arrivalCityDate,
-                                          flightStatus: currentTask.flightStatus,
-
-                                        ), ModelMyFlightsUpcoming(
                                           flightCode: currentTask.flightCode,
                                           departureCity: currentTask.departureCity,
                                           departureCityDate: currentTask.departureCityDate,
@@ -193,7 +180,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           flightStatus: currentTask.flightStatus,
 
                                         ),
-                                        ],
                                       )
                                       :
                                   modelMyFlightsDummy =
@@ -202,7 +188,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                         noOfFlights: "$count Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:
-                                        [
                                           ModelMyFlightsUpcoming(
                                           flightCode: "",
                                           departureCity: "",
@@ -214,7 +199,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           arrivalCityTime: "",
                                           arrivalCityDate: "",
                                           flightStatus: '',
-                                        ),],
+                                        ),
                                       );
                                   print(isChecked[index]);
                                 },

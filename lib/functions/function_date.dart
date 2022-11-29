@@ -18,7 +18,7 @@ class _PickDateState extends State<PickDate> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        selectDate(context);
+        // selectDate(context);
       },
 
       child: Container(
@@ -33,7 +33,7 @@ class _PickDateState extends State<PickDate> {
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_month, color: ColorsTheme.black),
+            Icon(Icons.calendar_month, color: ColorsTheme.textColor),
             SizedBox(width: 20),
             Text(
               "Departing ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",

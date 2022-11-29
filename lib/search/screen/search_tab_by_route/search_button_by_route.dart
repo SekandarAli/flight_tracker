@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
 import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
-import '../../../flight_detail/services/services_airports_track_screen.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
    SearchButtonByRoute({super.key, required this.departureAirport,required this.arrivalAirport,this.airlineOptional,this.dateByRoute});
@@ -33,6 +32,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
+  bool trackFlight = true;
 
   @override
   void initState() {
@@ -85,19 +85,9 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String departureLng = "67.0011";
                               String arrivalLat = "31.5204";
                               String arrivalLng = "74.3587";
-                              String departureTerminal = "---";
-                              String arrivalTerminal = "---";
-                              String departureGate = "---";
-                              String arrivalGate = "---";
-                              String distance = "---";
-                              String duration = "---";
-                              String flightTimeLeft = "---";
-                              String baggage = "---";
-                              String departureAirport = "---";
-                              String arrivalAirport = "---";
 
                               print("${widget.departureAirport}");
-                              print("${departureCity}");
+                              print(departureCity);
 
                               return
                                 widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity
@@ -175,37 +165,36 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                               }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                                               TextButton(onPressed: () {
 
-                                                modelMyFlights = ModelMyFlightsUpcoming(
-                                                  flightCode: flightCode,
-                                                  departureCityDate: departureCityDate,
-                                                  departureCity: departureCity,
-                                                  departureCityShortCode: departureCityShortName,
-                                                  departureCityTime: departureCityTime,
-                                                  arrivalCityDate: arrivalCityDate,
-                                                  arrivalCity: arrivalCity,
-                                                  arrivalCityShortCode: arrivalCityShortName,
-                                                  arrivalCityTime: arrivalCityTime,
-                                                  flightStatus: flightStatus,
-                                                  arrivalAirport: arrivalAirport,
-                                                  arrivalGate: arrivalGate,
-                                                  arrivalLat: arrivalLat,
-                                                  arrivalLng: arrivalLng,
-                                                  arrivalTerminal: arrivalTerminal,
-                                                  baggage: baggage,
-                                                  departureAirport: departureAirport,
-                                                  departureGate: departureGate,
-                                                  departureLat: departureLat,
-                                                  departureLng: departureLng,
-                                                  departureTerminal: departureTerminal,
-                                                  distance: distance,
-                                                  duration: duration,
-                                                  flightTimeLeft: flightTimeLeft
-                                                );
-                                                dataBox!.add(modelMyFlights!);
+                                                // setState((){
+                                                //   trackFlight =! trackFlight;
+                                                //   if(trackFlight == false){
+                                                    modelMyFlights = ModelMyFlightsUpcoming(
+                                                        flightCode: flightCode,
+                                                        departureCityDate: departureCityDate,
+                                                        departureCity: departureCity,
+                                                        departureCityShortCode: departureCityShortName,
+                                                        departureCityTime: departureCityTime,
+                                                        arrivalCityDate: arrivalCityDate,
+                                                        arrivalCity: arrivalCity,
+                                                        arrivalCityShortCode: arrivalCityShortName,
+                                                        arrivalCityTime: arrivalCityTime,
+                                                        flightStatus: flightStatus,
+                                                        arrivalLat: arrivalLat,
+                                                        arrivalLng: arrivalLng,
+                                                        departureLat: departureLat,
+                                                        departureLng: departureLng,
+                                                        flightIata: flight_iata,
+                                                        isSelected: trackFlight
+                                                    );
+                                                    dataBox!.add(modelMyFlights!);
+                                                    ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
+                                                //   }
+                                                //   else{
+                                                //     modelMyFlights!.delete();
+                                                //   }
+                                                // });
 
-                                                ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
-
-                                              }, child: Text("TRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                              }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                                             ],
                                           ) : Container()
                                         ],

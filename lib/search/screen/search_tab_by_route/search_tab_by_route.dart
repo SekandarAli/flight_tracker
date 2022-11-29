@@ -22,13 +22,23 @@ class SearchTabByRoute extends StatefulWidget {
 class _SearchTabByRouteState extends State<SearchTabByRoute> {
   bool hideAdvance = false;
 
-  var departureAirportShortName = "Departure Airport";
-  var arrivalAirportShortName = "Arrival Airport";
-  var airlineOptionalShortName = "Airline(Optional)";
-  var airlineOptional = "Airline(Optional)";
-  var departureAirportName = "Departure Airport";
-  var arrivalAirportName = "Arrival Airport";
+  // String departureAirportShortName = "KHI";
+  String departureAirportShortName = "Departure Airport";
+  // String arrivalAirportShortName= "LHE";
+  String arrivalAirportShortName = "Arrival Airport";
+  String airlineOptionalShortName = "Airline(Optional)";
+  String airlineOptional = "Airline(Optional)";
+  // String departureAirportName = "LHE";
+  String departureAirportName = "Departure Airport";
+  // String arrivalAirportName = "KHI";
+  String arrivalAirportName = "Arrival Airport";
 
+
+  List<dynamic>? departureValue;
+  List<dynamic>? arrivalValue;
+
+  var temp1;
+  var temp2;
 
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
@@ -37,6 +47,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelSearch>("modelSearch");
+  }
+
+  void swapValues(){
+    // var temp = firstController.text.toString();
+    setState((){
+      // firstController.text = secondController.text.toString();
+      // secondController.text = temp;
+    });
   }
 
   @override
@@ -56,14 +74,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
             children: [
               ReusingWidgets.byRouteContainer(
                 onTapDepartureTitle: () async {
-                  final List<dynamic> newValue = await Navigator.of(context)
+                   departureValue = await Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return SearchTabArrivalDepartureAirport();
                   }));
 
                   setState(() {
-                    departureAirportShortName = newValue[0];
-                    departureAirportName = newValue[1];
+                    departureAirportShortName = departureValue![0];
+                    departureAirportName = departureValue![1];
 
                     // print("departureAirportName$departureAirportName");
                     // print("departureAirportShortName$departureAirportShortName");
@@ -71,24 +89,59 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   });
                 },
                 onTapArrivalTitle: () async {
-                  final List<dynamic> newValue = await Navigator.of(context)
+                  arrivalValue = await Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                         return SearchTabArrivalDepartureAirport();
                   }));
 
                   setState(() {
-                    arrivalAirportShortName = newValue[0];
-                    arrivalAirportName = newValue[1];
+                    arrivalAirportShortName = arrivalValue![0];
+                    arrivalAirportName = arrivalValue![1];
 
                     // print("arrivalAirportName$arrivalAirportName");
                     // print("arrivalAirportShortName$arrivalAirportShortName");
+
                   });
                 },
                 context: context,
                 departureTitle: departureAirportShortName,
                 arrivalTitle: arrivalAirportShortName,
-                depStyle: departureAirportShortName == "Departure Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack.copyWith(overflow: TextOverflow.ellipsis),
-                arrStyle: arrivalAirportShortName == "Arrival Airport" ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
+                depStyle: departureAirportShortName == "Departure Airport" || departureAirportShortName == "Arrival Airport"
+                    ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
+                arrStyle: arrivalAirportShortName == "Arrival Airport" || arrivalAirportShortName == "Departure Airport"
+                    ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
+                onTapClearDepartureTitle: (){
+                  setState(() {
+                    departureAirportShortName = "Departure Airport";
+                  });
+                },
+                onTapClearArrivalTitle: (){
+                  setState(() {
+                    arrivalAirportShortName = "Arrival Airport";
+                  });
+                },
+                clearIconDeparture: departureAirportShortName == "Departure Airport" || departureAirportShortName == "Arrival Airport"
+                    ? false : true,
+                clearIconArrival: arrivalAirportShortName == "Arrival Airport" || arrivalAirportShortName == "Departure Airport"
+                    ? false : true,
+                onTapSwapIcon: () {
+
+                  temp1 = departureAirportShortName;
+                  temp2 = departureAirportName;
+
+                  setState((){
+                    departureAirportShortName = arrivalAirportShortName;
+                    departureAirportName = arrivalAirportName;
+
+                    arrivalAirportShortName = temp1;
+                    arrivalAirportName = temp2;
+
+                  });
+
+                  print(departureAirportShortName);
+                  print(arrivalAirportShortName);
+
+                },
               ),
               SizedBox(height: 10),
               PickDate(),

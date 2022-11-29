@@ -72,9 +72,17 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.no_backpack_outlined,size: 50,),
-              SizedBox(height: 20,),
               Text("Oops! No Data Found"),
-              ReusingWidgets.searchButton(onPress: (){Navigator.pop(context);}, context: context,text: "BACK")
+              SizedBox(height: 20,),
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("BACK"))
+              // ReusingWidgets.searchButton(onPress: (){
+              //   Navigator.pop(context);
+              //   },
+              //     context: context,
+              //     text: "BACK",
+              // )
             ],
           ),
         )) : Scaffold(
@@ -109,17 +117,18 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
                           departureLng: departureLng,
                           arrivalLat: arrivalLat,
                           arrivalLng: arrivalLng,
-                          departureTerminal: departureTerminal,
-                          departureAirport: departureAirport,
-                          departureGate: departureGate,
-                          arrivalGate: arrivalGate,
-                          duration: duration,
-                          distance: distance,
-                          flightTimeLeft: flightTimeLeft,
-                          baggage: baggage,
-                          arrivalAirport: arrivalAirport,
-                          arrivalTerminal: arrivalTerminal,
-                          flightStatus: flightStatus
+                          // departureTerminal: departureTerminal,
+                          // departureAirport: departureAirport,
+                          // departureGate: departureGate,
+                          // arrivalGate: arrivalGate,
+                          // duration: duration,
+                          // distance: distance,
+                          // flightTimeLeft: flightTimeLeft,
+                          // baggage: baggage,
+                          // arrivalAirport: arrivalAirport,
+                          // arrivalTerminal: arrivalTerminal,
+                          flightStatus: flightStatus,
+                        flightIata: widget.flight_iata
                       );
 
                       dataBox!.add(modelMyFlights!);
@@ -363,16 +372,16 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
         children: [
           Row(
             children: [
-              CustomTerminalgateRow(text: "Terminal",container: departureTerminal ),
+              CustomTerminalGateRow(text: "Terminal",container: departureTerminal ),
               SizedBox(width: 10),
-              CustomTerminalgateRow(text: "Gate",container: departureGate ),
+              CustomTerminalGateRow(text: "Gate",container: departureGate ),
             ],
           ),
           Row(
             children: [
-              CustomTerminalgateRow(text: "Terminal",container: arrivalTerminal ),
+              CustomTerminalGateRow(text: "Terminal",container: arrivalTerminal ),
               SizedBox(width: 10),
-              CustomTerminalgateRow(text: "Gate",container: arrivalGate ),
+              CustomTerminalGateRow(text: "Gate",container: arrivalGate ),
             ],
           ),
 
@@ -381,7 +390,7 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
     );
   }
 
-  Widget CustomTerminalgateRow({
+  Widget CustomTerminalGateRow({
     required String text,
     required String container,
   }) {

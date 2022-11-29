@@ -31,25 +31,16 @@ class ModelMyFlightsUpcomingAdapter
       departureLng: fields[10] as String?,
       arrivalLat: fields[11] as String?,
       arrivalLng: fields[12] as String?,
-      departureTerminal: fields[13] as String?,
-      arrivalTerminal: fields[14] as String?,
-      departureGate: fields[15] as String?,
-      arrivalGate: fields[16] as String?,
-      distance: fields[17] as String?,
-      duration: fields[18] as String?,
-      flightTimeLeft: fields[19] as String?,
-      baggage: fields[20] as String?,
-      departureAirport: fields[21] as String?,
-      arrivalAirport: fields[22] as String?,
       flightStatus: fields[23] as String?,
-      isSelected: fields[24] == null ? false : fields[24] as bool?,
+      isSelected: fields[24] as bool?,
+      flightIata: fields[25] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelMyFlightsUpcoming obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.flightCode)
       ..writeByte(1)
@@ -76,30 +67,12 @@ class ModelMyFlightsUpcomingAdapter
       ..write(obj.arrivalLat)
       ..writeByte(12)
       ..write(obj.arrivalLng)
-      ..writeByte(13)
-      ..write(obj.departureTerminal)
-      ..writeByte(14)
-      ..write(obj.arrivalTerminal)
-      ..writeByte(15)
-      ..write(obj.departureGate)
-      ..writeByte(16)
-      ..write(obj.arrivalGate)
-      ..writeByte(17)
-      ..write(obj.distance)
-      ..writeByte(18)
-      ..write(obj.duration)
-      ..writeByte(19)
-      ..write(obj.flightTimeLeft)
-      ..writeByte(20)
-      ..write(obj.baggage)
-      ..writeByte(21)
-      ..write(obj.departureAirport)
-      ..writeByte(22)
-      ..write(obj.arrivalAirport)
       ..writeByte(23)
       ..write(obj.flightStatus)
       ..writeByte(24)
-      ..write(obj.isSelected);
+      ..write(obj.isSelected)
+      ..writeByte(25)
+      ..write(obj.flightIata);
   }
 
   @override
