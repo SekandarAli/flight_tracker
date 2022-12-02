@@ -77,9 +77,9 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   @override
   void initState() {
     super.initState();
-    initBannerAd();
-    _bannerAd.load();
-    _initGoogleMobileAds();
+    // initBannerAd();
+    // _bannerAd.load();
+    // _initGoogleMobileAds();
   }
 
   @override
@@ -94,8 +94,6 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    // box.writeIfNull('currentIndex', currentIndex);
 
     return Scaffold(
       bottomNavigationBar: Column(

@@ -32,7 +32,7 @@ class ModelMyFlightsUpcomingAdapter
       arrivalLat: fields[11] as String?,
       arrivalLng: fields[12] as String?,
       flightStatus: fields[23] as String?,
-      isSelected: fields[24] as bool?,
+      isSelected: fields[24] == null ? false : fields[24] as bool?,
       flightIata: fields[25] as String?,
     );
   }

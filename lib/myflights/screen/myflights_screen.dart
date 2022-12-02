@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -22,6 +22,11 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
   TextEditingController createTripController = TextEditingController();
 
   TextEditingController? editingController = TextEditingController();
+
+  List<ModelMyFlightsUpcoming> finalItemsList = [];
+
+  ModelMyFlightsCreateTrip? task;
+  List<ModelMyFlightsUpcoming>? modelItemsList;
 
 
   @override
@@ -51,20 +56,18 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                   createTrip(
                       width: w,
                       onTap: () {
-                        openDialogue();
+                        // openDialogue();
+                        showDilougee();
                       }),
                   Container(
                     color: ColorsTheme.myFlightsbg,
                     height: w * 0.37,
                     width: w * 0.58,
                     child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
-                    // child: ValueListenableBuilder<Box<ModelNew>>(
                       valueListenable:
                       Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
-                      // Hive.box<ModelNew>("modelNew").listenable(),
                       builder: (context, box, _) {
                         final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-                        // final items = box.values.toList().cast<ModelNew>();
 
                         if (items.isEmpty) {
                           return Container();
@@ -74,7 +77,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             itemCount: box.values.length,
                             itemBuilder: (context, index) {
                               ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                              // ModelNew? currentTask = box.getAt(index);
                               return Row(
                                 children: [
                                   GestureDetector(
@@ -82,7 +84,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       print(currentTask.tripName);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                                         return MyFlightsOpenCreateNewTrips(
-                                          noOfFlights: currentTask.noOfFlights,
+                                          noOfFlights: currentTask.modelMyFlightsUpcoming.length,
                                           tripName: currentTask.tripName,
                                           currentTask: currentTask,
                                         );
@@ -112,12 +114,24 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             ),
                                             SizedBox(height: 5),
                                             Text(
-                                              // currentTask.noOfFlights,
-                                              "Flights",
+                                              "${currentTask.modelMyFlightsUpcoming!.length} Flights",
+                                              // "Flights",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.grey,
                                                   letterSpacing: 0),
-                                            )
+                                            ),
+
+                                            // Container(
+                                            //   height: 10,
+                                            //   child: ListView.builder(
+                                            //     scrollDirection: Axis.horizontal,
+                                            //       itemCount: currentTask.modelMyFlightsUpcoming!.length,
+                                            //       itemBuilder: (context, index) {
+                                            //         return Text(
+                                            //           "${currentTask.modelMyFlightsUpcoming![index].flightCode!}\t\t\t",
+                                            //         );
+                                            //       }),
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -367,26 +381,234 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Create New Trip'),
-          content: textFormFields(
-              width: MediaQuery.of(context).size.width / 2,
-              hintText: "Enter Trip Name",
-              textController: createTripController),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 1.5,
+            child: Column(
+              children: [
+                textFormFields(
+                    width: MediaQuery.of(context).size.width / 2,
+                    hintText: "Enter Trip Name",
+                    textController: createTripController),
+                finalItemsList.isEmpty
+                    ? Container(height: 0,color: Colors.green,)
+                    : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 9),
+                  height: MediaQuery.of(context).size.height / 2,
+                     child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: finalItemsList.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Text(
+                              finalItemsList[index].flightCode!,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
-                  }));
+                onPressed: () async{
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //   return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
+                  // }));
+
+                  Map result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => MyFlightCreateNewTrip(tripName: createTripController.text.toString())));
+
+                  if (result != null && result.containsKey('itemList')) {
+                    setState(() {
+                      finalItemsList = result['itemList'];
+                      print("final: ${finalItemsList}");
+                    });
+                  }
+                  else{
+                    return null;
+                  }
+
                 },
-                child: Text('OK')),
+                child: Text('ADD TRIP DATA')),
             TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+                onPressed: () async{
+                  // Navigator.of(context).pop();
+                  var newTask = ModelMyFlightsCreateTrip(
+                      tripName: createTripController.text,
+                      noOfFlights: '0',
+                      tripImage: '',
+                      modelMyFlightsUpcoming: finalItemsList
+                  );
+
+                  Box<ModelMyFlightsCreateTrip> taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+
+                  if (task != null) {
+                    task!.tripName = newTask.tripName;
+                    modelItemsList = finalItemsList;
+                    task!.save();
+                    Navigator.pop(context);
+                  } else {
+                    await taskBox.add(newTask);
+                    Navigator.pop(context);
+                  }
                 },
-                child: Text('CANCEL')),
+                child: Text('SAVE')),
           ],
         );
       });
+
+
+  showDilougee(){
+    return  showDialog(
+        context: context,
+        builder: (_) =>
+            AlertDialog(
+              insetPadding: EdgeInsets.only(top: MediaQuery.of(context).size.height/6),
+              contentPadding: EdgeInsets.zero,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              content: Builder(
+                builder: (context) {
+                  return SizedBox(
+                    height: double.infinity,
+                    width: double.maxFinite,
+                    child: Column(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 70,
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: Icon(
+                                      Icons.close,
+                                      color: Colors.black,
+                                      size: 35,
+                                    ),
+                                  ),
+                                  Text(
+                                    "CREATE TRIP",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      var newTask = ModelMyFlightsCreateTrip(
+                                          tripName: createTripController.text,
+                                          noOfFlights: '0',
+                                          tripImage: '',
+                                          modelMyFlightsUpcoming: finalItemsList
+                                      );
+
+                                      Box<ModelMyFlightsCreateTrip> taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+
+                                      if (task != null) {
+                                        task!.tripName = newTask.tripName;
+                                        modelItemsList = finalItemsList;
+                                        task!.save();
+                                        Navigator.pop(context);
+                                        modelItemsList!.clear();
+                                        finalItemsList.clear();
+                                      } else {
+                                        await taskBox.add(newTask);
+                                        Navigator.pop(context);
+                                        modelItemsList!.clear();
+                                        finalItemsList.clear();
+                                      }
+                                      // await taskBox.add(newTask);
+                                      // Navigator.pop(context);
+
+                                      // task!.tripName = "";
+
+                                    },
+                                    child: Text(
+                                        "SAVE",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          textFormFields(
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              hintText: "Enter Trip Name",
+                              textController: createTripController),
+                          ElevatedButton(onPressed: ()async{
+                            Map result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => MyFlightCreateNewTrip(tripName: createTripController.text.toString())));
+
+                            if (result.containsKey('itemList')) {
+                              setState(() {
+                                finalItemsList = result['itemList'];
+                                print("final: $finalItemsList");
+                              });
+                            }
+                            else{
+                              return null;
+                            }
+                          }, child: Text(
+                            "ADD TRIPS",
+                          ),),
+                          finalItemsList.isEmpty
+                              ? Container()
+                              : Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 9),
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: finalItemsList.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    color: Colors.white,
+                                    child: ListTile(
+                                      title: Text(
+                                        finalItemsList[index].flightCode!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      onTap: () {},
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                  );
+                },
+              ),
+            ));
+  }
 
   Widget textFormFields({
     required double width,

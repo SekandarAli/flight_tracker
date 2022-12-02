@@ -78,7 +78,7 @@ class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(23)
   String? flightStatus;
 
-  @HiveField(24)
+  @HiveField(24,defaultValue: false)
   bool? isSelected;
 
   @HiveField(25)

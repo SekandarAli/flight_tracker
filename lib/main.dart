@@ -25,8 +25,6 @@ void main() async{
   await Hive.openBox<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   Hive.registerAdapter<ModelSearch>(ModelSearchAdapter());
   await Hive.openBox<ModelSearch>("modelSearch");
-  // Hive.registerAdapter<ModelNew>(ModelNewAdapter());
-  // await Hive.openBox<ModelNew>("modelNew");
 
   await GetStorage.init();
   runApp(MyApp());
