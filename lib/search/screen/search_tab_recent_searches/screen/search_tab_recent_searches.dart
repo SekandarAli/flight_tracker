@@ -6,10 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class SearchTabRecentSearches extends StatefulWidget {
-   SearchTabRecentSearches({Key? key,this.departureAirportName,this.arrivalAirportName}) : super(key: key);
+   SearchTabRecentSearches({Key? key,
+     this.departureAirportShortName,
+     this.departureAirport,
+     this.arrivalAirportShortName,
+     this.arrivalAirport,
+   }) : super(key: key);
 
-   String? departureAirportName = "Departure Airport";
-   String? arrivalAirportName = "Arrival Airport";
+   String? departureAirport;
+   String? arrivalAirport;
+   String? departureAirportShortName;
+   String? arrivalAirportShortName;
 
   @override
   State<SearchTabRecentSearches> createState() => _SearchTabRecentSearchesState();
@@ -48,13 +55,14 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: (){
                                   setState(() {
-                                    print("${widget.departureAirportName}");
-                                    print(currentTask.departureCity!);
-                                    widget.departureAirportName = currentTask.departureCity!;
-                                    widget.arrivalAirportName = currentTask.arrivalCity!;
+                                    print("aaaaaaaaa");
+                                    widget.departureAirport = currentTask.departureCity!;
+                                    widget.departureAirportShortName = currentTask.departureCityShortName!;
+                                    widget.arrivalAirport = currentTask.arrivalCity!;
+                                    widget.arrivalAirportShortName = currentTask.arrivalCityShortName!;
                                   });
                                 },
                                 child: SizedBox(

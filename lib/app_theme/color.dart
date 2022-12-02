@@ -9,4 +9,5 @@ import 'package:flutter/material.dart';
    static Color black = Colors.black;
    static Color white = Colors.white;
    static Color buttonColor = Colors.blue.shade400;
+   static Color dismissibleColor = Colors.red.shade800;
 }

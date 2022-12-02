@@ -19,22 +19,28 @@ class ModelSearchAdapter extends TypeAdapter<ModelSearch> {
     return ModelSearch(
       arrivalCity: fields[0] as String?,
       departureCity: fields[1] as String?,
-      airlineName: fields[2] as String?,
-      flightCode: fields[3] as String?,
+      airlineName: fields[4] as String?,
+      flightCode: fields[5] as String?,
+      arrivalCityShortName: fields[2] as String?,
+      departureCityShortName: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ModelSearch obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.arrivalCity)
       ..writeByte(1)
       ..write(obj.departureCity)
       ..writeByte(2)
-      ..write(obj.airlineName)
+      ..write(obj.arrivalCityShortName)
       ..writeByte(3)
+      ..write(obj.departureCityShortName)
+      ..writeByte(4)
+      ..write(obj.airlineName)
+      ..writeByte(5)
       ..write(obj.flightCode);
   }
 

@@ -7,31 +7,31 @@ part 'myflights_upcoming_model.g.dart';
 @HiveType(typeId: 0)
 class ModelMyFlightsUpcoming extends HiveObject {
   @HiveField(0)
-  String flightCode;
+  String? flightCode;
 
   @HiveField(1)
-  String departureCityDate;
+  String? departureCityDate;
 
   @HiveField(2)
-  String departureCity;
+  String? departureCity;
 
   @HiveField(3)
-  String departureCityShortCode;
+  String? departureCityShortCode;
 
   @HiveField(4)
-  String departureCityTime;
+  String? departureCityTime;
 
   @HiveField(5)
-  String arrivalCity;
+  String? arrivalCity;
 
   @HiveField(6)
-  String arrivalCityShortCode;
+  String? arrivalCityShortCode;
 
   @HiveField(7)
-  String arrivalCityTime;
+  String? arrivalCityTime;
 
   @HiveField(8)
-  String arrivalCityDate;
+  String? arrivalCityDate;
 
   @HiveField(9)
   String? departureLat;
@@ -85,15 +85,15 @@ class ModelMyFlightsUpcoming extends HiveObject {
   String? flightIata;
 
   ModelMyFlightsUpcoming({
-      required this.flightCode,
-      required this.departureCityDate,
-      required this.departureCity,
-      required this.departureCityShortCode,
-      required this.departureCityTime,
-      required this.arrivalCity,
-      required this.arrivalCityShortCode,
-      required this.arrivalCityTime,
-      required this.arrivalCityDate,
+      this.flightCode,
+      this.departureCityDate,
+      this.departureCity,
+      this.departureCityShortCode,
+      this.departureCityTime,
+      this.arrivalCity,
+      this.arrivalCityShortCode,
+      this.arrivalCityTime,
+      this.arrivalCityDate,
       this.departureLat,
       this.departureLng,
       this.arrivalLat,

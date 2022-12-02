@@ -15,9 +15,6 @@ class SettingApplication extends StatefulWidget {
 
 class _SettingApplicationState extends State<SettingApplication> {
 
-  String editName = "Your Name Here";
-  TextEditingController nameController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -81,51 +78,4 @@ class _SettingApplicationState extends State<SettingApplication> {
       ),
     );
   }
-  Future<String?> openDialogue() => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Username'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width/2,
-                child: TextFormField(
-                  controller: nameController,
-                  maxLength: 10,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(fontSize: 12),
-                  decoration: InputDecoration(
-                    counterText: "",
-                    hintText: "Enter Your Name",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 3,
-                        color: Colors.black,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 3,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              )],
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(onPressed: () {
-                  Navigator.of(context).pop(nameController.text.toString());
-                },
-                    child: Text('DONE')),
-              ],
-            ),
-          ],
-        );
-      });
 }

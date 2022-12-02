@@ -1,15 +1,19 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
-import 'package:flight_tracker/ads/ad_mobs_implement.dart';
+import 'package:flight_tracker/ads/ad_mobs_manager.dart';
 import 'package:flight_tracker/airlines/screen/airline_screen.dart';
-import 'package:flight_tracker/airports/screen/airports_screen.dart';
+import 'package:flight_tracker/useless/airports_screen.dart';
+import 'package:flight_tracker/airports/screen/airport_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flight_tracker/search/screen/search_tab/search_tab_screen.dart';
 import 'package:flight_tracker/settings/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import '../useless/airlines_screen.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   const BottomNavBarScreen({Key? key}) : super(key: key);
@@ -20,10 +24,13 @@ class BottomNavBarScreen extends StatefulWidget {
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   late BannerAd _bannerAd;
   bool isBannerAdLoaded = false;
+
+  final box = GetStorage();
+
 
   initBannerAd() {
     _bannerAd = BannerAd(
@@ -87,9 +94,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var cart = Provider.of<ProviderData>(context);
-    // var subTotal = cart.currentIndex;
-    // int currentIndex = 0;
+
+    // box.writeIfNull('currentIndex', currentIndex);
 
     return Scaffold(
       bottomNavigationBar: Column(
@@ -125,11 +131,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
           BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: currentIndex,
+            // currentIndex: int.parse('${box.read("currentIndex")}'),
             backgroundColor: Colors.white,
             selectedItemColor: ColorsTheme.primaryColor,
             unselectedItemColor: Colors.grey[400],
             onTap: (value) {
               setState(() {
+                // box.write("currentIndex", currentIndex);
                 currentIndex = value;
               });
             },

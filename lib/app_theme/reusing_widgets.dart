@@ -339,7 +339,7 @@ class ReusingWidgets {
         onTapFlightCodeText();
       },
       child: Container(
-          height: MediaQuery.of(context).size.height * 0.17,
+          height: MediaQuery.of(context).size.height * 0.19,
           margin: EdgeInsets.all(0),
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
@@ -430,7 +430,7 @@ class ReusingWidgets {
                 width: MediaQuery.of(context).size.width/2,
                 child: TextFormField(
                   controller: textEditingController,
-                  maxLength: 10,
+                  maxLength: 15,
                   keyboardType: TextInputType.text,
                   style: TextStyle(fontSize: 12),
                   decoration: InputDecoration(

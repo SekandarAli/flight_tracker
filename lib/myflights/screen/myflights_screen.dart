@@ -105,7 +105,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             SizedBox(height: 10),
                                             Text(
                                               currentTask!.tripName,
-                                              // "null",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w600,
@@ -113,8 +112,8 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             ),
                                             SizedBox(height: 5),
                                             Text(
-                                              currentTask.noOfFlights,
-                                               // "null",
+                                              // currentTask.noOfFlights,
+                                              "Flights",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.grey,
                                                   letterSpacing: 0),
@@ -198,9 +197,8 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                 itemCount: box.values.length,
                                 itemBuilder: (context, index) {
                                   ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                  return InkWell(
+                                  return GestureDetector(
                                     onTap: (){
-
                                       Navigator.push(context, MaterialPageRoute(builder: (context){
                                         return FlightDetailAirportAirline(flight_iata: currentTask.flightIata,);
                                       }));
@@ -210,7 +208,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       background: Container(
                                         margin: EdgeInsets.all(5),
                                         padding: EdgeInsets.all(15),
-                                        color: Colors.red.shade800,
+                                        color: ColorsTheme.dismissibleColor,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -236,7 +234,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Text(currentTask!.flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                  Text(currentTask!.flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
                                                   Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
                                                 ],
                                               ),
@@ -247,12 +245,12 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                               color: Colors.grey.shade100,
                                               child: Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.center,
                                                 children: [
-                                                  Text("🗓️ ${currentTask.departureCityDate}",
-                                                      style: ThemeTexts.textStyleTitle3
-                                                          .copyWith(
-                                                          color: Colors.black87)),
+                                                  // Text("🗓️ ${currentTask.departureCityDate}".substring(0,23),
+                                                  //     style: ThemeTexts.textStyleTitle3
+                                                  //         .copyWith(
+                                                  //         color: Colors.black87)),
                                                   Text("🗓️ ${currentTask.arrivalCityDate}",
                                                       style: ThemeTexts.textStyleTitle3
                                                           .copyWith(
@@ -267,9 +265,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   flightDetails(
-                                                      cityName: currentTask.departureCity,
-                                                      cityShortCode: currentTask.departureCityShortCode,
-                                                      cityTime: currentTask.departureCityTime,
+                                                      cityName: currentTask.departureCity!,
+                                                      cityShortCode: currentTask.departureCityShortCode!,
+                                                      cityTime: currentTask.departureCityTime!,
                                                       crossAlignment:
                                                       CrossAxisAlignment.start),
                                                   RotatedBox(
@@ -280,9 +278,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                       color: Colors.grey,),
                                                   ),
                                                   flightDetails(
-                                                      cityName: currentTask.arrivalCity,
-                                                      cityShortCode: currentTask.arrivalCityShortCode,
-                                                      cityTime: currentTask.arrivalCityTime,
+                                                      cityName: currentTask.arrivalCity!,
+                                                      cityShortCode: currentTask.arrivalCityShortCode!,
+                                                      cityTime: currentTask.arrivalCityTime!,
                                                       crossAlignment:
                                                       CrossAxisAlignment.end),
                                                 ],
@@ -371,7 +369,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
           title: Text('Create New Trip'),
           content: textFormFields(
               width: MediaQuery.of(context).size.width / 2,
-              hintText: "Enter Name",
+              hintText: "Enter Trip Name",
               textController: createTripController),
           actions: [
             TextButton(

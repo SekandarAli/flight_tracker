@@ -59,7 +59,8 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                         //
                         // }, icon: Icon(Icons.more_vert,color: Colors.white,))
                       child: PopupMenuButton(
-                        color: Colors.white,
+                        // color: Colors.white,
+                        icon: Icon(Icons.more_vert, color: Colors.white,),
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
@@ -178,7 +179,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                   alignment: Alignment.center,
                                   child: Icon(
                                     Icons.flight,
-                                    size: w * 0.4,
+                                    size: w * 0.3,
                                     color: Colors.grey,
                                   )),
                               SizedBox(
@@ -188,7 +189,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                 "No Flights Found",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: w * 0.1,
+                                  fontSize: w * 0.05,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.grey,
                                 ),
@@ -204,7 +205,8 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                     itemCount: box.values.length,
                                     itemBuilder: (context, index) {
                                       ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                                      return currentTask!.modelMyFlightsUpcoming!.flightCode.isNotEmpty ?
+                                      return
+                                        currentTask!.modelMyFlightsUpcoming!.flightCode.isNotEmpty ?
                                       InkWell(
                                         // onTap: (){
                                         //   Navigator.push(context, MaterialPageRoute(builder: (context){
@@ -217,7 +219,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                           background: Container(
                                             margin: EdgeInsets.all(5),
                                             padding: EdgeInsets.all(15),
-                                            color: Colors.amberAccent,
+                                            color: ColorsTheme.dismissibleColor,
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -252,13 +254,13 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                   color: Colors.grey.shade100,
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
+                                                    MainAxisAlignment.center,
                                                     children: [
 
-                                                      Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.departureCityDate}",
-                                                          style: ThemeTexts.textStyleTitle3
-                                                              .copyWith(
-                                                              color: Colors.black87)),
+                                                      // Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.departureCityDate}",
+                                                      //     style: ThemeTexts.textStyleTitle3
+                                                      //         .copyWith(
+                                                      //         color: Colors.black87)),
                                                       Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.arrivalCityDate}",
                                                           style: ThemeTexts.textStyleTitle3
                                                               .copyWith(
@@ -301,7 +303,8 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                             ),
                                           ),
                                         ),
-                                      ) : Container();
+                                      )
+                                      : Container();
                                     },
                                   ),
                                 ),

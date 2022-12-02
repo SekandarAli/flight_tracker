@@ -12,7 +12,13 @@ import '../../../../app_theme/theme_texts.dart';
 import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
-   SearchButtonByRoute({super.key, required this.departureAirport,required this.arrivalAirport,this.airlineOptional,this.dateByRoute});
+   SearchButtonByRoute({
+     super.key,
+     required this.departureAirport,
+     required this.arrivalAirport,
+     this.airlineOptional,
+     this.dateByRoute,
+   });
 
   var departureAirport;
   var arrivalAirport;
@@ -69,8 +75,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                             itemCount: snapshot.data!.response!.length,
                             itemBuilder: (context, index) {
 
-                              String flightCode = snapshot.data!.response![index].flightNumber ?? "---";
-                              String flightStatus = snapshot.data!.response![index].status.toString() ?? "Unknown";
+                              String flightCode = snapshot.data!.response![index].flightIata ?? "---";
+                              Status flightStatus = snapshot.data!.response![index].status!;
                               String departureCity = snapshot.data!.response![index].depIata ?? "---";
                               String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
                               String airlineCityOptional = snapshot.data!.response![index].airlineIata ?? "---";
@@ -79,8 +85,10 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String departureCityTime = snapshot.data!.response![index].lat.toString();
                               String arrivalCityTime = snapshot.data!.response![index].lng.toString();
                               String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
-                              String departureCityDate = 'Nov 08, 2022';
-                              String arrivalCityDate = 'Nov 09, 2022';
+                              int updated = snapshot.data!.response![index].updated!;
+                              var dateTimeUpdated = DateTime.fromMillisecondsSinceEpoch(updated * 1000);
+                              // String departureCityDate = 'Nov 08, 2022';
+                              // String arrivalCityDate = 'Nov 09, 2022';
                               String departureLat = "24.8607";
                               String departureLng = "67.0011";
                               String arrivalLat = "31.5204";
@@ -170,15 +178,15 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                 //   if(trackFlight == false){
                                                     modelMyFlights = ModelMyFlightsUpcoming(
                                                         flightCode: flightCode,
-                                                        departureCityDate: departureCityDate,
+                                                        // departureCityDate: departureCityDate,
                                                         departureCity: departureCity,
                                                         departureCityShortCode: departureCityShortName,
                                                         departureCityTime: departureCityTime,
-                                                        arrivalCityDate: arrivalCityDate,
+                                                        arrivalCityDate: dateTimeUpdated.toString(),
                                                         arrivalCity: arrivalCity,
                                                         arrivalCityShortCode: arrivalCityShortName,
                                                         arrivalCityTime: arrivalCityTime,
-                                                        flightStatus: flightStatus,
+                                                        flightStatus: flightStatus.toString(),
                                                         arrivalLat: arrivalLat,
                                                         arrivalLng: arrivalLng,
                                                         departureLat: departureLat,

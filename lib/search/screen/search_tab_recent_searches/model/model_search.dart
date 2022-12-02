@@ -12,10 +12,16 @@ class ModelSearch extends HiveObject {
   String? departureCity;
 
   @HiveField(2)
-  String? airlineName;
+  String? arrivalCityShortName;
 
   @HiveField(3)
+  String? departureCityShortName;
+
+  @HiveField(4)
+  String? airlineName;
+
+  @HiveField(5)
   String? flightCode;
 
-  ModelSearch({ this.arrivalCity, this.departureCity,this.airlineName,this.flightCode});
+  ModelSearch({ this.arrivalCity, this.departureCity,this.airlineName,this.flightCode,this.arrivalCityShortName,this.departureCityShortName});
 }

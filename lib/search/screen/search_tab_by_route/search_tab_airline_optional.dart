@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flight_tracker/airlines/model/model_airlines.dart';
 import 'package:flight_tracker/airlines/services/services_airlines.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -7,6 +9,7 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SearchTabAirlineOptional extends StatefulWidget {
   SearchTabAirlineOptional({super.key});
@@ -18,15 +21,24 @@ class SearchTabAirlineOptional extends StatefulWidget {
 class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
 
   TextEditingController searchAirlineController = TextEditingController();
-  Future<ModelAirlines>? futureList;
+  List _items = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      futureList = ServicesAirlines().GetAllPosts();
+      readJson();
     });
   }
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/jsons/airline.json');
+    final data = await json.decode(response);
+    setState(() {
+      _items = data["response"];
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,66 +68,42 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                 ),
               ),
               Expanded(
-                child: FutureBuilder(
-                  future: futureList,
-                  builder: (context,snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.response!.isNotEmpty) {
-                        return Container(
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Flexible(
-                                child: ListView.builder(
-                                  padding: EdgeInsets.all(5),
-                                  itemCount: snapshot.data!.response!.length,
-                                  itemBuilder: (context, index) {
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: ListView.builder(
+                          padding: EdgeInsets.all(5),
+                          itemCount: _items.length,
+                          itemBuilder: (context, index) {
 
-                                    String? airlineName = snapshot.data!.response![index].name ?? "Unknown";
-                                    String? countryShortName = snapshot.data!.response![index].iataCode ?? "Unknown";
-                                    String? airportImage;
+                            String? airlineName = _items[index]["name"]  ?? "Unknown";
+                            String? countryShortName = _items[index]["iata_code"]  ?? "Unknown";
+                            String? airportImage;
+                            String? iataValue = _items[index]["icao_code"]  ?? "Unknown";
 
-                                    return
-                                     airlineName.toLowerCase().contains(searchAirlineController.text) || countryShortName.toLowerCase().contains(searchAirlineController.text) ?
-                                      InkWell(
-                                          onTap: () async {
-                                            Navigator.pop(context,[airlineName,countryShortName]);
-                                          },
-                                          child: ListTile(
-                                            title: Text(airlineName,style: ThemeTexts.textStyleValueBlack,),
-                                            subtitle: Text(countryShortName,style: ThemeTexts.textStyleValueBlack2),
-                                            trailing: FlutterLogo(
-                                              size: 40,
-                                              textColor: Colors.blue,
-                                              style: FlutterLogoStyle.stacked,
-                                            ), //F
-                                          )) : Container();
+                            return
+                              airlineName!.toLowerCase().contains(searchAirlineController.text)
+                                  || countryShortName!.toLowerCase().contains(searchAirlineController.text) ?
+                              InkWell(
+                                  onTap: () async {
+                                    Navigator.pop(context,[airlineName,countryShortName]);
                                   },
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Center(
-                          child: Text(
-                            "error 1${snapshot.error}",
-                          ),
-                        );
-                      }
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          "error 2${snapshot.error}",
+                                  child: ListTile(
+                                    title: Text(airlineName,style: ThemeTexts.textStyleValueBlack,),
+                                    subtitle: Text(countryShortName!,style: ThemeTexts.textStyleValueBlack2),
+                                    trailing: FlutterLogo(
+                                      size: 40,
+                                      textColor: Colors.blue,
+                                      style: FlutterLogoStyle.stacked,
+                                    ), //F
+                                  )) : Container();
+                          },
                         ),
-                      );
-                    } else {
-                      return Center(
-                          child: FunctionProgressIndicator()
-                      );
-                    }
-                  },
-
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

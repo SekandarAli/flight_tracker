@@ -68,13 +68,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
           IconButton(
               onPressed: () async {
 
-
-                                                                  /// ///
-
-                                         ///////////////////////////////////////////////////////
-
-                                                                  /// ///
-
                 modelMyFlightsDummy = ModelMyFlightsCreateTrip(
                   tripName: widget.tripName!,
                   noOfFlights: noOfFlights,
@@ -82,19 +75,8 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   modelMyFlightsUpcoming:
                   ModelMyFlightsUpcoming(
                     flightCode: "",
-                    departureCity: "",
-                    departureCityDate: "",
-                    departureCityShortCode: "",
-                    departureCityTime: "",
-                    arrivalCity: "",
-                    arrivalCityShortCode: "",
-                    arrivalCityTime: "",
-                    arrivalCityDate: "",
-                    flightStatus: "",
                   ),
                 );
-
-
 
                 modelMyFlights == null
                     ? dataBox!.add(modelMyFlightsDummy!)
@@ -124,7 +106,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.flight,
-                      size: w * 0.4,
+                      size: w * 0.3,
                       color: Colors.grey,
                     )),
                 SizedBox(
@@ -134,7 +116,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   "No Flights Found",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: w * 0.1,
+                    fontSize: w * 0.05,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
@@ -148,9 +130,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   itemCount: box.values.length,
                   itemBuilder: (context, index) {
                     ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                    return InkWell(
-
-                      child: Card(
+                    return Card(
                         key: ValueKey(currentTask!.key),
                         child: Row(
                           children: [
@@ -162,12 +142,11 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                   isChecked[index] == true
                                       ? modelMyFlights =
                                       ModelMyFlightsCreateTrip(
-
                                         tripName: widget.tripName!,
-                                        noOfFlights: "$count Flights",
+                                        noOfFlights: " Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:
-                                          ModelMyFlightsUpcoming(
+                                         ModelMyFlightsUpcoming(
                                           flightCode: currentTask.flightCode,
                                           departureCity: currentTask.departureCity,
                                           departureCityDate: currentTask.departureCityDate,
@@ -178,27 +157,17 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                           arrivalCityTime: currentTask.arrivalCityTime,
                                           arrivalCityDate: currentTask.arrivalCityDate,
                                           flightStatus: currentTask.flightStatus,
-
                                         ),
                                       )
                                       :
                                   modelMyFlightsDummy =
                                       ModelMyFlightsCreateTrip(
                                         tripName: widget.tripName!,
-                                        noOfFlights: "$count Flights",
+                                        noOfFlights: " Flights",
                                         tripImage: tripImage,
                                         modelMyFlightsUpcoming:
                                           ModelMyFlightsUpcoming(
                                           flightCode: "",
-                                          departureCity: "",
-                                          departureCityDate: "",
-                                          departureCityShortCode: "",
-                                          departureCityTime: "",
-                                          arrivalCity: "",
-                                          arrivalCityShortCode: "",
-                                          arrivalCityTime: "",
-                                          arrivalCityDate: "",
-                                          flightStatus: '',
                                         ),
                                       );
                                   print(isChecked[index]);
@@ -226,6 +195,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                             //
                             //             ),
                             //       );
+                            //
                             //       print(selectedItems.length);
                             //       print(selectedItems.map((e) => e.flightCode));
                             //     }
@@ -262,7 +232,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(currentTask.flightCode,
+                                        Text(currentTask.flightCode!,
                                             style: ThemeTexts.textStyleTitle3
                                                 .copyWith(color: Colors.white)),
                                         Text(currentTask.flightStatus!,
@@ -277,12 +247,12 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                     color: Colors.grey.shade200,
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                            "🗓️ ${currentTask.departureCityDate}",
-                                            style: ThemeTexts.textStyleTitle3.copyWith(
-                                                color: Colors.black87)),
+                                        // Text(
+                                        //     "🗓️ ${currentTask.departureCityDate}",
+                                        //     style: ThemeTexts.textStyleTitle3.copyWith(
+                                        //         color: Colors.black87)),
                                         Text(
                                             "🗓️ ${currentTask.arrivalCityDate}",
                                             style: ThemeTexts.textStyleTitle3.copyWith(
@@ -304,9 +274,9 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                       MainAxisAlignment.spaceBetween,
                                       children: [
                                         flightDetails(
-                                          cityName: currentTask.departureCity,
-                                          cityShortCode: currentTask.departureCityShortCode,
-                                          cityTime: currentTask.departureCityTime,
+                                          cityName: currentTask.departureCity!,
+                                          cityShortCode: currentTask.departureCityShortCode!,
+                                          cityTime: currentTask.departureCityTime!,
                                           crossAlignment: CrossAxisAlignment.start,
                                         ),
                                         RotatedBox(
@@ -317,9 +287,9 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                             color: Colors.grey,),
                                         ),
                                         flightDetails(
-                                          cityName: currentTask.arrivalCity,
-                                          cityShortCode: currentTask.arrivalCityShortCode,
-                                          cityTime: currentTask.arrivalCityTime,
+                                          cityName: currentTask.arrivalCity!,
+                                          cityShortCode: currentTask.arrivalCityShortCode!,
+                                          cityTime: currentTask.arrivalCityTime!,
                                           crossAlignment: CrossAxisAlignment.end,
                                         ),
                                       ],
@@ -330,8 +300,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                             ),
                           ],
                         ),
-                      ),
-                    );
+                      );
                   },
                 ),
               ),

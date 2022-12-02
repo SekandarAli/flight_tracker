@@ -63,7 +63,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                             itemCount: snapshot.data!.response!.length,
                             itemBuilder: (context, index) {
 
-                              String flightCode = snapshot.data!.response![index].flightNumber ?? "Unknown";
+                              String flightCode = snapshot.data!.response![index].flightIata ?? "Unknown";
                               String flightStatus = snapshot.data!.response![index].status.toString() ?? "Unknown";
                               String departureCity = snapshot.data!.response![index].depIata ?? "Unknown";
                               String arrivalCity = snapshot.data!.response![index].arrIata ?? "Unknown";
@@ -80,7 +80,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                               print("arrivalcity $arrivalCity");
 
                               return
-                                widget.flightCode == flightCode ?
+                                widget.flightCode == flightCode.toLowerCase() || widget.flightCode == flightCode ?
                                 InkWell(
                                   onTap: (){
                                     setState((){
@@ -96,7 +96,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                           Container(
                                             padding: EdgeInsets.all(15),
                                             decoration: BoxDecoration(
-                                                color: Colors.grey.shade300,
+                                                color: ColorsTheme.primaryColor,
                                                 border: Border(
                                                     bottom: BorderSide(
                                                         color: Colors.grey.shade500,

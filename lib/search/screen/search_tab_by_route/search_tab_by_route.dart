@@ -7,6 +7,7 @@ import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/screen/search_tab_recent_searches.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'search_button_by_route.dart';
 import 'search_tab_airline_optional.dart';
@@ -23,19 +24,18 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   bool hideAdvance = false;
 
   // String departureAirportShortName = "KHI";
-  String departureAirportShortName = "Departure Airport";
   // String arrivalAirportShortName= "LHE";
-  String arrivalAirportShortName = "Arrival Airport";
-  String airlineOptionalShortName = "Airline(Optional)";
-  String airlineOptional = "Airline(Optional)";
   // String departureAirportName = "LHE";
-  String departureAirportName = "Departure Airport";
   // String arrivalAirportName = "KHI";
-  String arrivalAirportName = "Arrival Airport";
+  String departureAirportShortName = "DPT";
+  String arrivalAirportShortName = "ARR";
+  String departureAirport = "Departure Airport";
+  String arrivalAirport = "Arrival Airport";
+  String airlineOptionalShortName = "AR";
+  String airlineOptional = "Airline(Optional)";
 
-
-  List<dynamic>? departureValue;
   List<dynamic>? arrivalValue;
+  List<dynamic>? departureValue;
 
   var temp1;
   var temp2;
@@ -43,24 +43,21 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
 
+  // var box = GetStorage();
+
   @override
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelSearch>("modelSearch");
   }
 
-  void swapValues(){
-    // var temp = firstController.text.toString();
-    setState((){
-      // firstController.text = secondController.text.toString();
-      // secondController.text = temp;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+
+    // box.writeIfNull('departureAirportName', departureAirportName);
+    // box.writeIfNull('departureAirportShortName', departureAirportShortName);
 
     return Column(
       children: [
@@ -74,14 +71,17 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
             children: [
               ReusingWidgets.byRouteContainer(
                 onTapDepartureTitle: () async {
-                   departureValue = await Navigator.of(context)
+                  departureValue = await Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return SearchTabArrivalDepartureAirport();
                   }));
 
                   setState(() {
-                    departureAirportShortName = departureValue![0];
-                    departureAirportName = departureValue![1];
+                    departureAirport = departureValue![0];
+                    departureAirportShortName = departureValue![1];
+
+                    // box.write('departureAirportName', departureAirportName);
+                    // box.write('departureAirportShortName', departureAirportShortName);
 
                     // print("departureAirportName$departureAirportName");
                     // print("departureAirportShortName$departureAirportShortName");
@@ -89,14 +89,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   });
                 },
                 onTapArrivalTitle: () async {
-                  arrivalValue = await Navigator.of(context)
+                   arrivalValue = await Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                         return SearchTabArrivalDepartureAirport();
                   }));
 
                   setState(() {
-                    arrivalAirportShortName = arrivalValue![0];
-                    arrivalAirportName = arrivalValue![1];
+                    arrivalAirport = arrivalValue![0];
+                    arrivalAirportShortName = arrivalValue![1];
 
                     // print("arrivalAirportName$arrivalAirportName");
                     // print("arrivalAirportShortName$arrivalAirportShortName");
@@ -104,42 +104,43 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   });
                 },
                 context: context,
-                departureTitle: departureAirportShortName,
-                arrivalTitle: arrivalAirportShortName,
-                depStyle: departureAirportShortName == "Departure Airport" || departureAirportShortName == "Arrival Airport"
+                departureTitle: departureAirport,
+                // departureTitle: '${box.read("departureAirportShortName")}',
+                arrivalTitle: arrivalAirport,
+                depStyle: departureAirport == "Departure Airport" || departureAirport == "Arrival Airport"
                     ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
-                arrStyle: arrivalAirportShortName == "Arrival Airport" || arrivalAirportShortName == "Departure Airport"
+                arrStyle: arrivalAirport == "Arrival Airport" || arrivalAirport == "Departure Airport"
                     ? ThemeTexts.textStyleValueGrey : ThemeTexts.textStyleValueBlack,
                 onTapClearDepartureTitle: (){
                   setState(() {
-                    departureAirportShortName = "Departure Airport";
+                    departureAirport = "Departure Airport";
                   });
                 },
                 onTapClearArrivalTitle: (){
                   setState(() {
-                    arrivalAirportShortName = "Arrival Airport";
+                    arrivalAirport = "Arrival Airport";
                   });
                 },
-                clearIconDeparture: departureAirportShortName == "Departure Airport" || departureAirportShortName == "Arrival Airport"
+                clearIconDeparture: departureAirport == "Departure Airport" || departureAirport == "Arrival Airport"
                     ? false : true,
-                clearIconArrival: arrivalAirportShortName == "Arrival Airport" || arrivalAirportShortName == "Departure Airport"
+                clearIconArrival: arrivalAirport == "Arrival Airport" || arrivalAirport == "Departure Airport"
                     ? false : true,
                 onTapSwapIcon: () {
 
-                  temp1 = departureAirportShortName;
-                  temp2 = departureAirportName;
+                  temp1 = departureAirport;
+                  temp2 = departureAirportShortName;
 
                   setState((){
+                    departureAirport = arrivalAirport;
                     departureAirportShortName = arrivalAirportShortName;
-                    departureAirportName = arrivalAirportName;
 
-                    arrivalAirportShortName = temp1;
-                    arrivalAirportName = temp2;
+                    arrivalAirport = temp1;
+                    arrivalAirportShortName = temp2;
 
                   });
 
-                  print(departureAirportShortName);
-                  print(arrivalAirportShortName);
+                  print(departureAirport);
+                  print(arrivalAirport);
 
                 },
               ),
@@ -183,26 +184,27 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       // showAlertDialog(context);
 
                       /// If search exist
-                      if(departureAirportShortName == "Departure Airport" && arrivalAirportShortName == "Arrival Airport"){
+                      if(departureAirport == "Departure Airport" && arrivalAirport == "Arrival Airport"){
                         ReusingWidgets().snackBar(context: context, text: 'Please Select Airport');
                       }
                       else {
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                          print("departureAirportShortName$departureAirportName");
-                          print("arrivalAirportShortName$arrivalAirportName");
+                          print("departureAirportShortName$departureAirportShortName");
+                          print("arrivalAirportShortName$arrivalAirportShortName");
 
                           return SearchButtonByRoute(
-                            departureAirport: departureAirportName,
-                            arrivalAirport: arrivalAirportName,
+                            departureAirport: departureAirportShortName,
+                            arrivalAirport: arrivalAirportShortName,
                             airlineOptional: airlineOptional,
                           );
                         }));
 
                         modelMyFlights = ModelSearch(
-                          arrivalCity: arrivalAirportShortName,
-                          departureCity: departureAirportShortName,
+                          arrivalCity: arrivalAirport,
+                          departureCity: departureAirport,
+                          arrivalCityShortName: arrivalAirportShortName,
+                          departureCityShortName: departureAirportShortName
                         );
-                        // dataBox!.put("modelSearch",modelMyFlights!);
                         dataBox!.add(modelMyFlights!);
                       }
                     });
@@ -234,7 +236,89 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 ),
               ),
               SizedBox(height: 10),
-              SearchTabRecentSearches(),
+              // SearchTabRecentSearches(
+              //   departureAirport: departureAirport,
+              //   departureAirportShortName: departureAirportShortName,
+              //   arrivalAirport: arrivalAirport,
+              //   arrivalAirportShortName: arrivalAirportShortName,
+              // ),
+              SizedBox(
+                height: h * 0.4,
+                width: w,
+                child: ValueListenableBuilder<Box<ModelSearch>>(
+                  valueListenable:
+                  Hive.box<ModelSearch>("modelSearch").listenable(),
+                  builder: (context, box, _) {
+                    final items = box.values.toList().cast<ModelSearch>();
+
+                    if (items.isEmpty) {
+                      return Container();
+                    } else {
+                      return Flex(
+                          direction: Axis.vertical,
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: box.values.length,
+                                itemBuilder: (context, index) {
+                                  ModelSearch? currentTask = box.getAt(index);
+                                  return Container(
+                                    width: w,
+                                    padding: EdgeInsets.only(left: 6,bottom: 6),
+                                    margin: EdgeInsets.only(left: 6,bottom: 6),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              departureAirport = currentTask.departureCity!;
+                                              departureAirportShortName = currentTask.departureCityShortName!;
+                                              arrivalAirport = currentTask.arrivalCity!;
+                                              arrivalAirportShortName = currentTask.arrivalCityShortName!;
+                                            });
+                                          },
+                                          child: SizedBox(
+                                            width: w * 0.7,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Icon(Icons.history,color: Colors.grey,),
+                                                SizedBox(width: 10,),
+                                                Flexible(
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: TextStyle(color: Colors.black, fontSize: 60),
+                                                      children: [
+                                                        TextSpan(text: 'From  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                                        TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                                        TextSpan(text: '  to  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
+                                                        TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                                      ],
+                                                    ),
+                                                    textScaleFactor: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                          onPressed: (){
+                                            currentTask.delete();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),]
+                      );
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),
