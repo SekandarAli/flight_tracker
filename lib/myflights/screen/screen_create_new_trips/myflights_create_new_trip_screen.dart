@@ -1,12 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
+import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:uuid/uuid.dart';
 
 class MyFlightCreateNewTrip extends StatefulWidget {
   MyFlightCreateNewTrip({Key? key, this.tripName}) : super(key: key);
@@ -18,42 +19,26 @@ class MyFlightCreateNewTrip extends StatefulWidget {
 }
 
 class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
-  Box<ModelMyFlightsCreateTrip>? dataBox;
-  // ModelMyFlightsCreateTrip? modelMyFlights;
-  // ModelMyFlightsCreateTrip? modelMyFlightsDummy;
-
+  Box<ModelMyFlightsCreateTrip>? taskBox;
   List<ModelMyFlightsUpcoming> selectedItems = [];
   List<ModelMyFlightsUpcoming> getSelectedItems() => selectedItems;
-
-  // int count = 0;
-  String noOfFlights = '0';
-  String tripImage = "Image";
-  // List<bool> isChecked = List.generate(10, (index) => false);
-
-  var uuid = Uuid();
-  // var finalItemsList = [];
-
-  ModelMyFlightsCreateTrip? modelMyFlightsCreateTrip;
-
-  // Box<ModelNew>? taskBox;
+  ModelMyFlightsCreateTrip? task;
+  List<ModelMyFlightsUpcoming>? modelItemsList;
 
   @override
   void initState() {
     super.initState();
-    dataBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
-    // taskBox = Hive.box<ModelNew>('modelNew');
-
+    taskBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   }
 
   @override
   Widget build(BuildContext context) {
-    var idNumber = uuid.v4();
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Add Flights ww",
+        title: Text("Add Flights",
             style: ThemeTexts.textStyleTitle2
                 .copyWith(fontWeight: FontWeight.normal, color: Colors.grey)),
         leading: IconButton(
@@ -65,33 +50,40 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
+              onPressed: () async{
 
-                // modelMyFlightsDummy = ModelMyFlightsCreateTrip(
-                //   tripName: widget.tripName!,
-                //   noOfFlights: noOfFlights,
-                //   tripImage: tripImage,
-                //   idNumber: idNumber,
-                //   modelMyFlightsUpcoming:
-                //   ModelMyFlightsUpcoming(
-                //     flightCode: "",
-                //   ),
-                // );
-                //
-                // modelMyFlights == null
-                //     ? dataBox!.add(modelMyFlightsDummy!)
-                //     : dataBox!.add(modelMyFlights!);
-                //
+                var newTask = ModelMyFlightsCreateTrip(
+                    tripName: widget.tripName!,
+                    noOfFlights: '',
+                    tripImage: '',
+                    modelMyFlightsUpcoming: selectedItems
+                );
+
+                taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+
+                if (task != null) {
+                  task!.tripName = newTask.tripName;
+                  modelItemsList = selectedItems;
+                  task!.save();
+                } else {
+                  await taskBox!.add(newTask);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+
+                }
+
+                // await taskBox!.add(newTask);
+                // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
                 // Navigator.pop(context);
                 // Navigator.pop(context);
+                // Navigator.pop(context);
 
-                setState(() {
-                  Navigator.of(context).pop({'itemList': selectedItems});
-                });
+                // setState(() {
+                //   Navigator.of(context).pop({'itemList': selectedItems});
+                // });
 
-
-
-                // Navigator.push(context, MaterialPageRoute(builder: (context)=>))
 
               },
               icon: Icon(
@@ -105,9 +97,9 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
         Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming")
             .listenable(),
         builder: (context, box, _) {
-          final _items = box.values.toList().cast<ModelMyFlightsUpcoming>();
+          final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
-          if (_items.isEmpty) {
+          if (items.isEmpty) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -136,98 +128,71 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
             return Flex(direction: Axis.vertical, children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: _items.length,
+                  itemCount: items.length,
                   itemBuilder: (context, index) {
                     ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                    return Card(
+                    return InkWell(
+                      onTap: (){
+                        setState(() {
+                          currentTask.isSelected =! currentTask.isSelected!;
+                          if (currentTask.isSelected == true) {
+                            selectedItems.add(
+                              ModelMyFlightsUpcoming(
+                                  flightCode: currentTask.flightCode,
+                                  departureCity: currentTask.departureCity,
+                                  departureCityDate: currentTask.departureCityDate,
+                                  departureCityShortCode: currentTask.departureCityShortCode,
+                                  departureCityTime: currentTask.departureCityTime,
+                                  arrivalCity: currentTask.arrivalCity,
+                                  arrivalCityShortCode: currentTask.arrivalCityShortCode,
+                                  arrivalCityTime: currentTask.arrivalCityTime,
+                                  arrivalCityDate: currentTask.arrivalCityDate,
+                                  flightStatus: currentTask.flightStatus,
+                                  isSelected: currentTask.isSelected,
+                              ),
+                            );
+                            // currentTask.isSelected = false;
+                            // Future.delayed(Duration(seconds: 5));
+                            // currentTask.isSelected = false;
+
+                            // print(selectedItems.length);
+                            // print(selectedItems.map((e) => e.flightCode));
+                            // print(selectedItems.map((e) => e.isSelected));
+                            print(currentTask.isSelected);
+                            // print(selectedItems.map((e) => e.isSelected = false));
+                            // print(selectedItems.map((e) => e.isSelected!));
+                          }
+                          else {
+                            selectedItems.removeWhere((element) =>
+                            element.flightCode == currentTask.flightCode);
+                            // print(selectedItems.length);
+                            // print(selectedItems.map((e) => e.flightCode));
+                            // print(selectedItems.map((e) => e.isSelected));
+
+                          }
+                          // else if (currentTask.isSelected == false) {
+                          //   selectedItems.removeWhere((element) =>
+                          //   element.flightCode == currentTask.flightCode);
+                          //   print(selectedItems.length);
+                          //   print(selectedItems.map((e) => e.flightCode));
+                          //   print(selectedItems.map((e) => e.isSelected));
+                          //
+                          // }
+                          // else{
+                          //   getSelectedItems();
+                          // }
+                        });
+                      },
+                      child: Card(
                         key: ValueKey(currentTask!.key),
                         child: Row(
                           children: [
-                            // Checkbox(
-                            //   onChanged: (bool? checked) {
-                            //     setState(() {
-                            //
-                            //       isChecked[index] = checked!;
-                            //       isChecked[index] == true
-                            //           ? modelMyFlights =
-                            //           ModelMyFlightsCreateTrip(
-                            //             tripName: widget.tripName!,
-                            //             idNumber: idNumber,
-                            //             noOfFlights: " Flights",
-                            //             tripImage: tripImage,
-                            //             modelMyFlightsUpcoming:
-                            //              ModelMyFlightsUpcoming(
-                            //               flightCode: currentTask.flightCode,
-                            //               departureCity: currentTask.departureCity,
-                            //               departureCityDate: currentTask.departureCityDate,
-                            //               departureCityShortCode: currentTask.departureCityShortCode,
-                            //               departureCityTime: currentTask.departureCityTime,
-                            //               arrivalCity: currentTask.arrivalCity,
-                            //               arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                            //               arrivalCityTime: currentTask.arrivalCityTime,
-                            //               arrivalCityDate: currentTask.arrivalCityDate,
-                            //               flightStatus: currentTask.flightStatus,
-                            //             ),
-                            //           )
-                            //           :
-                            //       modelMyFlightsDummy =
-                            //           ModelMyFlightsCreateTrip(
-                            //             tripName: widget.tripName!,
-                            //             idNumber: idNumber,
-                            //             noOfFlights: " Flights",
-                            //             tripImage: tripImage,
-                            //             modelMyFlightsUpcoming:
-                            //               ModelMyFlightsUpcoming(
-                            //               flightCode: "",
-                            //             ),
-                            //           );
-                            //       print(isChecked[index]);
-                            //     },
-                            //     );
-                            //   },
-                            //   value: isChecked[index],
-                            // ),
-                            IconButton(onPressed: (){
-                              setState(() {
-                                currentTask.isSelected =! currentTask.isSelected!;
-                                if (currentTask.isSelected == true) {
-                                  selectedItems.add(
-                                    ModelMyFlightsUpcoming(
-                                          flightCode: currentTask.flightCode,
-                                          departureCity: currentTask.departureCity,
-                                          departureCityDate: currentTask.departureCityDate,
-                                          departureCityShortCode: currentTask.departureCityShortCode,
-                                          departureCityTime: currentTask.departureCityTime,
-                                          arrivalCity: currentTask.arrivalCity,
-                                          arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                                          arrivalCityTime: currentTask.arrivalCityTime,
-                                          arrivalCityDate: currentTask.arrivalCityDate,
-                                          flightStatus: currentTask.flightStatus,
-
-                                        ),
-                                  );
-
-                                  print(selectedItems.length);
-                                  print(selectedItems.map((e) => e.flightCode));
-                                }
-                                else if (currentTask.isSelected == false) {
-                                  selectedItems.removeWhere((element) =>
-                                  element.flightCode == currentTask.flightCode);
-                                  print(selectedItems.length);
-                                  print(selectedItems.map((e) => e.flightCode));
-                                }
-                                else{
-                                  getSelectedItems();
-                                }
-                              });
-                            },
-                                icon: currentTask.isSelected == true ?
+                                currentTask.isSelected == true ?
                                 Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
-                                Icon(Icons.check_box_outline_blank)
-                            ),
+                                Icon(Icons.check_box_outline_blank),
                             Spacer(),
                             SizedBox(
-                              width: w * 0.84,
+                              width: w * 0.9,
                               child: Column(
                                 children: [
                                   Container(
@@ -311,7 +276,8 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                             ),
                           ],
                         ),
-                      );
+                      ),
+                    );
                   },
                 ),
               ),

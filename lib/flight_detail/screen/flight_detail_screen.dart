@@ -11,19 +11,18 @@ import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-
 import '../../myflights/model/my_flight_create_trip_model.dart';
 
 
-class FlightDetailAirportAirline extends StatefulWidget {
-  FlightDetailAirportAirline({super.key, this.flight_iata});
+class FlightDetailScreen extends StatefulWidget {
+  FlightDetailScreen({super.key, this.flight_iata});
   String? flight_iata;
 
   @override
-  State<FlightDetailAirportAirline> createState() => _FlightDetailAirportAirlineState();
+  State<FlightDetailScreen> createState() => _FlightDetailScreenState();
 }
 
-class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline> {
+class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
   bool trackFlight = true;
   Box<ModelMyFlightsUpcoming>? dataBox;
@@ -106,21 +105,22 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
 
                     if (trackFlight == false) {
                       modelMyFlights = ModelMyFlightsUpcoming(
-                          flightCode: flightCode,
-                          departureCityDate: departureCityDate,
-                          departureCity: departureCity,
-                          departureCityShortCode: departureCityShortCode,
-                          departureCityTime: departureLat,
-                          arrivalCityDate: departureCityDate,
-                          arrivalCity: arrivalCity,
-                          arrivalCityShortCode: arrivalCityShortCode,
-                          arrivalCityTime: departureLng,
-                          departureLat: departureLat,
-                          departureLng: departureLng,
-                          arrivalLat: arrivalLat,
-                          arrivalLng: arrivalLng,
-                          flightStatus: flightStatus,
-                        flightIata: widget.flight_iata
+                        flightCode: flightCode,
+                        departureCityDate: departureCityDate,
+                        departureCity: departureCity,
+                        departureCityShortCode: departureCityShortCode,
+                        departureCityTime: departureLat,
+                        arrivalCityDate: departureCityDate,
+                        arrivalCity: arrivalCity,
+                        arrivalCityShortCode: arrivalCityShortCode,
+                        arrivalCityTime: departureLng,
+                        departureLat: departureLat,
+                        departureLng: departureLng,
+                        arrivalLat: arrivalLat,
+                        arrivalLng: arrivalLng,
+                        flightStatus: flightStatus,
+                        flightIata: widget.flight_iata,
+                        isSelected: false,
                       );
                       dataBox!.add(modelMyFlights!);
                       /// Notification
@@ -133,14 +133,14 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
                       Duration duration = date1.difference(date2);
                       print("duration${duration}");
 
-                       service!.showScheduleNotification(
+                      service!.showScheduleNotification(
                           id: 0,
                           title: "Flight Track Update",
                           body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
                           hours: 1);
 
 
-                       service!.showScheduleNotification(
+                      service!.showScheduleNotification(
                           id: 1,
                           title: "Flight Track Update",
                           body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
@@ -162,7 +162,7 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
                 onPressed: () {
 
                   dialogueAddToTrip(
-                      context: context,
+                    context: context,
                   );
                 },
               ),
@@ -726,7 +726,7 @@ class _FlightDetailAirportAirlineState extends State<FlightDetailAirportAirline>
                   },
                 ),
               ),
-              ],
+            ],
           ),
           actions: [
             Row(

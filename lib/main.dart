@@ -3,7 +3,7 @@
 import 'package:flight_tracker/airports/screen/airport_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
-import 'package:flight_tracker/flight_detail/screen/flight_detail_airport_airline.dart';
+import 'package:flight_tracker/flight_detail/screen/flight_detail_screen.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/notifications/notification_page.dart';

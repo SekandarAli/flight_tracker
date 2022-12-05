@@ -5,7 +5,7 @@ import 'package:flight_tracker/airlines/services/services_airline_details.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
-import '../../flight_detail/screen/flight_detail_airport_airline.dart';
+import '../../flight_detail/screen/flight_detail_screen.dart';
 import '../../functions/function_progress_indicator.dart';
 
 class AirlineScreenDetails extends StatefulWidget {
@@ -165,7 +165,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                         InkWell(
                                           onTap: () async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                              return FlightDetailScreen(flight_iata: flight_iata,);
                                             }));
                                           },
                                           child: Padding(

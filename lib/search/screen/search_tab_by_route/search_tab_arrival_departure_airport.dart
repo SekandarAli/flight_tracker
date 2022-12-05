@@ -35,7 +35,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
 
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/jsons/airport.json');
+    final String response = await rootBundle.loadString('assets/json/airport.json');
     final data = await json.decode(response);
     setState(() {
       _items = data["response"];

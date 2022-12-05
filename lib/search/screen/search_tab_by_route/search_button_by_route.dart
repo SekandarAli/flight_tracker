@@ -9,7 +9,7 @@ import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
-import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
+import '../../../flight_detail/screen/flight_detail_screen.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
    SearchButtonByRoute({
@@ -32,13 +32,11 @@ class SearchButtonByRoute extends StatefulWidget {
 class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
   Future<ModelSearchFlights>? futureList;
-
-  bool cardExpand = false;
-
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
   bool trackFlight = true;
+  bool cardExpand = false;
 
   @override
   void initState() {
@@ -167,7 +165,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                               TextButton(onPressed: () {
 
                                                   Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                    return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                    return FlightDetailScreen(flight_iata: flight_iata,);
                                                   }));
 
                                               }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
@@ -192,7 +190,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                         departureLat: departureLat,
                                                         departureLng: departureLng,
                                                         flightIata: flight_iata,
-                                                        isSelected: trackFlight
+                                                        isSelected: false
                                                     );
                                                     dataBox!.add(modelMyFlights!);
                                                     ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");

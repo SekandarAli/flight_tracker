@@ -9,7 +9,7 @@ import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
-import '../../flight_detail/screen/flight_detail_airport_airline.dart';
+import '../../flight_detail/screen/flight_detail_screen.dart';
 
 class AirportScreenDetail extends StatefulWidget {
    AirportScreenDetail({required this.airportName,required this.iataValue}) : super();
@@ -197,7 +197,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                               onTap: () async {
                                                 print("airportscreem $flight_iata");
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata,);
                                                 }));
                                               },
                                               child: Padding(
@@ -288,7 +288,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                             InkWell(
                                               onTap: () async {
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata,);
                                                 }));
                                               },
                                               child: Padding(

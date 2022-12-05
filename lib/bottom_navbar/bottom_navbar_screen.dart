@@ -171,6 +171,13 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         ],
       ),
       body: _getDrawerItemWidget(currentIndex),
+      // body: Navigator(
+      //   onGenerateRoute: (settings) {
+      //     Widget page = MyFlightsScreen();
+      //     if (settings.name == 'page2') page = MyFlightsScreen();
+      //     return MaterialPageRoute(builder: (_) => page);
+      //   },
+      // ),
     );
   }
 }

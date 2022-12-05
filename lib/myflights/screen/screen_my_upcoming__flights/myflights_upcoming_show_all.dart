@@ -7,7 +7,7 @@ import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
+import '../../../flight_detail/screen/flight_detail_screen.dart';
 
 class MyFlightsUpcomingShowAllScreen extends StatefulWidget {
   const MyFlightsUpcomingShowAllScreen({Key? key}) : super(key: key);
@@ -72,6 +72,12 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
             // var task = items.values.where((_) => currentTask!.isSelected == true).first;
             // task.delete();
             openDialogue();
+            setState(() {
+              print(selectedItems);
+              // selectedItems.removeWhere((element) =>  element.isSelected == true);
+              // dataBoxUpcoming!.deleteAll(selectedItems);
+            });
+
           }, icon: Icon(Icons.delete,color: Colors.grey))
         ],
       ),
@@ -151,7 +157,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                               return InkWell(
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    return FlightDetailAirportAirline(flight_iata: currentTask.flightIata,);
+                                    return FlightDetailScreen(flight_iata: currentTask.flightIata,);
                                   }));
                                 },
                                 child: Dismissible(
@@ -171,7 +177,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                   ),
                                   onDismissed: (direction){
                                     setState(() {
-                                      currentTask!.delete();
+                                      currentTask.delete();
                                     });
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content:
@@ -292,67 +298,52 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
               ],
             );
           } else {
-            return Flex(direction: Axis.vertical, children: [
+            return Flex(
+                direction: Axis.vertical,
+                children: [
               Expanded(
                 child: ListView.builder(
                   itemCount: box.values.length,
                   itemBuilder: (context, index) {
                      ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                    return Card(
+                    return InkWell(
+                      onTap: (){
+                        setState(() {
+                          currentTask.isSelected =! currentTask.isSelected!;
+                          if (currentTask.isSelected == true) {
+                            selectedItems.add(
+                              ModelMyFlightsUpcoming(
+                                flightCode: currentTask.flightCode,
+                                departureCity: currentTask.departureCity,
+                                departureCityDate: currentTask.departureCityDate,
+                                departureCityShortCode: currentTask.departureCityShortCode,
+                                departureCityTime: currentTask.departureCityTime,
+                                arrivalCity: currentTask.arrivalCity,
+                                arrivalCityShortCode: currentTask.arrivalCityShortCode,
+                                arrivalCityTime: currentTask.arrivalCityTime,
+                                arrivalCityDate: currentTask.arrivalCityDate,
+                                flightStatus: currentTask.flightStatus,
+                                isSelected: currentTask.isSelected,
+                              ),
+                            );
+                            print(currentTask.isSelected);
+                          }
+                          else {
+                            selectedItems.removeWhere((element) =>
+                            element.flightCode == currentTask.flightCode);
+                          }
+                        });
+                      },
+                      child: Card(
                         key: ValueKey(currentTask!.key),
                         child: Row(
                           children: [
-                            Checkbox(
-                              onChanged: (bool? checked) {
-                                setState(() {
-                                  isChecked[index] = checked!;
-                                  print(isChecked[index]);
-                                },);
-                              },
-                              value: isChecked[index],
-                            ),
-                            // IconButton(onPressed: (){
-                            //   setState(() {
-                            //     currentTask!.isSelected =! currentTask!.isSelected!;
-                            //     if (currentTask!.isSelected == true) {
-                            //       selectedItems.add(
-                            //         ModelMyFlightsUpcoming(
-                            //               flightCode: currentTask!.flightCode,
-                            //               departureCity: currentTask!.departureCity,
-                            //               departureCityDate: currentTask!.departureCityDate,
-                            //               departureCityShortCode: currentTask!.departureCityShortCode,
-                            //               departureCityTime: currentTask!.departureCityTime,
-                            //               arrivalCity: currentTask!.arrivalCity,
-                            //               arrivalCityShortCode: currentTask!.arrivalCityShortCode,
-                            //               arrivalCityTime: currentTask!.arrivalCityTime,
-                            //               arrivalCityDate: currentTask!.arrivalCityDate,
-                            //               flightStatus: currentTask!.flightStatus,
-                            //           duration: currentTask.duration
-                            //
-                            //             ),
-                            //       );
-                            //       print(selectedItems.length);
-                            //       print(selectedItems.map((e) => e.duration));
-                            //     }
-                            //     else if (currentTask!.isSelected == false) {
-                            //       selectedItems.removeWhere((element) =>
-                            //       element.flightCode == currentTask!.flightCode);
-                            //       print(selectedItems.length);
-                            //       print(selectedItems.map((e) => e.duration));
-                            //     }
-                            //     else{
-                            //       getSelectedItems();
-                            //     }
-                            //   });
-                            // },
-                            //     icon: currentTask!.isSelected! ?
-                            //     Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
-                            //     Icon(Icons.check_box_outline_blank)
-                            // ),
-
+                            currentTask.isSelected == true ?
+                            Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
+                            Icon(Icons.check_box_outline_blank),
                             Spacer(),
                             SizedBox(
-                              width: w * 0.84,
+                              width: w * 0.9,
                               child: Column(
                                 children: [
                                   Container(
@@ -410,9 +401,9 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                       MainAxisAlignment.spaceBetween,
                                       children: [
                                         flightDetails(
-                                          cityName: currentTask!.departureCity!,
-                                          cityShortCode: currentTask!.departureCityShortCode!,
-                                          cityTime: currentTask!.departureCityTime!,
+                                          cityName: currentTask.departureCity!,
+                                          cityShortCode: currentTask.departureCityShortCode!,
+                                          cityTime: currentTask.departureCityTime!,
                                           crossAlignment: CrossAxisAlignment.start,
                                         ),
                                         RotatedBox(
@@ -423,9 +414,9 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                             color: Colors.grey,),
                                         ),
                                         flightDetails(
-                                          cityName: currentTask!.arrivalCity!,
-                                          cityShortCode: currentTask!.arrivalCityShortCode!,
-                                          cityTime: currentTask!.arrivalCityTime!,
+                                          cityName: currentTask.arrivalCity!,
+                                          cityShortCode: currentTask.arrivalCityShortCode!,
+                                          cityTime: currentTask.arrivalCityTime!,
                                           crossAlignment: CrossAxisAlignment.end,
                                         ),
                                       ],
@@ -436,7 +427,8 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                             ),
                           ],
                         ),
-                      );
+                      ),
+                    );
                   },
                 ),
               ),
@@ -474,7 +466,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Are you sure to you want to Delete the Items?'),
+          title: Text('Are you sure to you want to Delete All the Items?'),
           actions: [
             TextButton(
                 onPressed: () {
@@ -488,7 +480,10 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                 child: Text('OK')),
             TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  setState(() {
+                    Navigator.of(context).pop();
+                    isEdit =! isEdit;
+                  });
                 },
                 child: Text('CANCEL')),
           ],

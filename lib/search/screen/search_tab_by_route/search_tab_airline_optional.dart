@@ -32,7 +32,7 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
   }
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/jsons/airline.json');
+    final String response = await rootBundle.loadString('assets/json/airline.json');
     final data = await json.decode(response);
     setState(() {
       _items = data["response"];

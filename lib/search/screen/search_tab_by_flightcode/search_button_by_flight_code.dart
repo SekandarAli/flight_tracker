@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
 import '../../../app_theme/color.dart';
-import '../../../flight_detail/screen/flight_detail_airport_airline.dart';
+import '../../../flight_detail/screen/flight_detail_screen.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
    SearchButtonByFlightCode({required this.flightCode}) : super();
@@ -147,7 +147,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                               TextButton(onPressed: () {
 
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailAirportAirline(flight_iata: flight_iata,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata,);
                                                 }));
 
                                               }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),

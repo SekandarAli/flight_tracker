@@ -2,7 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/flight_detail/screen/flight_detail_airport_airline.dart';
+import 'package:flight_tracker/flight_detail/screen/flight_detail_screen.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
@@ -20,14 +20,15 @@ class MyFlightsScreen extends StatefulWidget {
 
 class _MyFlightsScreenState extends State<MyFlightsScreen> {
   TextEditingController createTripController = TextEditingController();
-
-  TextEditingController? editingController = TextEditingController();
-
-  List<ModelMyFlightsUpcoming> finalItemsList = [];
-
   ModelMyFlightsCreateTrip? task;
   List<ModelMyFlightsUpcoming>? modelItemsList;
 
+  @override
+  void initState() {
+    super.initState();
+    // createTripController.clear();
+    // MyFlightsScreen();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +57,16 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                   createTrip(
                       width: w,
                       onTap: () {
-                        // openDialogue();
-                        showDilougee();
+                        createTripController.clear();
+                        openDialogue(
+                          createTripController: createTripController,
+                          context: context,
+                          onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
+                              }));
+                          }
+                        );
                       }),
                   Container(
                     color: ColorsTheme.myFlightsbg,
@@ -120,18 +129,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                   color: Colors.grey,
                                                   letterSpacing: 0),
                                             ),
-
-                                            // Container(
-                                            //   height: 10,
-                                            //   child: ListView.builder(
-                                            //     scrollDirection: Axis.horizontal,
-                                            //       itemCount: currentTask.modelMyFlightsUpcoming!.length,
-                                            //       itemBuilder: (context, index) {
-                                            //         return Text(
-                                            //           "${currentTask.modelMyFlightsUpcoming![index].flightCode!}\t\t\t",
-                                            //         );
-                                            //       }),
-                                            // ),
                                           ],
                                         ),
                                       ),
@@ -214,7 +211,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                   return GestureDetector(
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        return FlightDetailAirportAirline(flight_iata: currentTask.flightIata,);
+                                        return FlightDetailScreen(flight_iata: currentTask.flightIata,);
                                       }));
                                     },
                                     child: Dismissible(
@@ -376,239 +373,38 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
     );
   }
 
-  Future<String?> openDialogue() => showDialog<String>(
+  Future<String?> openDialogue({
+  required TextEditingController createTripController,
+  required BuildContext context,
+    required Function() onTap,
+}) => showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Create New Trip'),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 1.5,
-            child: Column(
-              children: [
-                textFormFields(
-                    width: MediaQuery.of(context).size.width / 2,
-                    hintText: "Enter Trip Name",
-                    textController: createTripController),
-                finalItemsList.isEmpty
-                    ? Container(height: 0,color: Colors.green,)
-                    : Container(
-                  padding: EdgeInsets.symmetric(horizontal: 9),
-                  height: MediaQuery.of(context).size.height / 2,
-                     child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: finalItemsList.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: Colors.white,
-                          child: ListTile(
-                            title: Text(
-                              finalItemsList[index].flightCode!,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-          ),
+          content: textFormFields(
+              width: MediaQuery.of(context).size.width / 2,
+              hintText: "Enter Trip Name",
+              textController: createTripController),
           actions: [
             TextButton(
-                onPressed: () async{
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
-                  // }));
-
-                  Map result = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => MyFlightCreateNewTrip(tripName: createTripController.text.toString())));
-
-                  if (result != null && result.containsKey('itemList')) {
-                    setState(() {
-                      finalItemsList = result['itemList'];
-                      print("final: ${finalItemsList}");
-                    });
-                  }
-                  else{
-                    return null;
-                  }
-
-                },
-                child: Text('ADD TRIP DATA')),
+                // onPressed: () {
+                //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+                //     return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
+                //   }));
+                // },
+              onPressed: (){
+                onTap();
+              },
+                child: Text('OK')),
             TextButton(
                 onPressed: () async{
-                  // Navigator.of(context).pop();
-                  var newTask = ModelMyFlightsCreateTrip(
-                      tripName: createTripController.text,
-                      noOfFlights: '0',
-                      tripImage: '',
-                      modelMyFlightsUpcoming: finalItemsList
-                  );
-
-                  Box<ModelMyFlightsCreateTrip> taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-
-                  if (task != null) {
-                    task!.tripName = newTask.tripName;
-                    modelItemsList = finalItemsList;
-                    task!.save();
-                    Navigator.pop(context);
-                  } else {
-                    await taskBox.add(newTask);
-                    Navigator.pop(context);
-                  }
+                  Navigator.of(context).pop();
                 },
-                child: Text('SAVE')),
+                child: Text('CANCEL')),
           ],
         );
       });
-
-
-  showDilougee(){
-    return  showDialog(
-        context: context,
-        builder: (_) =>
-            AlertDialog(
-              insetPadding: EdgeInsets.only(top: MediaQuery.of(context).size.height/6),
-              contentPadding: EdgeInsets.zero,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: Builder(
-                builder: (context) {
-                  return SizedBox(
-                    height: double.infinity,
-                    width: double.maxFinite,
-                    child: Column(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 70,
-                            child: Container(
-                              color: Colors.white,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: Colors.black,
-                                      size: 35,
-                                    ),
-                                  ),
-                                  Text(
-                                    "CREATE TRIP",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      var newTask = ModelMyFlightsCreateTrip(
-                                          tripName: createTripController.text,
-                                          noOfFlights: '0',
-                                          tripImage: '',
-                                          modelMyFlightsUpcoming: finalItemsList
-                                      );
-
-                                      Box<ModelMyFlightsCreateTrip> taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-
-                                      if (task != null) {
-                                        task!.tripName = newTask.tripName;
-                                        modelItemsList = finalItemsList;
-                                        task!.save();
-                                        Navigator.pop(context);
-                                        modelItemsList!.clear();
-                                        finalItemsList.clear();
-                                      } else {
-                                        await taskBox.add(newTask);
-                                        Navigator.pop(context);
-                                        modelItemsList!.clear();
-                                        finalItemsList.clear();
-                                      }
-                                      // await taskBox.add(newTask);
-                                      // Navigator.pop(context);
-
-                                      // task!.tripName = "";
-
-                                    },
-                                    child: Text(
-                                        "SAVE",
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20,),
-                          textFormFields(
-                              width: MediaQuery.of(context).size.width / 1.2,
-                              hintText: "Enter Trip Name",
-                              textController: createTripController),
-                          ElevatedButton(onPressed: ()async{
-                            Map result = await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => MyFlightCreateNewTrip(tripName: createTripController.text.toString())));
-
-                            if (result.containsKey('itemList')) {
-                              setState(() {
-                                finalItemsList = result['itemList'];
-                                print("final: $finalItemsList");
-                              });
-                            }
-                            else{
-                              return null;
-                            }
-                          }, child: Text(
-                            "ADD TRIPS",
-                          ),),
-                          finalItemsList.isEmpty
-                              ? Container()
-                              : Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 9),
-                                height: MediaQuery.of(context).size.height / 2,
-                                child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: finalItemsList.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    color: Colors.white,
-                                    child: ListTile(
-                                      title: Text(
-                                        finalItemsList[index].flightCode!,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      onTap: () {},
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ],
-                      ),
-                  );
-                },
-              ),
-            ));
-  }
 
   Widget textFormFields({
     required double width,
@@ -661,60 +457,5 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
       ],
     );
   }
-
-  Future<String?> openDialogueNew({required var tripName}) => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Trip Name'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width/2,
-                child: TextFormField(
-                  controller: editingController,
-                  maxLength: 10,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(fontSize: 12),
-                  decoration: InputDecoration(
-                    counterText: "",
-                    hintText: "Enter Trip Name",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 3,
-                        color: Colors.black,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 3,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              )],
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(onPressed: () {
-                  setState(() {
-                    print("tripname $tripName");
-                    tripName = editingController!.text.toString();
-                    print("tripname $tripName");
-                    Navigator.of(context).pop(editingController!.text.toString());
-                    // Navigator.of(context).pop();
-                  });
-
-                },
-                    child: Text('DONE')),
-              ],
-            ),
-          ],
-        );
-      });
 
 }
