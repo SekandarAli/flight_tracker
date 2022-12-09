@@ -56,6 +56,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                     tripName: widget.tripName!,
                     noOfFlights: '',
                     tripImage: '',
+                    isSelected: false,
                     modelMyFlightsUpcoming: selectedItems
                 );
 
@@ -148,26 +149,14 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                   arrivalCityTime: currentTask.arrivalCityTime,
                                   arrivalCityDate: currentTask.arrivalCityDate,
                                   flightStatus: currentTask.flightStatus,
-                                  isSelected: currentTask.isSelected,
+                                  isSelected: false,
                               ),
                             );
-                            // currentTask.isSelected = false;
-                            // Future.delayed(Duration(seconds: 5));
-                            // currentTask.isSelected = false;
-
-                            // print(selectedItems.length);
-                            // print(selectedItems.map((e) => e.flightCode));
-                            // print(selectedItems.map((e) => e.isSelected));
                             print(currentTask.isSelected);
-                            // print(selectedItems.map((e) => e.isSelected = false));
-                            // print(selectedItems.map((e) => e.isSelected!));
                           }
                           else {
                             selectedItems.removeWhere((element) =>
                             element.flightCode == currentTask.flightCode);
-                            // print(selectedItems.length);
-                            // print(selectedItems.map((e) => e.flightCode));
-                            // print(selectedItems.map((e) => e.isSelected));
 
                           }
                           // else if (currentTask.isSelected == false) {

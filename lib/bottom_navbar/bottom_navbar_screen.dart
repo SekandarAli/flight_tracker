@@ -23,14 +23,14 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
-
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   late BannerAd _bannerAd;
   bool isBannerAdLoaded = false;
 
-  final box = GetStorage();
+  DateTime? currentTime;
 
+  final box = GetStorage();
 
   initBannerAd() {
     _bannerAd = BannerAd(
@@ -73,7 +73,6 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -94,90 +93,102 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      bottomNavigationBar: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-
-          isBannerAdLoaded ? Stack(
-            alignment: AlignmentDirectional.topStart,
-            children: [
-              Container(width: _bannerAd.size.width.toDouble(),
-                height: _bannerAd.size.height.toDouble() * 0.7,
-                color: Colors.white,
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      onPressed: () {
-                        ReusingWidgets().snackBar(context: context, text: "Go Premium");
-                      },
-                      icon: Icon(Icons.clear,color: ColorsTheme.primaryColor,),
-                    ),
-                ),
+        bottomNavigationBar: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            isBannerAdLoaded
+                ? Stack(
+                    alignment: AlignmentDirectional.topStart,
+                    children: [
+                      Container(
+                        width: _bannerAd.size.width.toDouble(),
+                        height: _bannerAd.size.height.toDouble() * 0.7,
+                        color: Colors.white,
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            onPressed: () {
+                              ReusingWidgets().snackBar(
+                                  context: context, text: "Go Premium");
+                            },
+                            icon: Icon(
+                              Icons.clear,
+                              color: ColorsTheme.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: _bannerAd.size.width.toDouble() * 0.65,
+                        height: _bannerAd.size.height.toDouble() * 0.7,
+                        child: AdWidget(ad: _bannerAd),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            Container(
+              // height: 80,
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //       color: Colors.white,
+              //       width: 4.0,
+              //       style: BorderStyle.solid),
+              //   borderRadius: BorderRadius.only(
+              //     topRight: Radius.circular(30),
+              //     topLeft: Radius.circular(30),
+              //   ),
+              // ),
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: currentIndex,
+                backgroundColor: Colors.white,
+                selectedItemColor: ColorsTheme.primaryColor,
+                unselectedItemColor: Colors.grey[400],
+                onTap: (value) {
+                  setState(() {
+                    currentIndex = value;
+                  });
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    label: "Search",
+                    icon: Icon(Icons.search),
+                    // activeIcon: Icon(Icons.inventory_2_rounded),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'My Flights',
+                    icon: Icon(Icons.flight_takeoff),
+                  ),
+                  BottomNavigationBarItem(
+                    label: "Airports",
+                    icon: Icon(Icons.houseboat_rounded),
+                  ),
+                  BottomNavigationBarItem(
+                    label: "Airlines",
+                    icon: Icon(Icons.line_style_outlined),
+                  ),
+                  BottomNavigationBarItem(
+                    label: "Settings",
+                    icon: Icon(Icons.settings),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: _bannerAd.size.width.toDouble() * 0.65,
-                height: _bannerAd.size.height.toDouble() * 0.7,
-                child: AdWidget(ad: _bannerAd),
-              ),
-
-            ],
-          ) : SizedBox(),
-
-          BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: currentIndex,
-            // currentIndex: int.parse('${box.read("currentIndex")}'),
-            backgroundColor: Colors.white,
-            selectedItemColor: ColorsTheme.primaryColor,
-            unselectedItemColor: Colors.grey[400],
-            onTap: (value) {
-              setState(() {
-                // box.write("currentIndex", currentIndex);
-                currentIndex = value;
-              });
-            },
-            items: [
-              BottomNavigationBarItem(
-                label: "Search",
-                icon: Icon(Icons.search),
-                // activeIcon: Icon(Icons.inventory_2_rounded),
-              ),
-
-              BottomNavigationBarItem(
-                label: 'My Flights',
-                icon: Icon(Icons.flight_takeoff),
-              ),
-
-              BottomNavigationBarItem(
-                label:"Airports",
-                icon: Icon(Icons.houseboat_rounded),
-              ),
-
-              BottomNavigationBarItem(
-                label: "Airlines",
-                icon: Icon(Icons.line_style_outlined),
-              ),
-
-              BottomNavigationBarItem(
-                label: "Settings",
-                icon: Icon(Icons.settings),
-              ),
-
-            ],
-          ),
-        ],
-      ),
-      body: _getDrawerItemWidget(currentIndex),
-      // body: Navigator(
-      //   onGenerateRoute: (settings) {
-      //     Widget page = MyFlightsScreen();
-      //     if (settings.name == 'page2') page = MyFlightsScreen();
-      //     return MaterialPageRoute(builder: (_) => page);
-      //   },
-      // ),
-    );
+            ),
+          ],
+        ),
+        body: WillPopScope(
+          onWillPop: () {
+            DateTime now = DateTime.now();
+            if (currentTime == null || now.difference(currentTime!) > Duration(seconds: 2)) {
+              currentTime = now;
+              ReusingWidgets().snackBar(context: context, text: "Press Back Button Again to Exit");
+              return Future.value(false);
+            }
+            return Future.value(true);
+          },
+          child: _getDrawerItemWidget(currentIndex),
+        ));
   }
 }

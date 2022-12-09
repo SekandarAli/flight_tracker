@@ -78,18 +78,18 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                               ],
                             ),
                           ),
-                          PopupMenuItem(
-                            value: 2,
-                            child: Row(
-                              children: [
-                                Icon(Icons.flight),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text("Add Flight")
-                              ],
-                            ),
-                          ),
+                          // PopupMenuItem(
+                          //   value: 2,
+                          //   child: Row(
+                          //     children: [
+                          //       Icon(Icons.flight),
+                          //       SizedBox(
+                          //         width: 10,
+                          //       ),
+                          //       Text("Add Flight")
+                          //     ],
+                          //   ),
+                          // ),
                           PopupMenuItem(
                             value: 3,
                             child: Row(
@@ -124,9 +124,9 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                               // dialogueText = "Enter Flight Code";
                             }
                           }
-                          else if (value == 2) {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
-                          }
+                          // else if (value == 2) {
+                          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
+                          // }
                           else if (value == 3) {
                             deleteDialogue(currentTask: widget.currentTask);
                           }
@@ -383,6 +383,11 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
           actions: [
             TextButton(
                 onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('CANCEL')),
+            TextButton(
+                onPressed: () {
                   setState(() {
                     currentTask.delete();
                     Navigator.pop(context);
@@ -390,11 +395,6 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                   });
                 },
                 child: Text('OK')),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('CANCEL')),
           ],
         );
       });

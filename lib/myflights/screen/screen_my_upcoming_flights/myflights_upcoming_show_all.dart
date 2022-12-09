@@ -22,7 +22,6 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
   Box<ModelMyFlightsUpcoming>? dataBoxUpcoming;
   ModelMyFlightsCreateTrip? modelMyFlights;
   bool isEdit = false;
-  List<bool> isChecked = List.generate(10, (index) => true);
 
 
   List<ModelMyFlightsUpcoming> selectedItems = [];
@@ -45,17 +44,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: isEdit == false ?
-      AppBar(
-        title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
-            .copyWith(fontWeight: FontWeight.normal)),
-        actions: [
-          TextButton(onPressed: (){
-            setState(() {
-              isEdit =! isEdit;
-            });
-          }, child: Text("EDIT",style: ThemeTexts.textStyleTitle3,))
-        ],
-      )
+      AppBar(toolbarHeight: 0)
           :
       AppBar(
         backgroundColor: Colors.white,
@@ -69,11 +58,11 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
         icon: Icon(Icons.arrow_back,color: Colors.grey,),),
         actions: [
           IconButton(onPressed: (){
-            // var task = items.values.where((_) => currentTask!.isSelected == true).first;
-            // task.delete();
-            openDialogue();
+            deleteDialogue();
             setState(() {
               print(selectedItems);
+              // task.delete();
+              // var task = items.values.where((_) => currentTask!.isSelected == true).first;
               // selectedItems.removeWhere((element) =>  element.isSelected == true);
               // dataBoxUpcoming!.deleteAll(selectedItems);
             });
@@ -81,7 +70,8 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
           }, icon: Icon(Icons.delete,color: Colors.grey))
         ],
       ),
-      body: isEdit == false ? ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
+      body: isEdit == false ?
+      ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
         valueListenable:
         Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
         builder: (context, box, _) {
@@ -89,178 +79,169 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
 
           if (items.isEmpty) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.flight,
-                      size: w * 0.3,
-                      color: Colors.grey,
-                    )),
-                SizedBox(
-                  height: 20,
+                AppBar(
+                  title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
+                      .copyWith(fontWeight: FontWeight.normal)),
                 ),
-                Text(
-                  "No Flights Found",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: w * 0.05,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
+                Column(
+                  children: [
+                    Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.flight,
+                          size: w * 0.3,
+                          color: Colors.grey,
+                        )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "No Flights Found",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: w * 0.05,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
+                SizedBox()
+
               ],
             );
           } else {
-            return  ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
-              valueListenable:
-              Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
-              builder: (context, box, _) {
-
-                final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
-
-                if (items.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.flight,
-                            size: w * 0.4,
-                            color: Colors.grey,
-                          )),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "No Flights Found",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: w * 0.1,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Flex(
-                      direction: Axis.vertical,
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: box.values.length,
-                            itemBuilder: (context, index) {
-                              ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                              return InkWell(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    return FlightDetailScreen(flight_iata: currentTask.flightIata,);
-                                  }));
-                                },
-                                child: Dismissible(
-                                  key: Key(
-                                      UniqueKey().toString()),
-                                  background: Container(
-                                    margin: EdgeInsets.all(5),
-                                    padding: EdgeInsets.all(15),
-                                    color: Colors.red.shade800,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(Icons.delete,color: Colors.white,),
-                                        Icon(Icons.delete,color: Colors.white,),
-                                      ],
-                                    ),
-                                  ),
-                                  onDismissed: (direction){
-                                    setState(() {
-                                      currentTask.delete();
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content:
-                                        Text('Flight Removed Successfully'),
-                                            duration: Duration(milliseconds: 700),));
-                                  },
-                                  child: Card(
-                                    child: Column(
-                                      children: [
-                                        Container(
+            return  Column(
+              children: [
+                AppBar(
+                  title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
+                      .copyWith(fontWeight: FontWeight.normal)),
+                  actions: [
+                    TextButton(onPressed: (){
+                      setState(() {
+                        isEdit =! isEdit;
+                      });
+                    }, child: Text("EDIT",style: ThemeTexts.textStyleTitle3,))
+                  ],
+                ),
+                Expanded(
+                  child: Flex(
+                            direction: Axis.vertical,
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: box.values.length,
+                                  itemBuilder: (context, index) {
+                                    ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+                                    return InkWell(
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                                          return FlightDetailScreen(flight_iata: currentTask.flightIata,);
+                                        }));
+                                      },
+                                      child: Dismissible(
+                                        key: Key(
+                                            UniqueKey().toString()),
+                                        background: Container(
+                                          margin: EdgeInsets.all(5),
                                           padding: EdgeInsets.all(15),
-                                          color: ColorsTheme.primaryColor,
+                                          color: Colors.red.shade800,
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(currentTask!.flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                              Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                              Icon(Icons.delete,color: Colors.white,),
+                                              Icon(Icons.delete,color: Colors.white,),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(15),
-                                          color: Colors.grey.shade100,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        onDismissed: (direction){
+                                          setState(() {
+                                            currentTask.delete();
+                                          });
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content:
+                                              Text('Flight Removed Successfully'),
+                                                  duration: Duration(milliseconds: 700),));
+                                        },
+                                        child: Card(
+                                          child: Column(
                                             children: [
-
-                                              // Text("🗓️ ${currentTask.departureCityDate}",
-                                              //     style: ThemeTexts.textStyleTitle3
-                                              //         .copyWith(
-                                              //         color: Colors.black87)),
-                                              Text("🗓️ ${currentTask.arrivalCityDate}",
-                                                  style: ThemeTexts.textStyleTitle3
-                                                      .copyWith(
-                                                      color: Colors.black87)),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(15),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-
-                                              flightDetails(
-                                                  cityName: currentTask.departureCity!,
-                                                  cityShortCode: currentTask.departureCityShortCode!,
-                                                  cityTime: currentTask.departureCityTime!,
-                                                  crossAlignment:
-                                                  CrossAxisAlignment.start),
-
-                                              RotatedBox(
-                                                quarterTurns: 1,
-                                                child: Icon(
-                                                  Icons.flight,
-                                                  size: 50,
-                                                  color: Colors.grey,),
+                                              Container(
+                                                padding: EdgeInsets.all(15),
+                                                color: ColorsTheme.primaryColor,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(currentTask!.flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                                                    Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
+                                                  ],
+                                                ),
                                               ),
+                                              Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.all(15),
+                                                color: Colors.grey.shade100,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
 
-                                              flightDetails(
-                                                  cityName: currentTask.arrivalCity!,
-                                                  cityShortCode: currentTask.arrivalCityShortCode!,
-                                                  cityTime: currentTask.arrivalCityTime!,
-                                                  crossAlignment:
-                                                  CrossAxisAlignment.end),
+                                                    // Text("🗓️ ${currentTask.departureCityDate}",
+                                                    //     style: ThemeTexts.textStyleTitle3
+                                                    //         .copyWith(
+                                                    //         color: Colors.black87)),
+                                                    Text("🗓️ ${currentTask.arrivalCityDate}",
+                                                        style: ThemeTexts.textStyleTitle3
+                                                            .copyWith(
+                                                            color: Colors.black87)),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(15),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
 
+                                                    flightDetails(
+                                                        cityName: currentTask.departureCity!,
+                                                        cityShortCode: currentTask.departureCityShortCode!,
+                                                        cityTime: currentTask.departureCityTime!,
+                                                        crossAlignment:
+                                                        CrossAxisAlignment.start),
+
+                                                    RotatedBox(
+                                                      quarterTurns: 1,
+                                                      child: Icon(
+                                                        Icons.flight,
+                                                        size: 50,
+                                                        color: Colors.grey,),
+                                                    ),
+
+                                                    flightDetails(
+                                                        cityName: currentTask.arrivalCity!,
+                                                        cityShortCode: currentTask.arrivalCityShortCode!,
+                                                        cityTime: currentTask.arrivalCityTime!,
+                                                        crossAlignment:
+                                                        CrossAxisAlignment.end),
+
+                                                  ],
+                                                ),
+                                              )
                                             ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),]
-                  );
-                }
-              },
+                              ),]
+                        ),
+                ),
+              ],
             );
           }
         },
@@ -276,11 +257,35 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                AppBar(
+                  backgroundColor: Colors.white,
+                  title: Text("MY FLIGHTS", style: ThemeTexts.textStyleTitle2
+                      .copyWith(fontWeight: FontWeight.normal,color: Colors.grey)),
+                  leading: IconButton(onPressed: (){
+                    setState(() {
+                      isEdit =! isEdit;
+                    });
+                  },
+                    icon: Icon(Icons.arrow_back,color: Colors.grey,),),
+                  actions: [
+                    IconButton(onPressed: (){
+                      // var task = items.values.where((_) => currentTask!.isSelected == true).first;
+                      // task.delete();
+                      deleteDialogue();
+                      setState(() {
+                        print(selectedItems);
+                        // selectedItems.removeWhere((element) =>  element.isSelected == true);
+                        // dataBoxUpcoming!.deleteAll(selectedItems);
+                      });
+
+                    }, icon: Icon(Icons.delete,color: Colors.grey))
+                  ],
+                ),
                 Container(
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.flight,
-                      size: w * 0.4,
+                      size: w * 0.3,
                       color: Colors.grey,
                     )),
                 SizedBox(
@@ -290,7 +295,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                   "No Flights Found",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: w * 0.1,
+                    fontSize: w * 0.05,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
@@ -462,12 +467,20 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
     );
   }
 
-  Future<String?> openDialogue() => showDialog<String>(
+  Future<String?> deleteDialogue() => showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Are you sure to you want to Delete All the Items?'),
           actions: [
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).pop();
+                    isEdit =! isEdit;
+                  });
+                },
+                child: Text('CANCEL')),
             TextButton(
                 onPressed: () {
                   setState(() {
@@ -478,14 +491,6 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                   });
                 },
                 child: Text('OK')),
-            TextButton(
-                onPressed: () {
-                  setState(() {
-                    Navigator.of(context).pop();
-                    isEdit =! isEdit;
-                  });
-                },
-                child: Text('CANCEL')),
           ],
         );
       });

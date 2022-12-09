@@ -5,6 +5,8 @@ import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/mo
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import '../../../../app_theme/color.dart';
+
 class SearchTabRecentSearches extends StatefulWidget {
    SearchTabRecentSearches({Key? key,
      this.departureAirportShortName,
@@ -28,7 +30,7 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    return SizedBox(
+    return  SizedBox(
       height: h * 0.4,
       width: w,
       child: ValueListenableBuilder<Box<ModelSearch>>(
@@ -48,54 +50,51 @@ class _SearchTabRecentSearchesState extends State<SearchTabRecentSearches> {
                       itemCount: box.values.length,
                       itemBuilder: (context, index) {
                         ModelSearch? currentTask = box.getAt(index);
-                        return Container(
-                          width: w,
-                          padding: EdgeInsets.only(left: 6,bottom: 6),
-                          margin: EdgeInsets.only(left: 6,bottom: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    print("aaaaaaaaa");
-                                    widget.departureAirport = currentTask.departureCity!;
-                                    widget.departureAirportShortName = currentTask.departureCityShortName!;
-                                    widget.arrivalAirport = currentTask.arrivalCity!;
-                                    widget.arrivalAirportShortName = currentTask.arrivalCityShortName!;
-                                  });
-                                },
-                                child: SizedBox(
-                                  width: w * 0.7,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(Icons.history,color: Colors.grey,),
-                                      SizedBox(width: 10,),
-                                      Flexible(
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(color: Colors.black, fontSize: 60),
-                                            children: [
-                                              TextSpan(text: 'From  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                              TextSpan(text: currentTask!.departureCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
-                                              TextSpan(text: '  to  ',style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.normal,fontFamily: "OpenSansRegular")),
-                                              TextSpan(text: currentTask.arrivalCity, style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
-                                            ],
-                                          ),
-                                          textScaleFactor: 1,
-                                        ),
-                                      ),
-                                    ],
+                        return Card(
+                          color: ColorsTheme.lightGreenPrimary,
+                          elevation: 5,
+                          child: Container(
+                            width: w,
+                            padding: EdgeInsets.all(5),
+                            margin: EdgeInsets.all(5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    setState(() {
+                                      // var departureAirport = currentTask.departureCity!;
+                                      // var departureAirportShortName = currentTask.departureCityShortName!;
+                                      // var arrivalAirport = currentTask.arrivalCity!;
+                                      // var arrivalAirportShortName = currentTask.arrivalCityShortName!;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: w * 0.7,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Icon(Icons.history,color: ColorsTheme.primaryColor,),
+                                        SizedBox(width: 10,),
+                                        Row(
+                                          children: [
+                                            Text("${currentTask!.departureCityShortName}   ", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
+                                            Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
+                                            Text("   ${currentTask.arrivalCityShortName}", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              IconButton(icon: Icon(Icons.clear),color: Colors.grey,
-                                onPressed: (){
-                                  currentTask.delete();
-                                },
-                              ),
-                            ],
+                                IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                  onPressed: (){
+                                    currentTask.delete();
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

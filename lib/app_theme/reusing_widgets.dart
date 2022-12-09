@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flutter/material.dart';
 
 class ReusingWidgets {
@@ -55,79 +56,81 @@ class ReusingWidgets {
 
   /// Airlines TAP BAR ///
 
-  //
-  // /// SEARCH BAR
-  //
-  //
-  // static Widget SearchTextFormField(
-  //     {required BuildContext context,
-  //       required TextEditingController controller,
-  //       required String hintText}) {
-  //   return TextFormField(
-  //     controller: controller,
-  //     decoration:  InputDecoration(
-  //       icon: Icon(Icons.person),
-  //       hintText: hintText,
-  //       labelText: 'Name *',
-  //     ),
-  //     onSaved: (String? value) {
-  //       // This optional block of code can be used to run
-  //       // code when the user saves the form.
-  //     },
-  //     validator: (String? value) {
-  //       return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-  //     },
-  //   );
-  // }
-  //
-  // ///  SEARCH BAR
 
 
+  /// SEARCH BAR start
 
-  /// SEARCH BAR
 
-
-  static InputDecoration SearchTextFormField(
-      {
-        required String hintText}) {
-    return InputDecoration(
-      prefixIcon: InkWell(
-        onTap: () {
-          // Navigator.pop(context);
-        },
-        child: Icon(
-          Icons.search,
-          size: 22,
-          color: Colors.grey,
+  static Widget SearchTextFormField({
+    required String hintText,
+    required TextEditingController textEditingController,
+    required Function(String value) onChange,
+    required Function() onTapClear,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 20,top: 20),
+          child: Text(
+            "Search",
+            style: ThemeTexts.textStyleTitle1,
+          ),
         ),
-      ),
-      // labelText: labelText,
-      // suffixIcon: suffixIcon,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      hintText: hintText,
-      filled: true,
-      fillColor: Colors.white,
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
+        Container(
+          color: ColorsTheme.white,
+          padding: EdgeInsets.all(12),
+          child: TextFormField(
+            controller: textEditingController,
+            enableInteractiveSelection: false,
+            style:
+            ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+            onChanged: (String value) {
+              onChange(value);
+            },
+            decoration: InputDecoration(
+              suffixIcon: textEditingController.text.isEmpty ?
+             IconButton(
+              onPressed: (){},
+                 icon: Icon(Icons.search,size: 22,color: Colors.grey,),)
+                  :
+              IconButton(
+                    onPressed: (){
+                      onTapClear();
+                    },
+                    icon: Icon(Icons.clear,size: 22,color: ColorsTheme.primaryColor,),),
+              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              hintText: hintText,
+              filled: true,
+              fillColor: Colors.white,
+              focusedBorder: OutlineInputBorder(
+                borderSide:  BorderSide(color: ColorsTheme.primaryColor, width: 2),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: ColorsTheme.primaryColor, width: 2),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              errorStyle: ThemeTexts.textStyleTitle2,
+              hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
+              labelStyle: ThemeTexts.textStyleTitle2,
+              floatingLabelStyle: ThemeTexts.textStyleTitle2,
+            ),
+          ),
         ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.white, width: .5),
-        borderRadius: BorderRadius.all(
-          Radius.circular(2),
-        ),
-      ),
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      errorStyle: ThemeTexts.textStyleTitle2,
-      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
-      labelStyle: ThemeTexts.textStyleTitle2,
-      floatingLabelStyle: ThemeTexts.textStyleTitle2,
+      ],
     );
+
+
+    ;
   }
 
-  ///  SEARCH BAR
+  ///  SEARCH BAR end
 
 
 
@@ -135,97 +138,97 @@ class ReusingWidgets {
 
   /// BY ROUTE ///
 
-  static Widget byRouteContainer({
-    required String departureTitle,
-    required String arrivalTitle,
-    required BuildContext context,
-    required Function() onTapDepartureTitle,
-    required Function() onTapArrivalTitle,
-    required TextStyle depStyle,
-    required TextStyle arrStyle,
-    required Function() onTapClearDepartureTitle,
-    required Function() onTapClearArrivalTitle,
-    required bool clearIconDeparture,
-    required bool clearIconArrival,
-    required Function() onTapSwapIcon,
-  }) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.19,
-        margin: EdgeInsets.all(0),
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.all(
-            Radius.circular(3),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: (){
-                    onTapDepartureTitle();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.flight_takeoff, color: ColorsTheme.black),
-                      SizedBox(width: 20),
-                      Text(
-                        departureTitle.length > 20 ? '${departureTitle.substring(0, 20)}...' : departureTitle,
-                        style: depStyle,
-                      ),
-                      clearIconDeparture == true ? IconButton(onPressed: (){
-                        onTapClearDepartureTitle();
-                      }, icon: Icon(Icons.clear)) : Container()
-                    ],
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Divider(
-                    // endIndent: 200,
-                    thickness: 1,
-                  ),
-                ),
-                InkWell(
-                  onTap: (){
-                    onTapArrivalTitle();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.flight_land, color: ColorsTheme.black),
-                      SizedBox(width: 20),
-                      Text(
-                        // arrivalTitle,
-                        arrivalTitle.length > 20 ? '${arrivalTitle.substring(0, 20)}...' : arrivalTitle,
-                        style: arrStyle,
-                      ),
-                      clearIconArrival == true ? IconButton(onPressed: (){
-                        onTapClearArrivalTitle();
-                      }, icon: Icon(Icons.clear)) : Container()
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-                onPressed: () {
-                  onTapSwapIcon();
-                },
-                icon: Icon(
-                  Icons.swap_vert,
-                  size: 30,
-                ))
-          ],
-        ));
-  }
+  // static Widget byRouteContainer({
+  //   required String departureTitle,
+  //   required String arrivalTitle,
+  //   required BuildContext context,
+  //   required Function() onTapDepartureTitle,
+  //   required Function() onTapArrivalTitle,
+  //   required TextStyle depStyle,
+  //   required TextStyle arrStyle,
+  //   required Function() onTapClearDepartureTitle,
+  //   required Function() onTapClearArrivalTitle,
+  //   required bool clearIconDeparture,
+  //   required bool clearIconArrival,
+  //   required Function() onTapSwapIcon,
+  // }) {
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height * 0.19,
+  //       margin: EdgeInsets.all(0),
+  //       padding: EdgeInsets.all(15),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         border: Border.all(color: Colors.white),
+  //         borderRadius: BorderRadius.all(
+  //           Radius.circular(3),
+  //         ),
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisSize: MainAxisSize.max,
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               InkWell(
+  //                 onTap: (){
+  //                   onTapDepartureTitle();
+  //                 },
+  //                 child: Row(
+  //                   children: [
+  //                     Icon(Icons.flight_takeoff, color: ColorsTheme.black),
+  //                     SizedBox(width: 20),
+  //                     Text(
+  //                       departureTitle.length > 20 ? '${departureTitle.substring(0, 20)}...' : departureTitle,
+  //                       style: depStyle,
+  //                     ),
+  //                     clearIconDeparture == true ? IconButton(onPressed: (){
+  //                       onTapClearDepartureTitle();
+  //                     }, icon: Icon(Icons.clear)) : Container()
+  //                   ],
+  //                 ),
+  //               ),
+  //               Container(
+  //                 color: Colors.white,
+  //                 width: MediaQuery.of(context).size.width * 0.7,
+  //                 child: Divider(
+  //                   // endIndent: 200,
+  //                   thickness: 1,
+  //                 ),
+  //               ),
+  //               InkWell(
+  //                 onTap: (){
+  //                   onTapArrivalTitle();
+  //                 },
+  //                 child: Row(
+  //                   children: [
+  //                     Icon(Icons.flight_land, color: ColorsTheme.black),
+  //                     SizedBox(width: 20),
+  //                     Text(
+  //                       // arrivalTitle,
+  //                       arrivalTitle.length > 20 ? '${arrivalTitle.substring(0, 20)}...' : arrivalTitle,
+  //                       style: arrStyle,
+  //                     ),
+  //                     clearIconArrival == true ? IconButton(onPressed: (){
+  //                       onTapClearArrivalTitle();
+  //                     }, icon: Icon(Icons.clear)) : Container()
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           IconButton(
+  //               onPressed: () {
+  //                 onTapSwapIcon();
+  //               },
+  //               icon: Icon(
+  //                 Icons.swap_vert,
+  //                 size: 30,
+  //               ))
+  //         ],
+  //       ));
+  // }
 
   static Widget optionalAirlineContainer({
     required String airlineTitle,
@@ -287,13 +290,15 @@ class ReusingWidgets {
     );
   }
 
+  /// Search Button
+
   static Widget searchButton({
     required Function() onPress,
     required BuildContext context,
     required String text,
   }) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width / 2.5,
       margin: EdgeInsets.all(0),
       padding: EdgeInsets.all(0),
       decoration: BoxDecoration(
@@ -306,7 +311,7 @@ class ReusingWidgets {
           onPress();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: ColorsTheme.buttonColor,
+          backgroundColor: ColorsTheme.themeColor,
           padding: EdgeInsets.all(15),
           textStyle: TextStyle(
               // fontSize: 20,
@@ -320,48 +325,198 @@ class ReusingWidgets {
     );
   }
           /// BY ROUTE ///
+          /// BY ROUTE NEW///
+
+
+  static Widget byRouteNewContainer({
+    required String title1,
+    required String title2,
+    required String airportName,
+    required String airportShortName,
+    required BuildContext context,
+    required CrossAxisAlignment crossAxisAlignment,
+    required Function() onTapAirport,
+     double? sizedBoxHeight,
+  }) {
+    return Container(
+      padding: EdgeInsets.only(top: 50),
+      child: Column(
+        crossAxisAlignment: crossAxisAlignment,
+        children: [
+          SizedBox(height: sizedBoxHeight),
+          Text(
+            title1,
+            style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+          ),
+           SizedBox(height: 0),
+           InkWell(
+             onTap: (){
+               onTapAirport();
+             },
+             child: Column(
+               children: [
+                 Text(
+                   airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
+                  style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                 ),
+                 SizedBox(height: 5),
+                 Text(
+                   airportShortName,
+                   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+                 ),
+               ],
+             ),
+           ),
+          divider(context: context),
+          SizedBox(height: 10),
+          Text(
+            title2,
+            style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+          ),
+          SizedBox(height: 5),
+          PickDate(),
+          divider(context: context),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  static Widget divider({required BuildContext context}){
+    return SizedBox(
+        width: MediaQuery.of(context).size.width / 4,
+        child: Divider(
+            thickness: 2,
+        ));
+  }
+
+  static Widget byRouteAirlineNewContainer({
+    required String airlineName,
+    required String airlineShortName,
+    required BuildContext context,
+    required Function() onTapAirline,
+  }){
+    return InkWell(
+      onTap: (){
+        onTapAirline();
+      },
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Column(
+          children: [
+            Text(
+              airlineName,
+              style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+            ),
+            SizedBox(height: 5),
+            Text(
+              airlineShortName,
+              style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+            ),
+            divider(context: context),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+          /// BY ROUTE NEW///
 
 
                /// BY FLIGHT CODE ///
 
 
 
-  static Widget byFlightCodeContainer({
-    required String flightCodeText,
+  // static Widget byFlightCodeContainer({
+  //   required String flightCodeText,
+  //   required BuildContext context,
+  //   required Function() onTapFlightCodeText,
+  //   required TextStyle flightCodeStyle,
+  //   required bool clearIcon,
+  //   required Function() onTapClearIcon,
+  // }) {
+  //   return GestureDetector(
+  //     onTap: (){
+  //       onTapFlightCodeText();
+  //     },
+  //     child: Container(
+  //         height: MediaQuery.of(context).size.height * 0.19,
+  //         margin: EdgeInsets.all(0),
+  //         padding: EdgeInsets.all(15),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           border: Border.all(color: Colors.white),
+  //           borderRadius: BorderRadius.all(
+  //             Radius.circular(3),
+  //           ),
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             Icon(Icons.numbers, color: ColorsTheme.black),
+  //             SizedBox(width: 20),
+  //             Text(
+  //               flightCodeText,
+  //               style: flightCodeStyle,
+  //             ),
+  //             clearIcon == true ? IconButton(onPressed: (){
+  //               onTapClearIcon();
+  //             }, icon: Icon(Icons.clear)) : Container()
+  //           ],
+  //         )),
+  //   );
+  // }
+
+
+  static Widget byFlightCodeNewContainer({
     required BuildContext context,
     required Function() onTapFlightCodeText,
-    required TextStyle flightCodeStyle,
+    required String flightCodeText,
     required bool clearIcon,
     required Function() onTapClearIcon,
+    required TextStyle flightCodeStyle,
+
   }) {
-    return GestureDetector(
-      onTap: (){
-        onTapFlightCodeText();
-      },
-      child: Container(
-          height: MediaQuery.of(context).size.height * 0.19,
-          margin: EdgeInsets.all(0),
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.white),
-            borderRadius: BorderRadius.all(
-              Radius.circular(3),
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.numbers, color: ColorsTheme.black),
-              SizedBox(width: 20),
-              Text(
-                flightCodeText,
-                style: flightCodeStyle,
+    return Column(
+      children: [
+        Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,size: MediaQuery.of(context).size.width * 0.2,),
+        SizedBox(height: 10),
+        Text("Enter Flight Code",style: ThemeTexts.textStyleTitle1.copyWith(fontSize: 20)),
+        SizedBox(height: 10),
+        InkWell(
+          onTap: (){
+            onTapFlightCodeText();
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: ColorsTheme.white,
+                border: Border.all(color: ColorsTheme.primaryColor,),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(3),
+                ),
               ),
-              clearIcon == true ? IconButton(onPressed: (){
-                onTapClearIcon();
-              }, icon: Icon(Icons.clear)) : Container()
-            ],
-          )),
+              child: Row(
+                children: [
+                  Icon(Icons.numbers, color: ColorsTheme.black),
+                  SizedBox(width: 20),
+                  Text(
+                    flightCodeText,
+                    style: flightCodeStyle,
+                  ),
+                  SizedBox(width: 40),
+                  clearIcon == true ? IconButton(onPressed: (){
+                    onTapClearIcon();
+                  }, icon: Icon(Icons.clear)) : Container()
+                ],
+              ),
+          ),
+        ),
+        SizedBox(height: 10),
+        PickDateFlightCode(),
+        SizedBox(height: 10),
+      ],
     );
   }
 
@@ -383,8 +538,8 @@ class ReusingWidgets {
           onTap();
         },
         child: Container(
-          height: 50.0,
-          width: MediaQuery.of(context).size.width * 0.4,
+          height: 30.0,
+          width: MediaQuery.of(context).size.width * 0.3,
           decoration: BoxDecoration(
               color: ColorsTheme.primaryColor,
               border: Border(
@@ -397,7 +552,7 @@ class ReusingWidgets {
           alignment: Alignment.center,
           child: Text(
               text,
-              style: ThemeTexts.textStyleTitle3.copyWith(color: textColor,fontWeight: FontWeight.w500)
+              style: ThemeTexts.textStyleTitle3.copyWith(color: textColor,fontWeight: FontWeight.bold)
           ),
         ));
   }

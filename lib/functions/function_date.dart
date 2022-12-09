@@ -18,22 +18,75 @@ class _PickDateState extends State<PickDate> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // selectDate(context);
+        selectDate(context);
+      },
+
+      child:  Row(
+        children: [
+          Icon(Icons.calendar_month, color: ColorsTheme.textColor),
+          SizedBox(width: 5),
+          Text(
+            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+            // DateFormat.yMMMEd().format(DateTime.now()),
+            style: ThemeTexts.textStyleValueGrey,
+          )
+        ],
+      ),
+    );
+  }
+
+  selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2022),
+      lastDate: DateTime(2025),
+      helpText: "Select Date",
+      initialEntryMode: DatePickerEntryMode.calendar,
+    );
+    if (selected != null && selected != selectedDate) {
+      setState(() {
+        selectedDate = selected;
+      });
+    }
+  }
+}
+
+
+
+/// //////////////// By Flight Code Date  /////////////////////
+
+class PickDateFlightCode extends StatefulWidget {
+  const PickDateFlightCode({Key? key}) : super(key: key);
+
+  @override
+  State<PickDateFlightCode> createState() => _PickDateFlightCodeState();
+}
+
+class _PickDateFlightCodeState extends State<PickDateFlightCode> {
+  DateTime selectedDate = DateTime.now();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        selectDate(context);
       },
 
       child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
         margin: EdgeInsets.all(0),
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.white),
+          border: Border.all(color: ColorsTheme.primaryColor),
           borderRadius: BorderRadius.all(
             Radius.circular(3),
           ),
         ),
         child: Row(
           children: [
-            Icon(Icons.calendar_month, color: ColorsTheme.textColor),
+            Icon(Icons.calendar_month, color: ColorsTheme.black),
             SizedBox(width: 20),
             Text(
               "Departing ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",

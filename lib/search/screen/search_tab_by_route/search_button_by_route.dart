@@ -4,12 +4,12 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
-import 'package:flight_tracker/search/model/model_search_flights.dart';
-import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import '../../../../app_theme/theme_texts.dart';
 import '../../../flight_detail/screen/flight_detail_screen.dart';
+import '../../model/model_search_flight.dart';
+import '../../services/services_search_flight.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
    SearchButtonByRoute({
@@ -17,13 +17,13 @@ class SearchButtonByRoute extends StatefulWidget {
      required this.departureAirport,
      required this.arrivalAirport,
      this.airlineOptional,
-     this.dateByRoute,
+     this.dateDay,
    });
 
   var departureAirport;
   var arrivalAirport;
   var airlineOptional;
-  var dateByRoute;
+  var dateDay;
 
   @override
   State<SearchButtonByRoute> createState() => _SearchButtonByRouteState();
@@ -31,7 +31,7 @@ class SearchButtonByRoute extends StatefulWidget {
 
 class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
-  Future<ModelSearchFlights>? futureList;
+  Future<ModelSearchFlight>? futureList;
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
@@ -43,7 +43,13 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
     super.initState();
 
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
-    futureList = ServicesSearchFlights().GetAllPosts();
+    futureList = ServicesSearchFlight().GetAllPosts(
+        depIata: widget.departureAirport,
+        arrIata: widget.arrivalAirport,
+        airlineIcao: widget.airlineOptional,
+        day: widget.dateDay,
+        flightIata: "",
+    );
   }
 
   @override
@@ -74,30 +80,43 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                             itemBuilder: (context, index) {
 
                               String flightCode = snapshot.data!.response![index].flightIata ?? "---";
-                              Status flightStatus = snapshot.data!.response![index].status!;
+                              // Status flightStatus = snapshot.data!.response![index].status!;
                               String departureCity = snapshot.data!.response![index].depIata ?? "---";
+                              String airlineShortName = snapshot.data!.response![index].airlineIata ?? "---";
                               String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
-                              String airlineCityOptional = snapshot.data!.response![index].airlineIata ?? "---";
+                              String airlineCityOptional = snapshot.data!.response![index].airlineIcao ?? "---";
                               String departureCityShortName = snapshot.data!.response![index].depIcao ?? "---";
                               String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "---";
-                              String departureCityTime = snapshot.data!.response![index].lat.toString();
-                              String arrivalCityTime = snapshot.data!.response![index].lng.toString();
+                              String departureCityTime = snapshot.data!.response![index].depTime!;
+                              String arrivalCityTime = snapshot.data!.response![index].arrTime!;
                               String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
-                              int updated = snapshot.data!.response![index].updated!;
-                              var dateTimeUpdated = DateTime.fromMillisecondsSinceEpoch(updated * 1000);
+                              DateTime updated = snapshot.data!.response![index].updated!;
+                              List<String> dateDay = snapshot.data!.response![index].days!;
+
+
+
+                              // var dateTimeUpdated = DateTime.fromMillisecondsSinceEpoch(updated * 1000);
                               // String departureCityDate = 'Nov 08, 2022';
                               // String arrivalCityDate = 'Nov 09, 2022';
-                              String departureLat = "24.8607";
-                              String departureLng = "67.0011";
-                              String arrivalLat = "31.5204";
-                              String arrivalLng = "74.3587";
+                              // String departureLat = "24.8607";
+                              // String departureLng = "67.0011";
+                              // String arrivalLat = "31.5204";
+                              // String arrivalLng = "74.3587";
 
-                              print("${widget.departureAirport}");
-                              print(departureCity);
+                              print("aaaaa${widget.departureAirport}");
+                              print("aaaaa${widget.airlineOptional}");
+                              print("aaaaa$departureCity");
+                              print("aaaaa$airlineCityOptional");
+                              print("vvv${widget.dateDay}");
+                              print("vvv${dateDay}");
+                              print("vvv${dateDay.contains(widget.dateDay)}");
+
 
                               return
-                                widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity
-                                    // || widget.airlineOptional == airlineCityOptional
+                                // (widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity && dateDay.contains(widget.dateDay))
+                                    // ||
+                                // (widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity) ||
+                              (widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay))
                                     ?
                                 InkWell(
                                   onTap: (){
@@ -126,7 +145,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text(flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-                                                Text(flightStatus.toString(),
+                                                Text(airlineShortName.toString(),
                                                      style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black))
                                               ],
                                             ),
@@ -154,7 +173,6 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                   cityTime: arrivalCityTime.toString(),
                                                   crossAlignment: CrossAxisAlignment.end,
                                                 ),
-
                                               ],
                                             ),
                                           ),
@@ -180,15 +198,15 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                         departureCity: departureCity,
                                                         departureCityShortCode: departureCityShortName,
                                                         departureCityTime: departureCityTime,
-                                                        arrivalCityDate: dateTimeUpdated.toString(),
+                                                        arrivalCityDate: updated.toString(),
                                                         arrivalCity: arrivalCity,
                                                         arrivalCityShortCode: arrivalCityShortName,
                                                         arrivalCityTime: arrivalCityTime,
-                                                        flightStatus: flightStatus.toString(),
-                                                        arrivalLat: arrivalLat,
-                                                        arrivalLng: arrivalLng,
-                                                        departureLat: departureLat,
-                                                        departureLng: departureLng,
+                                                        flightStatus: flightCode.toString(),
+                                                        // arrivalLat: arrivalLat,
+                                                        // arrivalLng: arrivalLng,
+                                                        // departureLat: departureLat,
+                                                        // departureLng: departureLng,
                                                         flightIata: flight_iata,
                                                         isSelected: false
                                                     );

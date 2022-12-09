@@ -22,7 +22,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
   TextEditingController numberController = TextEditingController();
   TextEditingController alphabetsController = TextEditingController();
 
-  var flightCode = "Enter Flight Code";
+  var flightCode = "Enter Code";
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
 
@@ -43,23 +43,31 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
     return Column(
         children: [
 
-          /// BlUE CONTAINER
+          /// White CONTAINER
           Container(
-            color: ColorsTheme.primaryColor,
-            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: ColorsTheme.white,
+              border: Border.all(
+                  color: ColorsTheme.white,
+                  width: 2,
+                  style: BorderStyle.solid),
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(50),
+                topLeft: Radius.circular(50),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
-                ReusingWidgets.byFlightCodeContainer(
+                ReusingWidgets.byFlightCodeNewContainer(
                     context: context,
-                    flightCodeText: flightCode.isEmpty ? "Enter Flight Code" : flightCode,
-                    flightCodeStyle: flightCode == "Enter Flight Code" ?
-                    ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
-                        : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
-                    onTapFlightCodeText: () async{
-
+                  flightCodeStyle: flightCode == "Enter Code" ?
+                  ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
+                      : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+                  flightCodeText: flightCode.isEmpty ? "Enter Code" : flightCode,
+                  onTapFlightCodeText: () async{
                       var dialogueText =
                           await openDialogue();
                       if (dialogueText != null) {
@@ -69,34 +77,38 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                       }
                       else{}
                     },
-                    clearIcon: flightCode == "Enter Flight Code" ? false : true,
+                    clearIcon: flightCode == "Enter Code" ? false : true,
                     onTapClearIcon: () {
-                      setState(() {
-                        flightCode = "Enter Flight Code";
-                      });
-                    }),
-
-                SizedBox(height: 10),
-
-                PickDate(),
-
-                SizedBox(height: 10),
+                       setState(() {
+                         flightCode = "Enter Code";
+                         });
+                    },
+                        ),
 
                 ReusingWidgets.searchButton(onPress: (){
                   setState(() {
                     /// If search don't exist
                     // showAlertDialog(context);
 
-                    /// If search exist
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    if(flightCode == "Enter Code"){
+                      ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
+                    }
+
+                    else {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                       return SearchButtonByFlightCode(flightCode: flightCode);
                     }));
-                  });
 
-                  // modelMyFlights = ModelSearch(
-                  //     flightCode: flightCode
-                  // );
-                  // dataBox!.add(modelMyFlights!);
+                      modelMyFlights = ModelSearch(
+                          flightCode: flightCode,
+                        arrivalCity: "",
+                        departureCity: "",
+                        arrivalCityShortName: "",
+                        departureCityShortName: "",
+                      );
+                      dataBox!.add(modelMyFlights!);
+                    }
+                  });
 
                 }, context: context,
                     text: 'SEARCH'),
@@ -104,11 +116,6 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
               ],
             ),
           ),
-
-          /// BlUE CONTAINER
-
-
-          /// WHITE CONTAINER
 
           Container(
             color: ColorsTheme.white,
@@ -122,13 +129,83 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                 Text("Recent Searches",style: TextStyle(
                   fontSize: 13,
-                  color: ColorsTheme.textColor,
-                  fontWeight: FontWeight.w500,
+                  color: ColorsTheme.black,
+                  fontWeight: FontWeight.bold,
                   letterSpacing: 2,),),
 
                 SizedBox(height: 10),
 
-                SearchTabRecentSearches(),
+                SizedBox(
+                  height: h * 0.4,
+                  width: w,
+                  child: ValueListenableBuilder<Box<ModelSearch>>(
+                    valueListenable:
+                    Hive.box<ModelSearch>("modelSearch").listenable(),
+                    builder: (context, box, _) {
+                      final items = box.values.toList().cast<ModelSearch>();
+
+                      if (items.isEmpty) {
+                        return Container();
+                      } else {
+                        return Flex(
+                            direction: Axis.vertical,
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: box.values.length,
+                                  itemBuilder: (context, index) {
+                                    ModelSearch? currentTask = box.getAt(index);
+                                    return
+                                      currentTask!.flightCode!.isNotEmpty ?
+                                      Card(
+                                      color: ColorsTheme.lightGreenPrimary,
+                                      elevation: 5,
+                                      child: Container(
+                                        width: w,
+                                        padding: EdgeInsets.all(5),
+                                        margin: EdgeInsets.all(5),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  flightCode = currentTask.flightCode!;
+                                                });
+                                              },
+                                              child: SizedBox(
+                                                width: w * 0.7,
+                                                child:
+                                               Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Icon(Icons.history,color: ColorsTheme.primaryColor,),
+                                                    SizedBox(width: 10,),
+                                                    Text(currentTask.flightCode!,
+                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                                  ],
+                                                )
+                                              ),
+                                            ),
+                                            IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                              onPressed: (){
+                                                currentTask.delete();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ) : Container();
+                                  },
+                                ),
+                              ),]
+                        );
+                      }
+                    },
+                  ),
+                ),
+
+                // SearchTabRecentSearches(),
 
               ],
             ),

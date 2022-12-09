@@ -1,20 +1,21 @@
-import 'package:flight_tracker/search/model/model_search_flights.dart';
 import 'package:http/http.dart' as http;
-
 import '../../api_key/api_key.dart';
+import '../model/model_search_flight.dart';
 
 
-class ServicesSearchFlights{
-  Future<ModelSearchFlights> GetAllPosts() async{
+class ServicesSearchFlight{
+  Future<ModelSearchFlight> GetAllPosts(
+      {required String depIata, required String arrIata, required String airlineIcao,required String flightIata, String? day}) async{
 
-    var url = Uri.parse("https://airlabs.co/api/v9/flights?api_key=${ApiKeys().API_KEY}");
+    var url = Uri.parse(
+        "https://airlabs.co/api/v9/routes?api_key=${ApiKeys().API_KEY}&dep_iata=$depIata&arr_iata=$arrIata&airline_icao=$airlineIcao&flight_iata=$flightIata&days=$day");
 
     var response = await http.get(url);
     // print("Response status: ${response.statusCode}");
     // print("Response body: ${response.body}");
 
     if(response.statusCode == 200){
-      final modelData = modelSearchFlightsFromJson(response.body.toString());
+      final modelData = modelSearchFlightFromJson(response.body.toString());
       return modelData;
     }
     else{

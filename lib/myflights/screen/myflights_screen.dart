@@ -7,9 +7,10 @@ import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart'
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_open_create_new_trips.dart';
-import 'package:flight_tracker/myflights/screen/screen_my_upcoming__flights/myflights_upcoming_show_all.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+
+import 'screen_my_upcoming_flights/myflights_upcoming_show_all.dart';
 
 class MyFlightsScreen extends StatefulWidget {
   const MyFlightsScreen({Key? key}) : super(key: key);
@@ -38,10 +39,18 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
     return Scaffold(
       backgroundColor: ColorsTheme.myFlightsbg,
       appBar: AppBar(
-        title: Text(
-          "MY FLIGHTS",
-          style: ThemeTexts.textStyleTitle2
-              .copyWith(fontWeight: FontWeight.normal),
+        title: GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return FlightDetailScreen(flight_iata: "IX142",);
+            }));
+
+          },
+          child: Text(
+            "MY FLIGHTS",
+            style: ThemeTexts.textStyleTitle2
+                .copyWith(fontWeight: FontWeight.normal),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -124,7 +133,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             SizedBox(height: 5),
                                             Text(
                                               "${currentTask.modelMyFlightsUpcoming!.length} Flights",
-                                              // "Flights",
                                               style: ThemeTexts.textStyleTitle3.copyWith(
                                                   color: Colors.grey,
                                                   letterSpacing: 0),

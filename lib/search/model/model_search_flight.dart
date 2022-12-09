@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final modelSearchFlights = modelSearchFlightsFromJson(jsonString);
+//     final modelSearchFlight = modelSearchFlightFromJson(jsonString);
 
 import 'dart:convert';
 
-ModelSearchFlights modelSearchFlightsFromJson(String str) => ModelSearchFlights.fromJson(json.decode(str));
+ModelSearchFlight modelSearchFlightFromJson(String str) => ModelSearchFlight.fromJson(json.decode(str));
 
-String modelSearchFlightsToJson(ModelSearchFlights data) => json.encode(data.toJson());
+String modelSearchFlightToJson(ModelSearchFlight data) => json.encode(data.toJson());
 
-class ModelSearchFlights {
-  ModelSearchFlights({
+class ModelSearchFlight {
+  ModelSearchFlight({
     this.request,
     this.response,
     this.terms,
@@ -19,7 +19,7 @@ class ModelSearchFlights {
   List<Response>? response;
   String? terms;
 
-  factory ModelSearchFlights.fromJson(Map<String, dynamic> json) => ModelSearchFlights(
+  factory ModelSearchFlight.fromJson(Map<String, dynamic> json) => ModelSearchFlight(
     request: json["request"] == null ? null : Request.fromJson(json["request"]),
     response: json["response"] == null ? null : List<Response>.from(json["response"].map((x) => Response.fromJson(x))),
     terms: json["terms"] == null ? null : json["terms"],
@@ -141,16 +141,24 @@ class Agent {
 class Connection {
   Connection({
     this.type,
+    this.ispCode,
+    this.ispName,
   });
 
   String? type;
+  int? ispCode;
+  String? ispName;
 
   factory Connection.fromJson(Map<String, dynamic> json) => Connection(
     type: json["type"] == null ? null : json["type"],
+    ispCode: json["isp_code"] == null ? null : json["isp_code"],
+    ispName: json["isp_name"] == null ? null : json["isp_name"],
   );
 
   Map<String, dynamic> toJson() => {
     "type": type == null ? null : type,
+    "isp_code": ispCode == null ? null : ispCode,
+    "isp_name": ispName == null ? null : ispName,
   };
 }
 
@@ -276,138 +284,132 @@ class Key {
 
 class Params {
   Params({
+    this.depIata,
+    this.arrIata,
+    this.airlineIata,
     this.lang,
   });
 
+  String? depIata;
+  String? arrIata;
+  String? airlineIata;
   String? lang;
 
   factory Params.fromJson(Map<String, dynamic> json) => Params(
+    depIata: json["dep_iata"] == null ? null : json["dep_iata"],
+    arrIata: json["arr_iata"] == null ? null : json["arr_iata"],
+    airlineIata: json["airline_iata"] == null ? null : json["airline_iata"],
     lang: json["lang"] == null ? null : json["lang"],
   );
 
   Map<String, dynamic> toJson() => {
+    "dep_iata": depIata == null ? null : depIata,
+    "arr_iata": arrIata == null ? null : arrIata,
+    "airline_iata": airlineIata == null ? null : airlineIata,
     "lang": lang == null ? null : lang,
   };
 }
 
 class Response {
   Response({
-    this.hex,
-    this.regNumber,
-    this.flag,
-    this.lat,
-    this.lng,
-    this.alt,
-    this.dir,
-    this.speed,
-    this.vSpeed,
-    this.squawk,
-    this.flightNumber,
-    this.flightIcao,
-    this.flightIata,
-    this.depIcao,
-    this.depIata,
-    this.arrIcao,
-    this.arrIata,
-    this.airlineIcao,
     this.airlineIata,
+    this.airlineIcao,
+    this.flightNumber,
+    this.flightIata,
+    this.flightIcao,
+    this.csAirlineIata,
+    this.csFlightIata,
+    this.csFlightNumber,
+    this.depIata,
+    this.depIcao,
+    this.depTerminals,
+    this.depTime,
+    this.depTimeUtc,
+    this.arrIata,
+    this.arrIcao,
+    this.arrTerminals,
+    this.arrTime,
+    this.arrTimeUtc,
+    this.duration,
+    this.days,
     this.aircraftIcao,
+    this.counter,
     this.updated,
-    this.status,
   });
 
-  String? hex;
-  String? regNumber;
-  String? flag;
-  double? lat;
-  double? lng;
-  int? alt;
-  int? dir;
-  int? speed;
-  double? vSpeed;
-  String? squawk;
-  String? flightNumber;
-  String? flightIcao;
-  String? flightIata;
-  String? depIcao;
-  String? depIata;
-  String? arrIcao;
-  String? arrIata;
-  String? airlineIcao;
   String? airlineIata;
-  String? aircraftIcao;
-  int? updated;
-  Status? status;
+  String? airlineIcao;
+  String? flightNumber;
+  String? flightIata;
+  String? flightIcao;
+  String? csAirlineIata;
+  String? csFlightIata;
+  String? csFlightNumber;
+  String? depIata;
+  String? depIcao;
+  List<String>? depTerminals;
+  String? depTime;
+  String? depTimeUtc;
+  String? arrIata;
+  String? arrIcao;
+  dynamic arrTerminals;
+  String? arrTime;
+  String? arrTimeUtc;
+  int? duration;
+  List<String>? days;
+  dynamic aircraftIcao;
+  int? counter;
+  DateTime? updated;
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
-    hex: json["hex"] == null ? null : json["hex"],
-    regNumber: json["reg_number"] == null ? null : json["reg_number"],
-    flag: json["flag"] == null ? null : json["flag"],
-    lat: json["lat"] == null ? null : json["lat"].toDouble(),
-    lng: json["lng"] == null ? null : json["lng"].toDouble(),
-    alt: json["alt"] == null ? null : json["alt"],
-    dir: json["dir"] == null ? null : json["dir"],
-    speed: json["speed"] == null ? null : json["speed"],
-    vSpeed: json["v_speed"] == null ? null : json["v_speed"].toDouble(),
-    squawk: json["squawk"] == null ? null : json["squawk"],
-    flightNumber: json["flight_number"] == null ? null : json["flight_number"],
-    flightIcao: json["flight_icao"] == null ? null : json["flight_icao"],
-    flightIata: json["flight_iata"] == null ? null : json["flight_iata"],
-    depIcao: json["dep_icao"] == null ? null : json["dep_icao"],
-    depIata: json["dep_iata"] == null ? null : json["dep_iata"],
-    arrIcao: json["arr_icao"] == null ? null : json["arr_icao"],
-    arrIata: json["arr_iata"] == null ? null : json["arr_iata"],
-    airlineIcao: json["airline_icao"] == null ? null : json["airline_icao"],
     airlineIata: json["airline_iata"] == null ? null : json["airline_iata"],
-    aircraftIcao: json["aircraft_icao"] == null ? null : json["aircraft_icao"],
-    updated: json["updated"] == null ? null : json["updated"],
-    status: json["status"] == null ? null : statusValues.map![json["status"]],
+    airlineIcao: json["airline_icao"] == null ? null : json["airline_icao"],
+    flightNumber: json["flight_number"] == null ? null : json["flight_number"],
+    flightIata: json["flight_iata"] == null ? null : json["flight_iata"],
+    flightIcao: json["flight_icao"] == null ? null : json["flight_icao"],
+    csAirlineIata: json["cs_airline_iata"] == null ? null : json["cs_airline_iata"],
+    csFlightIata: json["cs_flight_iata"] == null ? null : json["cs_flight_iata"],
+    csFlightNumber: json["cs_flight_number"] == null ? null : json["cs_flight_number"],
+    depIata: json["dep_iata"] == null ? null : json["dep_iata"],
+    depIcao: json["dep_icao"] == null ? null : json["dep_icao"],
+    depTerminals: json["dep_terminals"] == null ? null : List<String>.from(json["dep_terminals"].map((x) => x)),
+    depTime: json["dep_time"] == null ? null : json["dep_time"],
+    depTimeUtc: json["dep_time_utc"] == null ? null : json["dep_time_utc"],
+    arrIata: json["arr_iata"] == null ? null : json["arr_iata"],
+    arrIcao: json["arr_icao"] == null ? null : json["arr_icao"],
+    arrTerminals: json["arr_terminals"],
+    arrTime: json["arr_time"] == null ? null : json["arr_time"],
+    arrTimeUtc: json["arr_time_utc"] == null ? null : json["arr_time_utc"],
+    duration: json["duration"] == null ? null : json["duration"],
+    days: json["days"] == null ? null : List<String>.from(json["days"].map((x) => x)),
+    aircraftIcao: json["aircraft_icao"],
+    counter: json["counter"] == null ? null : json["counter"],
+    updated: json["updated"] == null ? null : DateTime.parse(json["updated"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "hex": hex == null ? null : hex,
-    "reg_number": regNumber == null ? null : regNumber,
-    "flag": flag == null ? null : flag,
-    "lat": lat == null ? null : lat,
-    "lng": lng == null ? null : lng,
-    "alt": alt == null ? null : alt,
-    "dir": dir == null ? null : dir,
-    "speed": speed == null ? null : speed,
-    "v_speed": vSpeed == null ? null : vSpeed,
-    "squawk": squawk == null ? null : squawk,
-    "flight_number": flightNumber == null ? null : flightNumber,
-    "flight_icao": flightIcao == null ? null : flightIcao,
-    "flight_iata": flightIata == null ? null : flightIata,
-    "dep_icao": depIcao == null ? null : depIcao,
-    "dep_iata": depIata == null ? null : depIata,
-    "arr_icao": arrIcao == null ? null : arrIcao,
-    "arr_iata": arrIata == null ? null : arrIata,
-    "airline_icao": airlineIcao == null ? null : airlineIcao,
     "airline_iata": airlineIata == null ? null : airlineIata,
-    "aircraft_icao": aircraftIcao == null ? null : aircraftIcao,
-    "updated": updated == null ? null : updated,
-    "status": status == null ? null : statusValues.reverse[status],
+    "airline_icao": airlineIcao == null ? null : airlineIcao,
+    "flight_number": flightNumber == null ? null : flightNumber,
+    "flight_iata": flightIata == null ? null : flightIata,
+    "flight_icao": flightIcao == null ? null : flightIcao,
+    "cs_airline_iata": csAirlineIata == null ? null : csAirlineIata,
+    "cs_flight_iata": csFlightIata == null ? null : csFlightIata,
+    "cs_flight_number": csFlightNumber == null ? null : csFlightNumber,
+    "dep_iata": depIata == null ? null : depIata,
+    "dep_icao": depIcao == null ? null : depIcao,
+    "dep_terminals": depTerminals == null ? null : List<dynamic>.from(depTerminals!.map((x) => x)),
+    "dep_time": depTime == null ? null : depTime,
+    "dep_time_utc": depTimeUtc == null ? null : depTimeUtc,
+    "arr_iata": arrIata == null ? null : arrIata,
+    "arr_icao": arrIcao == null ? null : arrIcao,
+    "arr_terminals": arrTerminals,
+    "arr_time": arrTime == null ? null : arrTime,
+    "arr_time_utc": arrTimeUtc == null ? null : arrTimeUtc,
+    "duration": duration == null ? null : duration,
+    "days": days == null ? null : List<dynamic>.from(days!.map((x) => x)),
+    "aircraft_icao": aircraftIcao,
+    "counter": counter == null ? null : counter,
+    "updated": updated == null ? null : updated!.toIso8601String(),
   };
-}
-
-enum Status { EN_ROUTE, LANDED, SCHEDULED }
-
-final statusValues = EnumValues({
-  "en-route": Status.EN_ROUTE,
-  "landed": Status.LANDED,
-  "scheduled": Status.SCHEDULED
-});
-
-class EnumValues<T> {
-  Map<String, T>? map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map!.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap!;
-  }
 }

@@ -8,7 +8,7 @@ import 'package:rxdart/rxdart.dart';
 class LocalNotificationService {
   LocalNotificationService();
 
-  final _localNotificationService = FlutterLocalNotificationsPlugin();
+  var localNotificationService = FlutterLocalNotificationsPlugin();
 
   final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
 
@@ -30,7 +30,7 @@ class LocalNotificationService {
         android: androidInitializationSettings,
         iOS: iosInitializationSettings);
 
-    await _localNotificationService.initialize(initializationSettings,
+    await localNotificationService.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
   }
 
@@ -63,7 +63,7 @@ class LocalNotificationService {
     // required var hours
   }) async {
     final details = await _notificationDetails();
-    await _localNotificationService.zonedSchedule(
+    await localNotificationService.zonedSchedule(
         id,
         title,
         body,

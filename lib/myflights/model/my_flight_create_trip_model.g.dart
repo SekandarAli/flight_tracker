@@ -22,7 +22,7 @@ class ModelMyFlightsCreateTripAdapter
       noOfFlights: fields[1] as String,
       tripImage: fields[2] as String,
       modelMyFlightsUpcoming: fields[3] as dynamic,
-      idNumber: fields[4] as dynamic,
+      isSelected: fields[4] == null ? false : fields[4] as bool?,
     );
   }
 
@@ -39,7 +39,7 @@ class ModelMyFlightsCreateTripAdapter
       ..writeByte(3)
       ..write(obj.modelMyFlightsUpcoming)
       ..writeByte(4)
-      ..write(obj.idNumber);
+      ..write(obj.isSelected);
   }
 
   @override

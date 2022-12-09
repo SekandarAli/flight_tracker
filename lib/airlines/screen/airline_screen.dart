@@ -23,7 +23,10 @@ class AirlineScreen extends StatefulWidget {
 class _AirlineScreenState extends State<AirlineScreen> {
 
   TextEditingController searchAirlineController = TextEditingController();
-  List _items = [];
+  List items = [];
+
+  List rows = [];
+  String query = '';
 
   @override
   void initState() {
@@ -37,8 +40,14 @@ class _AirlineScreenState extends State<AirlineScreen> {
     final String response = await rootBundle.loadString('assets/json/airline.json');
     final data = await json.decode(response);
     setState(() {
-      _items = data["response"];
+      items = data["response"];
     });
+  }
+
+  void setResults(String query) {
+    rows = items
+        .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
+        elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
 
   @override
@@ -51,63 +60,113 @@ class _AirlineScreenState extends State<AirlineScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                color: ColorsTheme.primaryColor,
-                padding: EdgeInsets.all(12),
-                child: TextFormField(
-                  controller: searchAirlineController,
-                  enableInteractiveSelection: false,
-                  style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
-                  onChanged: (String value) {
-                    print(value);
-                    setState(() {});
-                  },
-                  decoration: ReusingWidgets.SearchTextFormField(
-                      hintText: "Search for an Airline",
-                  ),
-                ),
+              ReusingWidgets.SearchTextFormField(
+                hintText: "Search for an Airline",
+                textEditingController: searchAirlineController,
+                onChange: (v) {
+                  setState(() {
+                    query = v;
+                    setResults(query);
+                  });
+
+                },
+                  onTapClear: (){
+                    setState(() {
+                      query = "";
+                      searchAirlineController.clear();
+                    });
+                  }
               ),
               Expanded(
                 child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: ListView.builder(
-                          padding: EdgeInsets.all(5),
-                          itemCount: _items.length,
-                          itemBuilder: (context, index) {
-
-                            String? airlineName = _items[index]["name"]  ?? "Unknown";
-                            String? countryShortName = _items[index]["iata_code"]  ?? "Unknown";
-                            String? airportImage;
-                            String? iataValue = _items[index]["icao_code"]  ?? "Unknown";
-
-                            return
-                              airlineName!.toLowerCase().contains(searchAirlineController.text)
-                                  || countryShortName!.toLowerCase().contains(searchAirlineController.text) ?
-                            InkWell(
-                                onTap: () async {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                    return AirlineScreenDetails(airlineName: airlineName,iataValue: iataValue!,);
-                                  }));
-                                },
-                                child: ListTile(
-                                  title: Text(airlineName,style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold),),
-                                  subtitle: Text(countryShortName!,style: ThemeTexts.textStyleValueBlack2),
-                                  trailing: FlutterLogo(
-                                    size: 40,
-                                    textColor: Colors.blue,
-                                    style: FlutterLogoStyle.stacked,
-                                  ), //F
-                                )) : Container();
-                          },
-                        ),
+                    decoration: BoxDecoration(
+                      color: ColorsTheme.primaryColor,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(50),
+                        topLeft: Radius.circular(50),
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                    padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "All Airlines",
+                          style: ThemeTexts.textStyleTitle1
+                              .copyWith(color: Colors.white, fontSize: 20),
+                        ),
+                        SizedBox(height: 20),
+                        Expanded(
+                            child: Container(
+                              padding: EdgeInsets.all(0),
+                              decoration: BoxDecoration(
+                                color: ColorsTheme.white,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    child: query.isEmpty ?
+                                    ListView.builder(
+                                        padding: EdgeInsets.all(5),
+                                        shrinkWrap: true,
+                                        itemCount: items.length,
+                                        itemBuilder: (context, index) {
+
+                                          String? airlineName = items[index]["name"]  ?? "Unknown";
+                                          String? countryShortName = items[index]["iata_code"]  ?? "Unknown";
+                                          String? iataValue = items[index]["icao_code"]  ?? "Unknown";
+                                          String? airportImage;
+
+                                          return
+                                            InkWell(
+                                                onTap: () async {
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                    return AirlineScreenDetails(airlineName: airlineName,iataValue: iataValue!,);
+                                                  }));
+                                                },
+                                                child: ListTile(
+                                                  title: Text(airlineName!,style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
+                                                  subtitle: Text(countryShortName!,style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+                                                ));
+                                        },
+                                    )
+                                        :
+                                    ListView.builder(
+                                      padding: EdgeInsets.all(5),
+                                      shrinkWrap: true,
+                                      itemCount: rows.length,
+                                      itemBuilder: (context, index) {
+
+                                        String? airlineName = rows[index]["name"]  ?? "Unknown";
+                                        String? countryShortName = rows[index]["iata_code"]  ?? "Unknown";
+                                        String? iataValue = rows[index]["icao_code"]  ?? "Unknown";
+                                        String? airportImage;
+
+                                        return
+                                          InkWell(
+                                              onTap: () async {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                  return AirlineScreenDetails(airlineName: airlineName,iataValue: iataValue!,);
+                                                }));
+                                              },
+                                              child: ListTile(
+                                                title: Text(airlineName!,style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
+                                                subtitle: Text(countryShortName!,style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+                                              ));
+                                      },
+                                    )
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    )),
               ),
+
 
             ],
           ),
