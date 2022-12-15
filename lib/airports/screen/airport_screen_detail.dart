@@ -186,7 +186,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                               departureFlightNo: flight_iata,
                                               onTap: ()async {
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: flight_iata,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
                                                 }));
                                               });
                                       },
@@ -260,7 +260,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                               departureFlightNo: departureFlightNo,
                                               onTap: ()async {
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,);
+                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
                                             }));
                                           });
                                       },

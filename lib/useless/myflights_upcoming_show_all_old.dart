@@ -138,7 +138,7 @@ class _MyFlightsUpcomingShowAllScreenState extends State<MyFlightsUpcomingShowAl
                                     return InkWell(
                                       onTap: (){
                                         Navigator.push(context, MaterialPageRoute(builder: (context){
-                                          return FlightDetailScreen(flight_iata: currentTask.flightIata,);
+                                          return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
                                         }));
                                       },
                                       child: Dismissible(

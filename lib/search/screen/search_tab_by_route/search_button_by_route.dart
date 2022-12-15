@@ -19,12 +19,14 @@ class SearchButtonByRoute extends StatefulWidget {
      required this.arrivalAirport,
      this.airlineOptional,
      this.dateDay,
+     this.currentDate
    });
 
   var departureAirport;
   var arrivalAirport;
   var airlineOptional;
   var dateDay;
+  var currentDate;
 
   @override
   State<SearchButtonByRoute> createState() => _SearchButtonByRouteState();
@@ -60,7 +62,12 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("${widget.departureAirport} - ${widget.arrivalAirport}",style: ThemeTexts.textStyleTitle3,),),
+        title: Text("${widget.departureAirport} - ${widget.arrivalAirport}",style: ThemeTexts.textStyleTitle3,),
+        actions: [
+          Center(child: Text(widget.currentDate.toString())),
+          SizedBox(width: 10),
+        ],
+      ),
       body: SafeArea(
         child: SizedBox(
           height: h,
@@ -136,7 +143,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                           TextButton(onPressed: () {
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,);
+                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
                                             }));
 
                                           }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),

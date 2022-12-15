@@ -22,7 +22,7 @@ class ModelMyFlightsCreateTripAdapter
       noOfFlights: fields[1] as String,
       tripImage: fields[2] as String,
       modelMyFlightsUpcoming: fields[3] as dynamic,
-      isSelected: fields[4] == null ? false : fields[4] as bool?,
+      isSelected: fields[4] as bool?,
     );
   }
 

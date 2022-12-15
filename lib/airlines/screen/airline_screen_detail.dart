@@ -62,17 +62,6 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
           child: Stack(
             children: [
               SizedBox(height: 150,),
-
-              // Container(
-              //   width: w,
-              //   height: h * 0.25,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(0),
-              //     image: DecorationImage(
-              //         image: AssetImage('assets/images/airport.jpg'),
-              //         fit: BoxFit.fill),
-              //   ),
-              // ),
               SizedBox(height: 150,),
               Container(
                 padding: EdgeInsets.all(15),
@@ -135,7 +124,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                     // ),
 
                     Container(
-                        height: h * 0.7,
+                        height: h * 0.8,
                         color: Colors.white,
                         child: FutureBuilder(
                           future: futureList,
@@ -163,13 +152,14 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                             String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
 
                                             String dateNow = DateTime.now().toString().substring(0,10);
+                                            String dateYesterday = DateTime.now().subtract(Duration(days:1)).toString().substring(0,10);
                                             String dateAirline = date.toString().substring(0,10);
 
-                                            return dateNow == dateAirline ?
-                                            InkWell(
+                                            return dateNow == dateAirline || dateYesterday == dateAirline ?
+                                             InkWell(
                                               onTap: () async {
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: flight_iata,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
                                                 }));
                                               },
                                               child: Padding(
@@ -184,7 +174,8 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                                   ],
                                                 ),
                                               ),
-                                            ) : Container();
+                                            )
+                                            : Container();
                                           },
                                         ),
                                       ),
@@ -192,11 +183,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                   ),
                                 );
                               } else {
-                                return Center(
-                                  child: Text(
-                                    "error 1${snapshot.error}",
-                                  ),
-                                );
+                                return Center(child: NoFlightFound());
                               }
                             } else if (snapshot.hasError) {
                               return Center(

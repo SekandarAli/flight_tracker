@@ -9,6 +9,7 @@ import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart'
 import 'package:flight_tracker/myflights/screen/screen_create_new_trips/myflights_create_new_trip_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../flight_detail/screen/flight_detail_screen.dart';
 
@@ -41,100 +42,99 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
         child: SafeArea(
           child: Column(
             children: [
-              Container(
-                height: h * 0.25,
-                width: w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/airline.png'),
-                      fit: BoxFit.fill),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, icon: Icon(Icons.arrow_back,color: Colors.white,))
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      // child: IconButton(onPressed: (){
-                      //
-                      // }, icon: Icon(Icons.more_vert,color: Colors.white,))
-                      child: PopupMenuButton(
-                        icon: Icon(Icons.more_vert, color: Colors.white,),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 1,
-                            child: Row(
-                              children: [
-                                Icon(Icons.drive_file_rename_outline),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text("Rename Trip")
-                              ],
-                            ),
+              Center(
+                child: Container(
+                  // height: h * 0.25,
+                  width: w,
+                  child: Stack(
+                    children: [
+                      Lottie.asset('assets/lottie/createtripbg.json',),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, icon: Icon(Icons.arrow_back,color: ColorsTheme.themeColor,))
                           ),
-                          // PopupMenuItem(
-                          //   value: 2,
-                          //   child: Row(
-                          //     children: [
-                          //       Icon(Icons.flight),
-                          //       SizedBox(
-                          //         width: 10,
-                          //       ),
-                          //       Text("Add Flight")
-                          //     ],
-                          //   ),
-                          // ),
-                          PopupMenuItem(
-                            value: 3,
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete),
-                                SizedBox(
-                                  width: 10,
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: PopupMenuButton(
+                              icon: Icon(Icons.more_vert, color: ColorsTheme.themeColor,),
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.drive_file_rename_outline),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("Rename Trip")
+                                    ],
+                                  ),
                                 ),
-                                Text("Delete Trip")
+                                // PopupMenuItem(
+                                //   value: 2,
+                                //   child: Row(
+                                //     children: [
+                                //       Icon(Icons.flight),
+                                //       SizedBox(
+                                //         width: 10,
+                                //       ),
+                                //       Text("Add Flight")
+                                //     ],
+                                //   ),
+                                // ),
+                                PopupMenuItem(
+                                  value: 3,
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.delete),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("Delete Trip")
+                                    ],
+                                  ),
+                                ),
                               ],
+                              offset: Offset(0, 40),
+                              elevation: 2,
+                              onSelected: (value) async {
+                                if (value == 1)  {
+
+                                  var dialogueText = await ReusingWidgets().dialogueBoxSimple(
+                                      context: context,
+                                      titleText: "Edit Trip Name",
+                                      hintText: "Enter New Trip Name",
+                                      textEditingController: editingController!);
+                                  if (dialogueText != null) {
+                                    setState(() {
+                                      widget.currentTask.tripName = editingController!.text.toString();
+                                      widget.tripName = editingController!.text.toString();
+                                      widget.currentTask.save();
+                                    });
+                                  }
+                                  else{
+                                    // dialogueText = "Enter Flight Code";
+                                  }
+                                }
+                                else if (value == 2) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
+                                }
+                                else if (value == 3) {
+                                  deleteDialogue(currentTask: widget.currentTask);
+                                }
+                              },
                             ),
                           ),
                         ],
-                        offset: Offset(0, 40),
-                        elevation: 2,
-                        onSelected: (value) async {
-                          if (value == 1)  {
-
-                            var dialogueText = await ReusingWidgets().dialogueBoxSimple(
-                                context: context,
-                                titleText: "Edit Trip Name",
-                                hintText: "Enter New Trip Name",
-                                textEditingController: editingController!);
-                            if (dialogueText != null) {
-                              setState(() {
-                                widget.currentTask.tripName = editingController!.text.toString();
-                                widget.tripName = editingController!.text.toString();
-                                widget.currentTask.save();
-                              });
-                            }
-                            else{
-                              // dialogueText = "Enter Flight Code";
-                            }
-                          }
-                          else if (value == 2) {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
-                          }
-                          else if (value == 3) {
-                            deleteDialogue(currentTask: widget.currentTask);
-                          }
-                        },
                       ),
-                    ),
-                  ],
+
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -192,7 +192,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                         onTap: (){
                                           Navigator.push(context, MaterialPageRoute(builder: (context){
                                             return FlightDetailScreen(
-                                                flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!);
+                                                flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,openTrack: true,);
                                           }));
                                         },
                                         // child: Dismissible(
@@ -230,107 +230,6 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                         arrivalCityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode!,
                                         arrivalCityTime: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityTime! ?? "---",
                                       )
-                                        // InkWell(
-                                        //   onTap: (){
-                                        //     Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        //       return FlightDetailScreen(
-                                        //           flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!);
-                                        //     }));
-                                        //   },
-                                        //   // child: Dismissible(
-                                        //     // key: Key(
-                                        //     //     UniqueKey().toString()),
-                                        //     // background: Container(
-                                        //     //   margin: EdgeInsets.all(5),
-                                        //     //   padding: EdgeInsets.all(15),
-                                        //     //   color: ColorsTheme.dismissibleColor,
-                                        //     //   child: Row(
-                                        //     //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //     //     children: [
-                                        //     //       Icon(Icons.delete,color: Colors.white,),
-                                        //     //       Icon(Icons.delete,color: Colors.white,),
-                                        //     //     ],
-                                        //     //   ),
-                                        //     // ),
-                                        //     // onDismissed: (direction){
-                                        //     //   setState(() {
-                                        //     //     print("aaa${ widget.currentTask.modelMyFlightsUpcoming![index].flightCode}");
-                                        //     //   });
-                                        //     //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //     //       SnackBar(
-                                        //     //           content: Text('Flight Removed Successfully'),
-                                        //     //           duration: Duration(milliseconds: 700)));
-                                        //     // },
-                                        //     child: Card(
-                                        //       child: Column(
-                                        //         children: [
-                                        //           Container(
-                                        //             padding: EdgeInsets.all(15),
-                                        //             color: ColorsTheme.primaryColor,
-                                        //             child: Row(
-                                        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //               children: [
-                                        //                 Text(widget.currentTask.modelMyFlightsUpcoming![index].flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
-                                        //                 Text(widget.currentTask.modelMyFlightsUpcoming![index].flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white))
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           Container(
-                                        //             width: double.infinity,
-                                        //             padding: EdgeInsets.all(15),
-                                        //             color: Colors.grey.shade100,
-                                        //             child: Row(
-                                        //               mainAxisAlignment:
-                                        //               MainAxisAlignment.center,
-                                        //               children: [
-                                        //
-                                        //                 // Text("🗓️ ${currentTask.modelMyFlightsUpcoming!.departureCityDate}",
-                                        //                 //     style: ThemeTexts.textStyleTitle3
-                                        //                 //         .copyWith(
-                                        //                 //         color: Colors.black87)),
-                                        //                 Text("🗓️ ${widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityDate!}",
-                                        //                     style: ThemeTexts.textStyleTitle3
-                                        //                         .copyWith(
-                                        //                         color: Colors.black87)),
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           Padding(
-                                        //             padding: EdgeInsets.all(15),
-                                        //             child: Row(
-                                        //               mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceBetween,
-                                        //               children: [
-                                        //
-                                        //                 flightDetails(
-                                        //                     cityName: widget.currentTask.modelMyFlightsUpcoming![index].departureCity!,
-                                        //                     cityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].departureCityShortCode!,
-                                        //                     cityTime: widget.currentTask.modelMyFlightsUpcoming![index].departureCityTime!,
-                                        //                     crossAlignment: CrossAxisAlignment.start),
-                                        //
-                                        //                 RotatedBox(
-                                        //                   quarterTurns: 1,
-                                        //                   child: Icon(
-                                        //                     Icons.flight,
-                                        //                     size: 50,
-                                        //                     color: Colors.grey,
-                                        //                   ),
-                                        //                 ),
-                                        //
-                                        //                 flightDetails(
-                                        //                     cityName: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCity!,
-                                        //                     cityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode!,
-                                        //                     cityTime: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityTime!,
-                                        //                     crossAlignment: CrossAxisAlignment.end),
-                                        //
-                                        //               ],
-                                        //             ),
-                                        //           )
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //   )
-
                                             : Container();
                                     },
                                   ),

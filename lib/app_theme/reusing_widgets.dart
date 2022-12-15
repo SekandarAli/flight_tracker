@@ -406,7 +406,7 @@ class ReusingWidgets {
         child: Column(
           children: [
             Text(
-              airlineName,
+              airlineName.length > 18 ? '${airlineName.substring(0, 18)}...' : airlineName,
               style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
             ),
             SizedBox(height: 5),
@@ -471,11 +471,8 @@ class ReusingWidgets {
 
   static Widget byFlightCodeNewContainer({
     required BuildContext context,
-    required Function() onTapFlightCodeText,
-    required String flightCodeText,
-    required bool clearIcon,
     required Function() onTapClearIcon,
-    required TextStyle flightCodeStyle,
+    required TextEditingController textEditingController
 
   }) {
     return Column(
@@ -489,39 +486,36 @@ class ReusingWidgets {
         ),        SizedBox(height: 10),
         Text("Enter Flight Code",style: ThemeTexts.textStyleTitle1.copyWith(fontSize: 20)),
         SizedBox(height: 10),
-        InkWell(
-          onTap: (){
-            onTapFlightCodeText();
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: ColorsTheme.white,
-                border: Border.all(color: ColorsTheme.primaryColor,),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(3),
-                ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.1,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: ColorsTheme.white,
+              border: Border.all(color: ColorsTheme.primaryColor,),
+              borderRadius: BorderRadius.all(
+                Radius.circular(3),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.numbers, color: ColorsTheme.black),
-                  SizedBox(width: 20),
-                  Text(
-                    flightCodeText,
-                    style: flightCodeStyle,
-                  ),
-                  SizedBox(width: 40),
-                  clearIcon == true ? IconButton(onPressed: (){
-                    onTapClearIcon();
-                  }, icon: Icon(Icons.clear)) : Container()
-                ],
+            ),
+            child: TextFormField(
+              controller: textEditingController,
+              textCapitalization: TextCapitalization.words,
+              cursorColor: ColorsTheme.primaryColor,
+              maxLength: 7,
+              cursorWidth: 5,
+              decoration: InputDecoration(
+                counterText: "",
+                border: InputBorder.none,
+                prefixIcon: IconButton(onPressed: (){},
+                icon: Icon(Icons.numbers,color: Colors.black)),
+                suffixIcon: IconButton(onPressed: (){
+                  onTapClearIcon();
+                }, icon: Icon(Icons.clear)),
+                hintText: '  ABC - 1234',
               ),
-          ),
+            ),
         ),
         SizedBox(height: 10),
-        // PickDateFlightCode(),
-        // SizedBox(height: 10),
       ],
     );
   }

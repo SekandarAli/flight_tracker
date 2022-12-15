@@ -198,11 +198,13 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           print("airlineOptional$airlineIcao");
                           print("dayDate$dateDay");
 
+                          var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
                           return SearchButtonByRoute(
                             departureAirport: depIata,
                             arrivalAirport: arrIata,
                             airlineOptional: airlineIcao,
                             dateDay: dateDay,
+                            currentDate: currentDate,
                           );
                         }));
 

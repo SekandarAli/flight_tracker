@@ -50,7 +50,9 @@ class _MyAppState extends State<MyApp> {
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: FlightDetailScreen(flight_iata: "aa"),
+      // home: FlightDetailScreen(flight_iata: "IX142", openTrack: true,),
     );
   }
+
 }
+

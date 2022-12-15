@@ -45,19 +45,26 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                            Text("My Flights",
-                              style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2),
-                            ),
-                        Text(DateTime.now().toString().substring(0,10),
-                          style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
-                        )
-                      ],
-                    ),
+              InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
+                  }));
+                },
+                child: Container(
+                  padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                              Text("My Flights",
+                                style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2),
+                              ),
+                          Text(DateTime.now().toString().substring(0,10),
+                            style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
+                          )
+                        ],
+                      ),
+                ),
               ),
 
               /// CREATE NEW TRIP STARTS
@@ -208,7 +215,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                         return FlightCardScreen().flightCardSimple(
                                           onTap: (){
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: currentTask.flightIata,);
+                                              return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
                                             }));
                                           },
                                           onDismiss: (direction){
@@ -227,118 +234,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             arrivalCityShortCode: currentTask.arrivalCityShortCode!,
                                             arrivalCityTime: currentTask.arrivalCityTime!,
                                         );
-                                        // return InkWell(
-                                        //   onTap: (){
-                                        //     Navigator.push(context, MaterialPageRoute(builder: (context){
-                                        //       return FlightDetailScreen(flight_iata: currentTask.flightIata,);
-                                        //     }));
-                                        //   },
-                                        //   child: Dismissible(
-                                        //     key: Key(UniqueKey().toString()),
-                                        //     background: Container(
-                                        //       decoration: BoxDecoration(
-                                        //         color: ColorsTheme.dismissibleColor,
-                                        //         borderRadius: BorderRadius.all(
-                                        //          Radius.circular(10)
-                                        //         ),
-                                        //       ),
-                                        //       margin: EdgeInsets.all(5),
-                                        //       padding: EdgeInsets.all(15),
-                                        //       child: Row(
-                                        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //         children: [
-                                        //           Icon(Icons.delete,color: Colors.white,),
-                                        //           Icon(Icons.delete,color: Colors.white,),
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //     onDismissed: (direction){
-                                        //       setState(() {
-                                        //         currentTask.delete();
-                                        //       });
-                                        //       ScaffoldMessenger.of(context).showSnackBar(
-                                        //           SnackBar(content: Text('Flight Removed Successfully'),
-                                        //               duration: Duration(milliseconds: 700)));
-                                        //     },
-                                        //     child: Card(
-                                        //       child: Column(
-                                        //         children: [
-                                        //           Container(
-                                        //             decoration: BoxDecoration(
-                                        //               color: ColorsTheme.primaryColor,
-                                        //               borderRadius: BorderRadius.only(
-                                        //                 topLeft: Radius.circular(10),
-                                        //                 topRight: Radius.circular(10),
-                                        //               ),
-                                        //             ),
-                                        //             padding: EdgeInsets.all(10),
-                                        //             child: Row(
-                                        //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //               children: [
-                                        //                 Text(currentTask!.flightCode!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white,fontWeight: FontWeight.bold)),
-                                        //                 Text(currentTask.flightStatus!, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white,fontWeight: FontWeight.bold))
-                                        //               ],
-                                        //             ),
-                                        //           ),
-                                        //           // Container(
-                                        //           //   width: double.infinity,
-                                        //           //   padding: EdgeInsets.all(15),
-                                        //           //   color: Colors.grey.shade100,
-                                        //           //   child: Row(
-                                        //           //     mainAxisAlignment:
-                                        //           //     MainAxisAlignment.center,
-                                        //           //     children: [
-                                        //           //       // Text("🗓️ ${currentTask.departureCityDate}".substring(0,23),
-                                        //           //       //     style: ThemeTexts.textStyleTitle3
-                                        //           //       //         .copyWith(
-                                        //           //       //         color: Colors.black87)),
-                                        //           //       Text("🗓️ ${currentTask.arrivalCityDate}",
-                                        //           //           style: ThemeTexts.textStyleTitle3
-                                        //           //               .copyWith(
-                                        //           //               color: Colors.black87)),
-                                        //           //     ],
-                                        //           //   ),
-                                        //           // ),
-                                        //           Container(
-                                        //             decoration: BoxDecoration(
-                                        //               color: Colors.grey.shade100,
-                                        //               borderRadius: BorderRadius.only(
-                                        //                 bottomLeft: Radius.circular(10),
-                                        //                 bottomRight: Radius.circular(10),
-                                        //               ),
-                                        //             ),
-                                        //             padding: EdgeInsets.all(10),
-                                        //             child: Row(
-                                        //               mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceBetween,
-                                        //               children: [
-                                        //                 flightDetails(
-                                        //                     cityName: currentTask.departureCity!,
-                                        //                     cityShortCode: currentTask.departureCityShortCode!,
-                                        //                     cityTime: currentTask.departureCityTime!,
-                                        //                     crossAlignment:
-                                        //                     CrossAxisAlignment.start),
-                                        //                 RotatedBox(
-                                        //                   quarterTurns: 0,
-                                        //                   child: Icon(
-                                        //                     Icons.flight_takeoff,
-                                        //                     size: 50,
-                                        //                     color: ColorsTheme.themeColor,),
-                                        //                 ),
-                                        //                 flightDetails(
-                                        //                     cityName: currentTask.arrivalCity!,
-                                        //                     cityShortCode: currentTask.arrivalCityShortCode!,
-                                        //                     cityTime: currentTask.arrivalCityTime!,
-                                        //                     crossAlignment:
-                                        //                     CrossAxisAlignment.end),
-                                        //               ],
-                                        //             ),
-                                        //           )
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // );
                                       },
                                     ),
                                   ),]
@@ -431,11 +326,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
               textController: createTripController),
           actions: [
             TextButton(
-                // onPressed: () {
-                //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //     return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
-                //   }));
-                // },
               onPressed: (){
                 onTap();
               },
@@ -485,7 +375,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
         required String cityTime,
         required CrossAxisAlignment crossAlignment}) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAlignment,
       children: [
         Text(cityName,

@@ -21,14 +21,14 @@ class SearchTabByFlightCode extends StatefulWidget {
 
 class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
-  TextEditingController numberController = TextEditingController();
-  TextEditingController alphabetsController = TextEditingController();
+  // TextEditingController numberController = TextEditingController();
+  TextEditingController flightCodeController = TextEditingController();
 
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
 
 
-  var flightCode = "Enter Code";
+  // var flightCode = "Enter Code";
   var dateDay;
 
   DateTime selectedDate = DateTime.now();
@@ -72,25 +72,27 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
               children: [
                 ReusingWidgets.byFlightCodeNewContainer(
                     context: context,
-                  flightCodeStyle: flightCode == "Enter Code" ?
-                  ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
-                      : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
-                  flightCodeText: flightCode.isEmpty ? "Enter Code" : flightCode,
-                  onTapFlightCodeText: () async{
-                      var dialogueText = await openDialogue();
-                      if (dialogueText != null) {
-                        setState(() {
-                          flightCode = alphabetsController.text.toString() + numberController.text.toString();
-                        });
-                      }
-                      else{}
-                    },
-                    clearIcon: flightCode == "Enter Code" ? false : true,
+                  // flightCodeStyle: flightCode == "Enter Code" ?
+                  // ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
+                  //     : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+                  // flightCodeText: flightCode.isEmpty ? "Enter Code" : flightCode,
+                  // textEditingController: flightCodeController,
+                  // onTapFlightCodeText: () async{
+                  //     var dialogueText = await openDialogue();
+                  //     if (dialogueText != null) {
+                  //       setState(() {
+                  //         flightCode = alphabetsController.text.toString() + numberController.text.toString();
+                  //       });
+                  //     }
+                  //     else{}
+                  //   },
+                  //   clearIcon: flightCode == "Enter Code" ? false : true,
                     onTapClearIcon: () {
                        setState(() {
-                         flightCode = "Enter Code";
+                         flightCodeController.clear();
                          });
                     },
+                  textEditingController: flightCodeController,
                         ),
                 InkWell(
                   onTap: () {
@@ -99,6 +101,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.1,
                     margin: EdgeInsets.all(0),
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -127,18 +130,19 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                     /// If search don't exist
                     // showAlertDialog(context);
 
-                    if(flightCode == "Enter Code"){
+                    if(flightCodeController.text.isEmpty){
                       ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
                     }
 
                     else {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                         print("dayDate$dateDay");
-                        return SearchButtonByFlightCode(flightCode: flightCode,dateDay: dateDay,);
+                        var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+                        return SearchButtonByFlightCode(flightCode: flightCodeController.text,dateDay: dateDay,currentDate: currentDate,);
                     }));
 
                       modelMyFlights = ModelSearch(
-                          flightCode: flightCode,
+                          flightCode: flightCodeController.text,
                         arrivalCity: "",
                         departureCity: "",
                         arrivalCityShortName: "",
@@ -209,7 +213,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                                             GestureDetector(
                                               onTap: (){
                                                 setState(() {
-                                                  flightCode = currentTask.flightCode!;
+                                                  flightCodeController.text = currentTask.flightCode!;
                                                 });
                                               },
                                               child: SizedBox(
@@ -291,33 +295,33 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
     );
   }
 
-  Future<String?> openDialogue() => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Enter Flight Number'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              textFormFields(width: 70, hintText: "AAA", maxLength: 3, inputType: TextInputType.text, textController: alphabetsController),
-              textFormFields(width: 80, hintText: "1234", maxLength: 4, inputType: TextInputType.number, textController: numberController)
-            ],
-          ),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(onPressed: () {
-                  numberController.text.isNotEmpty
-                      ? Navigator.of(context).pop(numberController.text.toString()) 
-                      : Navigator.pop(context);
-                },
-                    child: Text('DONE')),
-              ],
-            ),
-          ],
-        );
-      });
+  // Future<String?> openDialogue() => showDialog<String>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Enter Flight Number'),
+  //         content: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             textFormFields(width: 70, hintText: "AAA", maxLength: 3, inputType: TextInputType.text, textController: flightCodeController),
+  //             textFormFields(width: 80, hintText: "1234", maxLength: 4, inputType: TextInputType.number, textController: numberController)
+  //           ],
+  //         ),
+  //         actions: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               TextButton(onPressed: () {
+  //                 numberController.text.isNotEmpty
+  //                     ? Navigator.of(context).pop(numberController.text.toString())
+  //                     : Navigator.pop(context);
+  //               },
+  //                   child: Text('DONE')),
+  //             ],
+  //           ),
+  //         ],
+  //       );
+  //     });
 
   selectDate(BuildContext context) async {
     final DateTime? selected = await showDatePicker(

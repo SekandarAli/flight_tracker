@@ -14,10 +14,11 @@ import '../../../flight_detail/screen/flight_detail_screen.dart';
 import '../../model/model_search_flight.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
-   SearchButtonByFlightCode({required this.flightCode,required this.dateDay}) : super();
+   SearchButtonByFlightCode({required this.flightCode,required this.dateDay,required this.currentDate}) : super();
 
   var flightCode;
   var dateDay;
+  var currentDate;
 
   @override
   State<SearchButtonByFlightCode> createState() => _SearchButtonByFlightCodeState();
@@ -53,6 +54,10 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          Center(child: Text(widget.currentDate.toString())),
+          SizedBox(width: 10),
+        ],
         title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
       ),
       body: SafeArea(
@@ -126,7 +131,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                           TextButton(onPressed: () {
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,);
+                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
                                             }));
 
                                           }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),

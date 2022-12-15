@@ -19,7 +19,7 @@ class ModelMyFlightsCreateTrip extends HiveObject {
   @HiveField(3)
   var modelMyFlightsUpcoming;
 
-  @HiveField(4,defaultValue: false)
+  @HiveField(4)
   bool? isSelected;
 
   ModelMyFlightsCreateTrip({
