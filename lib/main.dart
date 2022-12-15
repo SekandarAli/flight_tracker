@@ -2,10 +2,10 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
+import 'package:flight_tracker/flight_detail/screen/flight_detail_screen.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
-import 'package:flight_tracker/useless/delete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: StorageUpload(),
+      // home: FlightDetailScreen(flight_iata: "aa"),
     );
   }
 }

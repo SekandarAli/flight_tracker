@@ -4,11 +4,13 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_date.dart';
+import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/search/screen/search_tab_by_flightcode/search_button_by_flight_code.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/screen/search_tab_recent_searches.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 
 class SearchTabByFlightCode extends StatefulWidget {
   const SearchTabByFlightCode({super.key});
@@ -22,15 +24,22 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
   TextEditingController numberController = TextEditingController();
   TextEditingController alphabetsController = TextEditingController();
 
-  var flightCode = "Enter Code";
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
 
+
+  var flightCode = "Enter Code";
+  var dateDay;
+
+  DateTime selectedDate = DateTime.now();
+
+  FocusNode? myFocusNode;
 
   @override
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelSearch>("modelSearch");
+    dateDay = DateFormat('EEEE').format(selectedDate).substring(0,3).toLowerCase();
   }
 
 
@@ -68,8 +77,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                       : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
                   flightCodeText: flightCode.isEmpty ? "Enter Code" : flightCode,
                   onTapFlightCodeText: () async{
-                      var dialogueText =
-                          await openDialogue();
+                      var dialogueText = await openDialogue();
                       if (dialogueText != null) {
                         setState(() {
                           flightCode = alphabetsController.text.toString() + numberController.text.toString();
@@ -84,7 +92,36 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                          });
                     },
                         ),
+                InkWell(
+                  onTap: () {
+                    selectDate(context);
+                  },
 
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    margin: EdgeInsets.all(0),
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: ColorsTheme.primaryColor),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_month, color: ColorsTheme.black),
+                        SizedBox(width: 20),
+                        Text(
+                          "${dateDay.toUpperCase()}, ${selectedDate.day}-${selectedDate.month}-${selectedDate.year}",
+                          style: ThemeTexts.textStyleValueGrey,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
                 ReusingWidgets.searchButton(onPress: (){
                   setState(() {
                     /// If search don't exist
@@ -96,7 +133,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                     else {
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return SearchButtonByFlightCode(flightCode: flightCode);
+                        print("dayDate$dateDay");
+                        return SearchButtonByFlightCode(flightCode: flightCode,dateDay: dateDay,);
                     }));
 
                       modelMyFlights = ModelSearch(
@@ -111,7 +149,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                   });
 
                 }, context: context,
-                    text: 'SEARCH'),
+                    text: 'SEARCH',
+                style: ThemeTexts.textStyleTitle2,),
 
               ],
             ),
@@ -145,7 +184,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                       final items = box.values.toList().cast<ModelSearch>();
 
                       if (items.isEmpty) {
-                        return Container();
+                        return NoSearchFound();
                       } else {
                         return Flex(
                             direction: Axis.vertical,
@@ -228,6 +267,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
       width: width,
       child: TextFormField(
         controller: textController,
+        textInputAction: TextInputAction.next,
         maxLength: maxLength,
         keyboardType: inputType,
         style: TextStyle(fontSize: 22),
@@ -268,9 +308,9 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(onPressed: () {
-                  Navigator.of(context).pop(numberController.text.toString());
-                  // alphabetsController.clear();
-                  // numberController.clear();
+                  numberController.text.isNotEmpty
+                      ? Navigator.of(context).pop(numberController.text.toString()) 
+                      : Navigator.pop(context);
                 },
                     child: Text('DONE')),
               ],
@@ -279,6 +319,22 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
         );
       });
 
-
+  selectDate(BuildContext context) async {
+    final DateTime? selected = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.utc(2022,12,10),
+      lastDate: DateTime(2024),
+      helpText: "Flight Track Date",
+      initialEntryMode: DatePickerEntryMode.calendar,
+    );
+    if (selected != null && selected != selectedDate) {
+      setState(() {
+        selectedDate = selected;
+        print(DateFormat('EEEE').format(selectedDate).substring(0,3));
+        dateDay = DateFormat('EEEE').format(selectedDate).substring(0,3).toLowerCase();
+      });
+    }
+  }
 
 }

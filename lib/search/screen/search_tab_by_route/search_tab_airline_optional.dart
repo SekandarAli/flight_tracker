@@ -43,7 +43,7 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
 
   void setResults(String query) {
     rows = items
-        .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
+        .where((elem) => elem['icao_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
 
@@ -116,7 +116,6 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                                           String? airlineName = items[index]["name"]  ?? "Unknown";
                                           String? countryShortName = items[index]["iata_code"]  ?? "Unknown";
                                           String? icaoCode = items[index]["icao_code"]  ?? "Unknown";
-                                          String? airportImage;
 
                                           return
                                             InkWell(
@@ -138,8 +137,7 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
 
                                           String? airlineName = rows[index]["name"]  ?? "Unknown";
                                           String? countryShortName = rows[index]["iata_code"]  ?? "Unknown";
-                                          String? icaoCode = items[index]["icao_code"]  ?? "Unknown";
-                                          String? airportImage;
+                                          String? icaoCode = rows[index]["icao_code"]  ?? "Unknown";
 
                                           return
                                             InkWell(

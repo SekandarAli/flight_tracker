@@ -42,7 +42,7 @@ dependencies:
   timezone: ^0.8.0
   rxdart: ^0.27.7
 
-  search_choices: ^2.1.8
+  lottie: ^2.0.0
 
 
 dev_dependencies:
@@ -63,6 +63,7 @@ flutter:
     - assets/images/
     - assets/fonts/
     - assets/json/
+    - assets/lottie/
 
   fonts:
     - family: MontserratRegular

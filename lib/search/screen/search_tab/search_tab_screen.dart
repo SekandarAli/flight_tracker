@@ -40,108 +40,81 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget topBarGreen() {
     return Container(
       padding: EdgeInsets.all(15),
-      child: Column(
+      child: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                  child:
-                  Text("Check Your\nFlight",
-                    style: ThemeTexts.textStyleTitle1.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                    ),
-                  ),
-              ),
-              GestureDetector(
-                  onTap: (){
-                    scanQRCode();
-                  },
-                  child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
-
-            ],
+          Positioned(
+            right: 0,
+            child: Image.asset(
+              "assets/images/plane.png",
+              fit: BoxFit.fill,
+              width: 130,
+              height: 90,
+            ),
           ),
-          SizedBox(height: 20),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ReusingWidgets().searchModuleTabBar(
-                    onTap: () {
-                      setState(() {
-                        index = 1;
-                      });
-                    },
-                    context: context,
-                    text: "BY ROUTE",
-                    textColor: index == 1 ? ColorsTheme.white : Colors.white54,
-                    borderColor: index == 1 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
-                    borderWidth: index == 1 ? 3 : 1),
-                ReusingWidgets().searchModuleTabBar(
-                    onTap: () {
-                      setState(() {
-                        index = 2;
-                      });
-                    },
-                    context: context,
-                    text: "BY FLIGHT CODE",
-                    textColor: index == 2 ? ColorsTheme.white : Colors.white54,
-                    borderColor: index == 2 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
-                    borderWidth: index == 2 ? 3 : 1),
-                // GestureDetector(
-                //     onTap: (){
-                //       // Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchQrCode()));
-                //       scanQRCode();
-                //     },
-                //     child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
-              ],
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                      heightFactor: 1.3,
+                      child: Text("Check Your\nFlight",
+                          style: ThemeTexts.textStyleTitle1.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            letterSpacing: 2
+                          ),
+                      ),
+                  ),
+                  // GestureDetector(
+                  //     onTap: (){
+                  //       scanQRCode();
+                  //     },
+                  //     child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
+
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ReusingWidgets().searchModuleTabBar(
+                        onTap: () {
+                          setState(() {
+                            index = 1;
+                          });
+                        },
+                        context: context,
+                        text: "BY ROUTE",
+                        textColor: index == 1 ? ColorsTheme.white : Colors.white54,
+                        borderColor: index == 1 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
+                        borderWidth: index == 1 ? 3 : 1),
+                    ReusingWidgets().searchModuleTabBar(
+                        onTap: () {
+                          setState(() {
+                            index = 2;
+                          });
+                        },
+                        context: context,
+                        text: "BY FLIGHT CODE",
+                        textColor: index == 2 ? ColorsTheme.white : Colors.white54,
+                        borderColor: index == 2 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
+                        borderWidth: index == 2 ? 3 : 1),
+                    // GestureDetector(
+                    //     onTap: (){
+                    //       // Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchQrCode()));
+                    //       scanQRCode();
+                    //     },
+                    //     child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
+                  ],
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
-
-
-  // Widget selectTabs() {
-  //   return Padding(
-  //     padding: EdgeInsets.only(top: 0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: [
-  //         ReusingWidgets().searchModuleTabBar(
-  //             onTap: () {
-  //               setState(() {
-  //                 index = 1;
-  //               });
-  //             },
-  //             context: context,
-  //             text: "BY ROUTE",
-  //             textColor: index == 1 ? ColorsTheme.white : Colors.white54,
-  //             borderColor: index == 1 ? ColorsTheme.white : ColorsTheme.primaryColor,
-  //             borderWidth: index == 1 ? 3 : 1),
-  //         ReusingWidgets().searchModuleTabBar(
-  //             onTap: () {
-  //               setState(() {
-  //                 index = 2;
-  //               });
-  //             },
-  //             context: context,
-  //             text: "BY FLIGHT CODE",
-  //             textColor: index == 2 ? ColorsTheme.white : Colors.white54,
-  //             borderColor: index == 2 ? ColorsTheme.white : ColorsTheme.primaryColor,
-  //             borderWidth: index == 2 ? 3 : 1),
-  //         GestureDetector(
-  //             onTap: (){
-  //               // Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchQrCode()));
-  //               scanQRCode();
-  //             },
-  //             child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Future<void> scanQRCode() async {
     try {

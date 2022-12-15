@@ -2,18 +2,15 @@
 
 import 'package:flight_tracker/ads/ad_mobs_manager.dart';
 import 'package:flight_tracker/airlines/screen/airline_screen.dart';
-import 'package:flight_tracker/useless/airports_screen.dart';
+import 'package:flight_tracker/settings/screen/setting_screen_new.dart';
 import 'package:flight_tracker/airports/screen/airport_screen.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/myflights/screen/myflights_screen.dart';
 import 'package:flight_tracker/search/screen/search_tab/search_tab_screen.dart';
-import 'package:flight_tracker/settings/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-import '../useless/airlines_screen.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   const BottomNavBarScreen({Key? key}) : super(key: key);
@@ -66,7 +63,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
       case 3:
         return AirlineScreen();
       case 4:
-        return SettingsScreen();
+        return SettingsScreenNew();
 
       default:
         return Center(child: Text("Error"));

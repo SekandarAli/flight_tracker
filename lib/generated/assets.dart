@@ -7,8 +7,19 @@ class Assets {
   static const String imagesAeroplane = 'assets/images/aeroplane.png';
   static const String imagesAirline = 'assets/images/airline.png';
   static const String imagesAirport = 'assets/images/airport.jpg';
+  static const String imagesError404 = 'assets/images/error404.png';
+  static const String imagesErrornosearch = 'assets/images/errornosearch.png';
   static const String imagesFlight = 'assets/images/flight.jpg';
-  static const String jsonsAirline = 'assets/jsons/airline.json';
-  static const String jsonsAirport = 'assets/jsons/airport.json';
+  static const String imagesFlightIcon = 'assets/images/flightIcon.png';
+  static const String imagesNoflight = 'assets/images/noflight.jpg';
+  static const String imagesNosearch = 'assets/images/nosearch.jpg';
+  static const String imagesPlane = 'assets/images/plane.png';
+  static const String jsonAirline = 'assets/json/airline.json';
+  static const String jsonAirport = 'assets/json/airport.json';
+  static const String lottieFlightloading = 'assets/lottie/flightloading.json';
+  static const String lottieLottietrip = 'assets/lottie/lottietrip.json';
+  static const String lottieNoflightfound = 'assets/lottie/noflightfound.json';
+  static const String lottieNoresultfound = 'assets/lottie/noresultfound.json';
+  static const String lottieNosearch = 'assets/lottie/nosearch.json';
 
 }

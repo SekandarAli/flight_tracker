@@ -35,9 +35,9 @@ class ReusingWidgets {
         },
         child: Container(
           height: 50.0,
-          width: MediaQuery.of(context).size.width * 0.5,
+          width: MediaQuery.of(context).size.width * 0.3,
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorsTheme.themeColor,
               border: Border(
                 bottom: BorderSide(
                   color: borderColor,
@@ -296,6 +296,7 @@ class ReusingWidgets {
     required Function() onPress,
     required BuildContext context,
     required String text,
+    required TextStyle style,
   }) {
     return Container(
       width: MediaQuery.of(context).size.width / 2.5,
@@ -319,7 +320,7 @@ class ReusingWidgets {
         ),
         child: Text(
           text,
-          style: ThemeTexts.textStyleTitle2,
+          style: style
         ),
       ),
     );
@@ -339,7 +340,7 @@ class ReusingWidgets {
      double? sizedBoxHeight,
   }) {
     return Container(
-      padding: EdgeInsets.only(top: 50),
+      padding: EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: crossAxisAlignment,
         children: [
@@ -356,27 +357,27 @@ class ReusingWidgets {
              child: Column(
                children: [
                  Text(
-                   airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
+                   airportName.length > 12 ? '${airportName.substring(0, 11)}...' : airportName,
                   style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
                  ),
                  SizedBox(height: 5),
-                 Text(
-                   airportShortName,
-                   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
-                 ),
+                 // Text(
+                 //   airportShortName,
+                 //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+                 // ),
                ],
              ),
            ),
-          divider(context: context),
-          SizedBox(height: 10),
-          Text(
-            title2,
-            style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
-          ),
-          SizedBox(height: 5),
-          PickDate(),
-          divider(context: context),
-          SizedBox(height: 20),
+          // divider(context: context),
+          // SizedBox(height: 10),
+          // Text(
+          //   title2,
+          //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+          // ),
+          // SizedBox(height: 5),
+          // PickDate(),
+          // divider(context: context),
+          // SizedBox(height: 20),
         ],
       ),
     );
@@ -479,8 +480,13 @@ class ReusingWidgets {
   }) {
     return Column(
       children: [
-        Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,size: MediaQuery.of(context).size.width * 0.2,),
-        SizedBox(height: 10),
+        Padding(
+          padding: EdgeInsets.only(top: 0),
+          child: Image.asset("assets/images/flightIcon.png",
+            width:  MediaQuery.of(context).size.width * 0.3,
+            height:  MediaQuery.of(context).size.width * 0.3,
+          ),
+        ),        SizedBox(height: 10),
         Text("Enter Flight Code",style: ThemeTexts.textStyleTitle1.copyWith(fontSize: 20)),
         SizedBox(height: 10),
         InkWell(
@@ -514,8 +520,8 @@ class ReusingWidgets {
           ),
         ),
         SizedBox(height: 10),
-        PickDateFlightCode(),
-        SizedBox(height: 10),
+        // PickDateFlightCode(),
+        // SizedBox(height: 10),
       ],
     );
   }
@@ -621,6 +627,118 @@ class ReusingWidgets {
         );
       });
 
+
+  SnackBar deleteInfoSnackBar = SnackBar(
+    backgroundColor: Colors.redAccent,
+    duration: Duration(
+      seconds: 2,
+    ),
+    content: Row(
+      children: [
+        Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 6.0,
+        ),
+        Text(
+          "Long Press to delete",
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  showConfirmDialog(BuildContext context, String title, String content) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.red,
+              ),
+            ),
+            child: Text(
+              "YES",
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                Colors.green,
+              ),
+            ),
+            child: Text(
+              "No",
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget settingListTiles({
+    required Function() onTap,
+    required String title,
+    required String subTitle,
+    required IconData icon,
+    required Color iconColor,
+  }){
+    return  Container(
+      color: ColorsTheme.lightGreyColor,
+      child: ListTile(
+        onTap: (){
+          onTap();
+        },
+        tileColor: Colors.black,
+        contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0,),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        subtitle: Text(
+          subTitle,
+        ),
+        trailing: Icon(
+          icon,
+          color: iconColor,
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration curveDecorationContainer(){
+    return BoxDecoration(
+      color: ColorsTheme.white,
+      border: Border.all(
+          color: ColorsTheme.white,
+          width: 2,
+          style: BorderStyle.solid),
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(40),
+        topLeft: Radius.circular(40),
+      ),
+    );
+  }
 
 
 }
