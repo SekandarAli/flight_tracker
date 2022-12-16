@@ -27,27 +27,22 @@ class SearchTabByRoute extends StatefulWidget {
 }
 
 class _SearchTabByRouteState extends State<SearchTabByRoute> {
-  bool hideAdvance = false;
 
+  bool hideAdvance = false;
   String departureAirportShortName = "Departure";
   String arrivalAirportShortName = "Arrival";
   String departureAirport = "DPT Airport";
   String arrivalAirport = "ARR Airport";
   String airlineOptionalShortName = "AR";
   String airlineOptional = "Airline(Optional)";
-
   var temp1;
   var temp2;
-
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
-
   String depIata = "Departure";
   String arrIata = "Arrival";
   String airlineIcao = "";
   var dateDay;
-
-
   DateTime selectedDate = DateTime.now();
 
   @override

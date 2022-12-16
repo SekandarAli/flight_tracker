@@ -22,9 +22,9 @@ class SearchTabArrivalDepartureAirport extends StatefulWidget {
 class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepartureAirport> {
 
   TextEditingController searchAirportController = TextEditingController();
-  List items = [];
+  List beforeSearch = [];
 
-  List rows = [];
+  List afterSearch = [];
   String query = '';
 
   @override
@@ -38,7 +38,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
 
 
   void setResults(String query) {
-    rows = items
+    afterSearch = beforeSearch
         .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
@@ -48,7 +48,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
     final String response = await rootBundle.loadString('assets/json/airport.json');
     final data = await json.decode(response);
     setState(() {
-      items = data["response"];
+      beforeSearch = data["response"];
     });
   }
   @override
@@ -79,6 +79,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
               ),
               Expanded(
                 child: Container(
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: ColorsTheme.primaryColor,
                       borderRadius: BorderRadius.only(
@@ -98,6 +99,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                         SizedBox(height: 20),
                         Expanded(
                             child: Container(
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(0),
                               decoration: BoxDecoration(
                                 color: ColorsTheme.white,
@@ -113,12 +115,12 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                     ListView.builder(
                                       padding: EdgeInsets.all(5),
                                       shrinkWrap: true,
-                                      itemCount: items.length,
+                                      itemCount: beforeSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = items[index]["iata_code"] ?? "---";
-                                        String countryShortName = items[index]["country_code"] ?? "---";
-                                        String airportName = items[index]["name"] ?? "---";
-                                        String iataValue = items[index]["iata_code"] ?? "---";
+                                        String cityName = beforeSearch[index]["iata_code"] ?? "---";
+                                        String countryShortName = beforeSearch[index]["country_code"] ?? "---";
+                                        String airportName = beforeSearch[index]["name"] ?? "---";
+                                        String iataValue = beforeSearch[index]["iata_code"] ?? "---";
 
                                         return
                                           InkWell(
@@ -138,15 +140,15 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                       },
                                     )
                                         :
-                                    ListView.builder(
+                                    afterSearch.isEmpty ? NoSearchFound() : ListView.builder(
                                       padding: EdgeInsets.all(5),
                                       shrinkWrap: true,
-                                      itemCount: rows.length,
+                                      itemCount: afterSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = rows[index]["iata_code"] ?? "---";
-                                        String countryShortName = rows[index]["country_code"] ?? "---";
-                                        String airportName = rows[index]["name"] ?? "---";
-                                        String iataCode = rows[index]["iata_code"] ?? "---";
+                                        String cityName = afterSearch[index]["iata_code"] ?? "---";
+                                        String countryShortName = afterSearch[index]["country_code"] ?? "---";
+                                        String airportName = afterSearch[index]["name"] ?? "---";
+                                        String iataCode = afterSearch[index]["iata_code"] ?? "---";
 
                                         return
                                           InkWell(

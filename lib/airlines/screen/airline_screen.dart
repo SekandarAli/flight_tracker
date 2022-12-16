@@ -23,9 +23,9 @@ class AirlineScreen extends StatefulWidget {
 class _AirlineScreenState extends State<AirlineScreen> {
 
   TextEditingController searchAirlineController = TextEditingController();
-  List items = [];
+  List beforeSearch = [];
 
-  List rows = [];
+  List afterSearch = [];
   String query = '';
 
   @override
@@ -40,12 +40,12 @@ class _AirlineScreenState extends State<AirlineScreen> {
     final String response = await rootBundle.loadString('assets/json/airline.json');
     final data = await json.decode(response);
     setState(() {
-      items = data["response"];
+      beforeSearch = data["response"];
     });
   }
 
   void setResults(String query) {
-    rows = items
+    afterSearch = beforeSearch
         .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
@@ -79,6 +79,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
               ),
               Expanded(
                 child: Container(
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: ColorsTheme.primaryColor,
                       borderRadius: BorderRadius.only(
@@ -98,6 +99,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                         SizedBox(height: 20),
                         Expanded(
                             child: Container(
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(0),
                               decoration: BoxDecoration(
                                 color: ColorsTheme.white,
@@ -113,12 +115,12 @@ class _AirlineScreenState extends State<AirlineScreen> {
                                     ListView.builder(
                                         padding: EdgeInsets.all(5),
                                         shrinkWrap: true,
-                                        itemCount: items.length,
+                                        itemCount: beforeSearch.length,
                                         itemBuilder: (context, index) {
 
-                                          String? airlineName = items[index]["name"]  ?? "Unknown";
-                                          String? countryShortName = items[index]["iata_code"]  ?? "Unknown";
-                                          String? iataValue = items[index]["icao_code"]  ?? "Unknown";
+                                          String? airlineName = beforeSearch[index]["name"]  ?? "Unknown";
+                                          String? countryShortName = beforeSearch[index]["iata_code"]  ?? "Unknown";
+                                          String? iataValue = beforeSearch[index]["icao_code"]  ?? "Unknown";
                                           String? airportImage;
 
                                           return
@@ -135,15 +137,15 @@ class _AirlineScreenState extends State<AirlineScreen> {
                                         },
                                     )
                                         :
-                                    ListView.builder(
+                                    afterSearch.isEmpty ? NoSearchFound() : ListView.builder(
                                       padding: EdgeInsets.all(5),
                                       shrinkWrap: true,
-                                      itemCount: rows.length,
+                                      itemCount: afterSearch.length,
                                       itemBuilder: (context, index) {
 
-                                        String? airlineName = rows[index]["name"]  ?? "Unknown";
-                                        String? countryShortName = rows[index]["iata_code"]  ?? "Unknown";
-                                        String? iataValue = rows[index]["icao_code"]  ?? "Unknown";
+                                        String? airlineName = afterSearch[index]["name"]  ?? "Unknown";
+                                        String? countryShortName = afterSearch[index]["iata_code"]  ?? "Unknown";
+                                        String? iataValue = afterSearch[index]["icao_code"]  ?? "Unknown";
                                         String? airportImage;
 
                                         return

@@ -8,6 +8,7 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../flight_detail/screen/flight_detail_screen.dart';
 
@@ -49,21 +50,19 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              expandedHeight: h * 0.25,
+              expandedHeight: h * 0.3,
               floating: false,
               pinned: true,
+              leading: IconButton(onPressed: (){
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back,color: ColorsTheme.primaryColor,)),
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(widget.airportName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
                   background: Container(
-                    width: w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/airport.jpg'),
-                          fit: BoxFit.fill),
-                    ),
-                  ),
+                    color: Colors.white,
+                      child: Lottie.asset('assets/lottie/createtripbg.json',)),
               ),
 
             ),
@@ -72,26 +71,8 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
         body: SingleChildScrollView(
           child: Container(
             color: Colors.white,
-
-            // padding: EdgeInsets.only(left: 20,right: 20),
             child: Column(
                 children: [
-                  // Container(
-                  //   height: h * 0.25,
-                  //   width: w,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(0),
-                  //     image: DecorationImage(
-                  //         image: AssetImage('assets/images/airport.jpg'),
-                  //         fit: BoxFit.fill),
-                  //   ),
-                  //   child: Align(
-                  //       alignment: Alignment.topLeft,
-                  //       child: IconButton(onPressed: (){
-                  //         Navigator.pop(context);
-                  //       }, icon: Icon(Icons.arrow_back,color: Colors.white,))
-                  //   ),
-                  // ),
                   Container(
                     padding: EdgeInsets.all(15),
                     width: w,
@@ -106,55 +87,6 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                       ],
                     ),
                   ),
-                  // Container(
-                  //   width: w,
-                  //   color: ColorsTheme.white,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Padding(
-                  //         padding: EdgeInsets.all(15),
-                  //         child: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Column(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               crossAxisAlignment: CrossAxisAlignment.start,
-                  //               children: [
-                  //                 Text("Local Time",
-                  //                     style: ThemeTexts.textStyleTitle2
-                  //                         .copyWith(color: Colors.grey)),
-                  //                 Text("Wed 02:56 PM",
-                  //                     style: ThemeTexts.textStyleTitle3
-                  //                         .copyWith(color: Colors.grey)),
-                  //               ],
-                  //             ),
-                  //             Text("86°F",
-                  //                 style: ThemeTexts.textStyleTitle1
-                  //                     .copyWith(fontWeight: FontWeight.normal)),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       // Divider(),
-                  //       // Row(
-                  //       //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //       //   children: [
-                  //       //     container(icon: Icons.info, text: "INFO"),
-                  //       //     container(
-                  //       //         icon: Icons.assistant_navigation, text: "NAV"),
-                  //       //     container(
-                  //       //         icon: Icons.sports_baseball_rounded,
-                  //       //         text: "WEBSITE"),
-                  //       //   ],
-                  //       // ),
-                  //       // Container(
-                  //       //   color: ColorsTheme.primaryColor,
-                  //       //   height: 15,
-                  //       // ),
-                  //     ],
-                  //   ),
-                  // ),
                   selectTabs(),
                   index == 1
                   /// ARRIVAL
@@ -237,23 +169,6 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                         String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
 
                                         return
-                                          // InkWell(
-                                          //   onTap: () async {
-                                          //
-                                          //   },
-                                          //   child: Padding(
-                                          //     padding: EdgeInsets.only(bottom: 20,top: 20),
-                                          //     child: Row(
-                                          //       mainAxisAlignment:
-                                          //       MainAxisAlignment.spaceBetween,
-                                          //       children: [
-                                          //         Text(departureTime),
-                                          //         Text(departureDestination),
-                                          //         Text(departureFlightNo),
-                                          //       ],
-                                          //     ),
-                                          //   ),
-                                          // );
                                           cardContainer(
                                               departureTime: departureTime,
                                               departureDestination: departureDestination,

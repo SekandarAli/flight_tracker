@@ -20,7 +20,7 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
-  int currentIndex = 1;
+  int currentIndex = 0;
 
   late BannerAd _bannerAd;
   bool isBannerAdLoaded = false;

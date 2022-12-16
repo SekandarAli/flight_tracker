@@ -5,6 +5,7 @@ import 'package:flight_tracker/airlines/services/services_airline_details.dart';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../flight_detail/screen/flight_detail_screen.dart';
 import '../../functions/function_progress_indicator.dart';
 
@@ -38,21 +39,19 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              expandedHeight: h * 0.25,
+              expandedHeight: h * 0.3,
               floating: false,
               pinned: true,
+              leading: IconButton(onPressed: (){
+                Navigator.pop(context);
+              },
+                  icon: Icon(Icons.arrow_back,color: ColorsTheme.primaryColor,)),
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Text(widget.airlineName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
                 background: Container(
-                  width: w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(0),
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/airport.jpg'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
+                    color: Colors.white,
+                    child: Lottie.asset('assets/lottie/createtripbg.json',)),
               ),
 
             ),
@@ -61,8 +60,6 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
         body: SingleChildScrollView(
           child: Stack(
             children: [
-              SizedBox(height: 150,),
-              SizedBox(height: 150,),
               Container(
                 padding: EdgeInsets.all(15),
                 width: w,

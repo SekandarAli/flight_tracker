@@ -472,7 +472,8 @@ class ReusingWidgets {
   static Widget byFlightCodeNewContainer({
     required BuildContext context,
     required Function() onTapClearIcon,
-    required TextEditingController textEditingController
+    required TextEditingController textEditingController,
+    required IconData clearIcon
 
   }) {
     return Column(
@@ -488,7 +489,7 @@ class ReusingWidgets {
         SizedBox(height: 10),
         Container(
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.1,
+          height: MediaQuery.of(context).size.height * 0.08,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: ColorsTheme.white,
@@ -500,6 +501,7 @@ class ReusingWidgets {
             child: TextFormField(
               controller: textEditingController,
               textCapitalization: TextCapitalization.words,
+              style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
               cursorColor: ColorsTheme.primaryColor,
               maxLength: 7,
               cursorWidth: 5,
@@ -510,8 +512,9 @@ class ReusingWidgets {
                 icon: Icon(Icons.numbers,color: Colors.black)),
                 suffixIcon: IconButton(onPressed: (){
                   onTapClearIcon();
-                }, icon: Icon(Icons.clear)),
-                hintText: '  ABC - 1234',
+                }, icon: Icon(clearIcon)),
+                hintText: ' e.g: ABC - 1234',
+                hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey,fontSize: 17),
               ),
             ),
         ),

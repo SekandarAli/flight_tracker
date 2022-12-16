@@ -21,9 +21,9 @@ class SearchTabAirlineOptional extends StatefulWidget {
 class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
 
   TextEditingController searchAirlineController = TextEditingController();
-  List items = [];
+  List beforeSearch = [];
 
-  List rows = [];
+  List afterSearch = [];
   String query = '';
   @override
   void initState() {
@@ -37,12 +37,12 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
     final String response = await rootBundle.loadString('assets/json/airline.json');
     final data = await json.decode(response);
     setState(() {
-      items = data["response"];
+      beforeSearch = data["response"];
     });
   }
 
   void setResults(String query) {
-    rows = items
+    afterSearch = beforeSearch
         .where((elem) => elem['icao_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
@@ -76,6 +76,7 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
               ),
               Expanded(
                 child: Container(
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: ColorsTheme.primaryColor,
                       borderRadius: BorderRadius.only(
@@ -95,6 +96,7 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                         SizedBox(height: 20),
                         Expanded(
                             child: Container(
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(0),
                               decoration: BoxDecoration(
                                 color: ColorsTheme.white,
@@ -110,12 +112,12 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                                       ListView.builder(
                                         padding: EdgeInsets.all(5),
                                         shrinkWrap: true,
-                                        itemCount: items.length,
+                                        itemCount: beforeSearch.length,
                                         itemBuilder: (context, index) {
 
-                                          String? airlineName = items[index]["name"]  ?? "Unknown";
-                                          String? countryShortName = items[index]["iata_code"]  ?? "Unknown";
-                                          String? icaoCode = items[index]["icao_code"]  ?? "Unknown";
+                                          String? airlineName = beforeSearch[index]["name"]  ?? "Unknown";
+                                          String? countryShortName = beforeSearch[index]["iata_code"]  ?? "Unknown";
+                                          String? icaoCode = beforeSearch[index]["icao_code"]  ?? "Unknown";
 
                                           return
                                             InkWell(
@@ -129,15 +131,15 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                                         },
                                       )
                                           :
-                                      ListView.builder(
+                                      afterSearch.isEmpty ? NoSearchFound() : ListView.builder(
                                         padding: EdgeInsets.all(5),
                                         shrinkWrap: true,
-                                        itemCount: rows.length,
+                                        itemCount: afterSearch.length,
                                         itemBuilder: (context, index) {
 
-                                          String? airlineName = rows[index]["name"]  ?? "Unknown";
-                                          String? countryShortName = rows[index]["iata_code"]  ?? "Unknown";
-                                          String? icaoCode = rows[index]["icao_code"]  ?? "Unknown";
+                                          String? airlineName = afterSearch[index]["name"]  ?? "Unknown";
+                                          String? countryShortName = afterSearch[index]["iata_code"]  ?? "Unknown";
+                                          String? icaoCode = afterSearch[index]["icao_code"]  ?? "Unknown";
 
                                           return
                                             InkWell(

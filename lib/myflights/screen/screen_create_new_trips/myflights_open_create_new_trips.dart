@@ -38,6 +38,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: ColorsTheme.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -174,9 +175,9 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                       Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
                       builder: (context, box, _) {
 
-                        final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+                        // final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
 
-                        if (items.isEmpty) {
+                        if (widget.currentTask.modelMyFlightsUpcoming!.length == 0) {
                           return NoFlightFound();
                         } else {
                           return Flex(

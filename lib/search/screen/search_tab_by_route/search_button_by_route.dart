@@ -101,13 +101,13 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               DateTime updated = snapshot.data!.response![index].updated!;
                               List<String> dateDay = snapshot.data!.response![index].days!;
 
-                              print("aaaaa${widget.departureAirport}");
-                              print("aaaaa${widget.airlineOptional}");
-                              print("aaaaa$departureCity");
-                              print("aaaaa$airlineCityOptional");
-                              print("vvv${widget.dateDay}");
-                              print("vvv${dateDay}");
-                              print("vvv${dateDay.contains(widget.dateDay)}");
+                              print("print${widget.departureAirport}");
+                              print("print${widget.airlineOptional}");
+                              print("print$departureCity");
+                              print("print$airlineCityOptional");
+                              print("print${widget.dateDay}");
+                              print("print${dateDay}");
+                              print("print${dateDay.contains(widget.dateDay)}");
 
 
                               return
@@ -169,115 +169,6 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                       ),
                                     ) : Container()
                                 )
-
-                                // InkWell(
-                                //   onTap: (){
-                                //     setState((){
-                                //       cardExpand =! cardExpand;
-                                //     });
-                                //   },
-                                //   child: Container(
-                                //     padding: EdgeInsets.only(bottom: 10),
-                                //     child: Card(
-                                //       elevation: 10,
-                                //       child: Column(
-                                //         children: [
-                                //           Container(
-                                //             padding: EdgeInsets.all(15),
-                                //             decoration: BoxDecoration(
-                                //                 color: ColorsTheme.primaryColor,
-                                //                 border: Border(
-                                //                     bottom: BorderSide(
-                                //                       color: Colors.grey.shade500,
-                                //                       width: 3
-                                //                     )
-                                //              )
-                                //             ),
-                                //             child: Row(
-                                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //               children: [
-                                //                 Text(flightCode, style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black)),
-                                //                 Text(airlineShortName.toString(),
-                                //                      style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black))
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           Padding(
-                                //             padding: EdgeInsets.all(15),
-                                //             child: Row(
-                                //               mainAxisAlignment:
-                                //               MainAxisAlignment.spaceBetween,
-                                //               children: [
-                                //
-                                //                 flightDetails(
-                                //                   cityName: departureCity,
-                                //                   cityShortCode: departureCityShortName,
-                                //                   cityTime: departureCityTime.toString(),
-                                //                   crossAlignment: CrossAxisAlignment.start,
-                                //                 ),
-                                //
-                                //                 RotatedBox(quarterTurns: 1,
-                                //                 child: Icon(Icons.flight, size: 35,color: Colors.grey,)),
-                                //
-                                //                 flightDetails(
-                                //                   cityName: arrivalCity,
-                                //                   cityShortCode: arrivalCityShortName,
-                                //                   cityTime: arrivalCityTime.toString(),
-                                //                   crossAlignment: CrossAxisAlignment.end,
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //           cardExpand == true ? Row(
-                                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //             children: [
-                                //               SizedBox(width: w * 0.3),
-                                //               TextButton(onPressed: () {
-                                //
-                                //                   Navigator.push(context, MaterialPageRoute(builder: (context){
-                                //                     return FlightDetailScreen(flight_iata: flight_iata,);
-                                //                   }));
-                                //
-                                //               }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
-                                //               TextButton(onPressed: () {
-                                //
-                                //                 // setState((){
-                                //                 //   trackFlight =! trackFlight;
-                                //                 //   if(trackFlight == false){
-                                //                     modelMyFlights = ModelMyFlightsUpcoming(
-                                //                         flightCode: flightCode,
-                                //                         // departureCityDate: departureCityDate,
-                                //                         departureCity: departureCity,
-                                //                         departureCityShortCode: departureCityShortName,
-                                //                         departureCityTime: departureCityTime,
-                                //                         arrivalCityDate: updated.toString(),
-                                //                         arrivalCity: arrivalCity,
-                                //                         arrivalCityShortCode: arrivalCityShortName,
-                                //                         arrivalCityTime: arrivalCityTime,
-                                //                         flightStatus: flightCode.toString(),
-                                //                         // arrivalLat: arrivalLat,
-                                //                         // arrivalLng: arrivalLng,
-                                //                         // departureLat: departureLat,
-                                //                         // departureLng: departureLng,
-                                //                         flightIata: flight_iata,
-                                //                         isSelected: false
-                                //                     );
-                                //                     dataBox!.add(modelMyFlights!);
-                                //                     ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
-                                //                 //   }
-                                //                 //   else{
-                                //                 //     modelMyFlights!.delete();
-                                //                 //   }
-                                //                 // });
-                                //
-                                //               }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
-                                //             ],
-                                //           ) : Container()
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                // )
                                     : Container();
                             },
                           ),

@@ -3,6 +3,7 @@
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
+import 'package:flight_tracker/recent_airport_airline_search/model/model_recent_search.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flight_tracker/settings/screen/setting_alert.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
   final box = GetStorage();
   Box<ModelMyFlightsUpcoming>? dataTrackFlights;
   Box<ModelSearch>? dataRecentSearch;
+  Box<ModelRecentSearch>? dataRecentAirportAndAirline;
   String editName = "👤";
   TextEditingController nameController = TextEditingController();
 
@@ -31,6 +33,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
     super.initState();
     dataTrackFlights = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     dataRecentSearch = Hive.box<ModelSearch>("modelSearch");
+    dataRecentAirportAndAirline = Hive.box<ModelRecentSearch>("modelRecentSearch");
   }
 
   @override
@@ -63,27 +66,16 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
               child: ListView(
                 padding: EdgeInsets.all(12),
                 children: [
-                  // SizedBox(height: 20.0),
-                  // ReusingWidgets().settingListTiles(
-                  //   onTap: () async {
-                  //     var dialogueText = await ReusingWidgets().dialogueBoxSimple(
-                  //         context: context,
-                  //         titleText: "Enter UserName",
-                  //         hintText: "Enter Your Name",
-                  //         textEditingController: nameController);
-                  //     if (dialogueText != null) {
-                  //       setState(() {
-                  //         editName = nameController.text.toString();
-                  //         box.write("editName", editName);
-                  //       });
-                  //     }
-                  //     else{}
-                  //   },
-                  //     title: "Change Name",
-                  //     subTitle: 'Welcome ${box.read("editName")}',
-                  //     icon: Icons.change_circle,
-                  //     iconColor: ColorsTheme.themeColor,
-                  // ),
+                  SizedBox(height: 20.0),
+                  ReusingWidgets().settingListTiles(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingAlert()));
+                    },
+                    title: "Alert",
+                    subTitle: "Alert default notifications",
+                    icon: Icons.add_alert,
+                    iconColor: ColorsTheme.primaryColor,
+                  ),
                   SizedBox(height: 20.0),
                   ReusingWidgets().settingListTiles(
                       onTap: (){
@@ -98,6 +90,17 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                   SizedBox(height: 20.0),
                   ReusingWidgets().settingListTiles(
                       onTap: (){
+                        dataRecentAirportAndAirline!.clear();
+                        ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
+                      },
+                      title: "Clear Recent Airports & Airlines",
+                      subTitle: "Remove your recent searches of Airports and Airlines",
+                      icon: Icons.remove_circle_outline,
+                      iconColor: ColorsTheme.dismissibleColor,
+                  ),
+                  SizedBox(height: 20.0),
+                  ReusingWidgets().settingListTiles(
+                      onTap: (){
                         dataTrackFlights!.clear();
                         ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
                       },
@@ -106,16 +109,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                       icon: Icons.delete_forever_outlined,
                       iconColor: ColorsTheme.dismissibleColor,
                   ),
-                  SizedBox(height: 20.0),
-                  ReusingWidgets().settingListTiles(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingAlert()));
-                      },
-                      title: "Alert",
-                      subTitle: "Alert default notifications",
-                      icon: Icons.add_alert,
-                      iconColor: ColorsTheme.primaryColor,
-                  ),
+
                   // SizedBox(height: 20.0),
                   // ReusingWidgets().settingListTiles(
                   //     onTap: (){
@@ -134,6 +128,5 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
       ),
     );
   }
-
 
 }

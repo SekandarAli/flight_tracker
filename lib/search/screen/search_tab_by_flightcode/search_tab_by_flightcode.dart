@@ -21,19 +21,12 @@ class SearchTabByFlightCode extends StatefulWidget {
 
 class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
-  // TextEditingController numberController = TextEditingController();
-  TextEditingController flightCodeController = TextEditingController();
 
+  TextEditingController flightCodeController = TextEditingController();
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
-
-
-  // var flightCode = "Enter Code";
   var dateDay;
-
   DateTime selectedDate = DateTime.now();
-
-  FocusNode? myFocusNode;
 
   @override
   void initState() {
@@ -72,27 +65,13 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
               children: [
                 ReusingWidgets.byFlightCodeNewContainer(
                     context: context,
-                  // flightCodeStyle: flightCode == "Enter Code" ?
-                  // ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)
-                  //     : ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
-                  // flightCodeText: flightCode.isEmpty ? "Enter Code" : flightCode,
-                  // textEditingController: flightCodeController,
-                  // onTapFlightCodeText: () async{
-                  //     var dialogueText = await openDialogue();
-                  //     if (dialogueText != null) {
-                  //       setState(() {
-                  //         flightCode = alphabetsController.text.toString() + numberController.text.toString();
-                  //       });
-                  //     }
-                  //     else{}
-                  //   },
-                  //   clearIcon: flightCode == "Enter Code" ? false : true,
                     onTapClearIcon: () {
                        setState(() {
                          flightCodeController.clear();
                          });
                     },
                   textEditingController: flightCodeController,
+                  clearIcon: flightCodeController.text.isEmpty ? Icons.clear : Icons.savings_rounded,
                         ),
                 InkWell(
                   onTap: () {
@@ -101,7 +80,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     margin: EdgeInsets.all(0),
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
@@ -195,6 +174,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                             children: [
                               Expanded(
                                 child: ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
                                   itemCount: box.values.length,
                                   itemBuilder: (context, index) {
                                     ModelSearch? currentTask = box.getAt(index);
@@ -260,40 +240,40 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
       );
   }
 
-  Widget textFormFields({
-  required double width,
-  required String hintText,
-  required int maxLength,
-  required TextInputType inputType,
-  required TextEditingController textController,
-}){
-    return SizedBox(
-      width: width,
-      child: TextFormField(
-        controller: textController,
-        textInputAction: TextInputAction.next,
-        maxLength: maxLength,
-        keyboardType: inputType,
-        style: TextStyle(fontSize: 22),
-        decoration: InputDecoration(
-          counterText: "",
-          hintText: hintText,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                width: 3,
-                color: Colors.black,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                width: 3,
-                color: Colors.grey,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//   Widget textFormFields({
+//   required double width,
+//   required String hintText,
+//   required int maxLength,
+//   required TextInputType inputType,
+//   required TextEditingController textController,
+// }){
+//     return SizedBox(
+//       width: width,
+//       child: TextFormField(
+//         controller: textController,
+//         textInputAction: TextInputAction.next,
+//         maxLength: maxLength,
+//         keyboardType: inputType,
+//         style: TextStyle(fontSize: 22),
+//         decoration: InputDecoration(
+//           counterText: "",
+//           hintText: hintText,
+//           focusedBorder: OutlineInputBorder(
+//             borderSide: BorderSide(
+//                 width: 3,
+//                 color: Colors.black,
+//             ),
+//           ),
+//           enabledBorder: OutlineInputBorder(
+//             borderSide: BorderSide(
+//                 width: 3,
+//                 color: Colors.grey,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
   // Future<String?> openDialogue() => showDialog<String>(
   //     context: context,
