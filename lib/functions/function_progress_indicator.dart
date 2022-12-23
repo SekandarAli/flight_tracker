@@ -80,25 +80,33 @@ class _NoSearchFoundState extends State<NoSearchFound> {
   Widget build(BuildContext context) {
 
     double w = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/images/nosearch.jpg',
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: MediaQuery.of(context).size.height * 0.25,
-          fit: BoxFit.fill,
+    double h = MediaQuery.of(context).size.height;
+    return SingleChildScrollView(
+      child: Container(
+        width: w,
+        // height: h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/nosearch.jpg',
+              // width: MediaQuery.of(context).size.width * 0.5,
+              // height: MediaQuery.of(context).size.height * 0.25,
+              fit: BoxFit.fill,
+            ),
+            Text(
+              "No Search Found",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: w * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ],
         ),
-        Text(
-          "No Search Found",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: w * 0.05,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

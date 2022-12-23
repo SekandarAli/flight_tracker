@@ -47,95 +47,95 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
           /// White CONTAINER
           Container(
-            decoration: BoxDecoration(
-              color: ColorsTheme.white,
-              border: Border.all(
-                  color: ColorsTheme.white,
-                  width: 2,
-                  style: BorderStyle.solid),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(50),
-                topLeft: Radius.circular(50),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ReusingWidgets.byFlightCodeNewContainer(
-                    context: context,
-                    onTapClearIcon: () {
-                       setState(() {
-                         flightCodeController.clear();
-                         });
+            color:  ColorsTheme.primaryColor,
+            child: Container(
+              decoration: ReusingWidgets().curveDecorationContainer(),
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ReusingWidgets.byFlightCodeNewContainer(
+                      context: context,
+                      onTapClearIcon: () {
+                         setState(() {
+                           flightCodeController.clear();
+                           });
+                      },
+                    textEditingController: flightCodeController,
+                    clearIcon: flightCodeController.text.isEmpty ? Icons.clear : Icons.clear,
+                          ),
+                  InkWell(
+                    onTap: () {
+                      selectDate(context);
                     },
-                  textEditingController: flightCodeController,
-                  clearIcon: flightCodeController.text.isEmpty ? Icons.clear : Icons.savings_rounded,
-                        ),
-                InkWell(
-                  onTap: () {
-                    selectDate(context);
-                  },
 
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    margin: EdgeInsets.all(0),
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: ColorsTheme.primaryColor),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(3),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      margin: EdgeInsets.all(0),
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: ColorsTheme.primaryColor),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_month, color: ColorsTheme.black),
+                          SizedBox(width: 20),
+                          Text(
+                            // DateFormat.yMMMMEEEEd().format(DateTime.now()).toString(),
+                            "${dateDay.toUpperCase()}, ${selectedDate.day}-${selectedDate.month}-${selectedDate.year}",
+                            style: ThemeTexts.textStyleValueGrey,
+                          )
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.calendar_month, color: ColorsTheme.black),
-                        SizedBox(width: 20),
-                        Text(
-                          "${dateDay.toUpperCase()}, ${selectedDate.day}-${selectedDate.month}-${selectedDate.year}",
-                          style: ThemeTexts.textStyleValueGrey,
-                        )
-                      ],
-                    ),
                   ),
-                ),
 
-                SizedBox(height: 10),
-                ReusingWidgets.searchButton(onPress: (){
-                  setState(() {
-                    /// If search don't exist
-                    // showAlertDialog(context);
+                  SizedBox(height: 10),
+                  ReusingWidgets.searchButton(onPress: (){
+                    setState(() {
+                      /// If search don't exist
+                      // showAlertDialog(context);
 
-                    if(flightCodeController.text.isEmpty){
-                      ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
-                    }
+                      if(flightCodeController.text.isEmpty){
+                        ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
+                      }
 
-                    else {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                        print("dayDate$dateDay");
-                        var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-                        return SearchButtonByFlightCode(flightCode: flightCodeController.text,dateDay: dateDay,currentDate: currentDate,);
-                    }));
+                      else {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                          print("dayDate$dateDay");
 
-                      modelMyFlights = ModelSearch(
-                          flightCode: flightCodeController.text,
-                        arrivalCity: "",
-                        departureCity: "",
-                        arrivalCityShortName: "",
-                        departureCityShortName: "",
-                      );
-                      dataBox!.add(modelMyFlights!);
-                    }
-                  });
+                          var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
 
-                }, context: context,
-                    text: 'SEARCH',
-                style: ThemeTexts.textStyleTitle2,),
+                          modelMyFlights = ModelSearch(
+                            flightCode: flightCodeController.text,
+                            arrivalCity: "",
+                            departureCity: "",
+                            arrivalCityShortName: "",
+                            departureCityShortName: "",
+                          );
 
-              ],
+                          return SearchButtonByFlightCode(
+                            flightCode: flightCodeController.text,
+                            dateDay: dateDay,
+                            currentDate: currentDate,
+                          );
+                      })).then((value) => dataBox!.add(modelMyFlights!));
+
+                      }
+                    });
+
+                  }, context: context,
+                      text: 'SEARCH',
+                  style: ThemeTexts.textStyleTitle2,),
+
+                ],
+              ),
             ),
           ),
 
@@ -157,75 +157,68 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                 SizedBox(height: 10),
 
-                SizedBox(
-                  height: h * 0.4,
-                  width: w,
-                  child: ValueListenableBuilder<Box<ModelSearch>>(
-                    valueListenable:
-                    Hive.box<ModelSearch>("modelSearch").listenable(),
-                    builder: (context, box, _) {
-                      final items = box.values.toList().cast<ModelSearch>();
+                ValueListenableBuilder<Box<ModelSearch>>(
+                  valueListenable:
+                  Hive.box<ModelSearch>("modelSearch").listenable(),
+                  builder: (context, box, _) {
+                    final items = box.values.toList().cast<ModelSearch>();
 
-                      if (items.isEmpty) {
-                        return NoSearchFound();
-                      } else {
-                        return Flex(
-                            direction: Axis.vertical,
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: box.values.length,
-                                  itemBuilder: (context, index) {
-                                    ModelSearch? currentTask = box.getAt(index);
-                                    return
-                                      currentTask!.flightCode!.isNotEmpty ?
-                                      Card(
-                                      color: ColorsTheme.lightGreenPrimary,
-                                      elevation: 5,
-                                      child: Container(
-                                        width: w,
-                                        padding: EdgeInsets.all(5),
-                                        margin: EdgeInsets.all(5),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: (){
-                                                setState(() {
-                                                  flightCodeController.text = currentTask.flightCode!;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                width: w * 0.7,
-                                                child:
-                                               Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(Icons.history,color: ColorsTheme.primaryColor,),
-                                                    SizedBox(width: 10,),
-                                                    Text(currentTask.flightCode!,
-                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
-                                                  ],
-                                                )
-                                              ),
-                                            ),
-                                            IconButton(icon: Icon(Icons.clear),color: Colors.grey,
-                                              onPressed: (){
-                                                currentTask.delete();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ) : Container();
-                                  },
-                                ),
-                              ),]
-                        );
-                      }
-                    },
-                  ),
+                    if (items.isEmpty) {
+                      return NoSearchFound();
+                    } else {
+                      return ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: box.values.length,
+                        itemBuilder: (context, index) {
+                          ModelSearch? currentTask = box.getAt(index);
+                          return
+                            currentTask!.flightCode!.isNotEmpty ?
+                            Card(
+                            color: ColorsTheme.lightGreenPrimary,
+                            elevation: 5,
+                            child: Container(
+                              width: w,
+                              padding: EdgeInsets.all(5),
+                              margin: EdgeInsets.all(5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: (){
+                                      setState(() {
+                                        flightCodeController.text = currentTask.flightCode!;
+                                      });
+                                    },
+                                    child: SizedBox(
+                                      width: w * 0.7,
+                                      child:
+                                     Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Icon(Icons.history,color: ColorsTheme.primaryColor,),
+                                          SizedBox(width: 10,),
+                                          Text(currentTask.flightCode!,
+                                                  style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                        ],
+                                      )
+                                    ),
+                                  ),
+                                  IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                    onPressed: (){
+                                      currentTask.delete();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ) : Container();
+                        },
+                      );
+                    }
+                  },
                 ),
 
                 // SearchTabRecentSearches(),

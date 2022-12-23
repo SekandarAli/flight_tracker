@@ -39,136 +39,136 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsTheme.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  // height: h * 0.25,
-                  width: w,
-                  child: Stack(
-                    children: [
-                      Lottie.asset('assets/lottie/createtripbg.json',),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Align(
-                              alignment: Alignment.topLeft,
-                              child: IconButton(onPressed: (){
-                                Navigator.pop(context);
-                              }, icon: Icon(Icons.arrow_back,color: ColorsTheme.themeColor,))
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: PopupMenuButton(
-                              icon: Icon(Icons.more_vert, color: ColorsTheme.themeColor,),
-                              itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  value: 1,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.drive_file_rename_outline),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text("Rename Trip")
-                                    ],
-                                  ),
-                                ),
-                                // PopupMenuItem(
-                                //   value: 2,
-                                //   child: Row(
-                                //     children: [
-                                //       Icon(Icons.flight),
-                                //       SizedBox(
-                                //         width: 10,
-                                //       ),
-                                //       Text("Add Flight")
-                                //     ],
-                                //   ),
-                                // ),
-                                PopupMenuItem(
-                                  value: 3,
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.delete),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text("Delete Trip")
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              offset: Offset(0, 40),
-                              elevation: 2,
-                              onSelected: (value) async {
-                                if (value == 1)  {
-
-                                  var dialogueText = await ReusingWidgets().dialogueBoxSimple(
-                                      context: context,
-                                      titleText: "Edit Trip Name",
-                                      hintText: "Enter New Trip Name",
-                                      textEditingController: editingController!);
-                                  if (dialogueText != null) {
-                                    setState(() {
-                                      widget.currentTask.tripName = editingController!.text.toString();
-                                      widget.tripName = editingController!.text.toString();
-                                      widget.currentTask.save();
-                                    });
-                                  }
-                                  else{
-                                    // dialogueText = "Enter Flight Code";
-                                  }
-                                }
-                                else if (value == 2) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
-                                }
-                                else if (value == 3) {
-                                  deleteDialogue(currentTask: widget.currentTask);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(15),
-                // height: h * 0.1,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                // height: h * 0.25,
                 width: w,
-                color: ColorsTheme.primaryColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    Text(widget.tripName, style: ThemeTexts.textStyleTitle2),
-                    SizedBox(height: 5),
-                    Text("My Trip", style: ThemeTexts.textStyleTitle3),
+                    Lottie.asset('assets/lottie/createtripbg.json',),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(onPressed: (){
+                              Navigator.pop(context);
+                            }, icon: Icon(Icons.arrow_back,color: ColorsTheme.themeColor,))
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: PopupMenuButton(
+                            icon: Icon(Icons.more_vert, color: ColorsTheme.themeColor,),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.drive_file_rename_outline),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("Rename Trip")
+                                  ],
+                                ),
+                              ),
+                              // PopupMenuItem(
+                              //   value: 2,
+                              //   child: Row(
+                              //     children: [
+                              //       Icon(Icons.flight),
+                              //       SizedBox(
+                              //         width: 10,
+                              //       ),
+                              //       Text("Add Flight")
+                              //     ],
+                              //   ),
+                              // ),
+                              PopupMenuItem(
+                                value: 3,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("Delete Trip")
+                                  ],
+                                ),
+                              ),
+                            ],
+                            offset: Offset(0, 40),
+                            elevation: 2,
+                            onSelected: (value) async {
+                              if (value == 1)  {
+
+                                var dialogueText = await ReusingWidgets().dialogueBoxSimple(
+                                    context: context,
+                                    titleText: "Edit Trip Name",
+                                    hintText: "Enter New Trip Name",
+                                    textEditingController: editingController!);
+                                if (dialogueText != null) {
+                                  setState(() {
+                                    widget.currentTask.tripName = editingController!.text.toString();
+                                    widget.tripName = editingController!.text.toString();
+                                    widget.currentTask.save();
+                                  });
+                                }
+                                else{
+                                  // dialogueText = "Enter Flight Code";
+                                }
+                              }
+                              else if (value == 2) {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
+                              }
+                              else if (value == 3) {
+                                deleteDialogue(currentTask: widget.currentTask);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
                   ],
                 ),
               ),
-              Column(
+            ),
+            Container(
+              padding: EdgeInsets.all(15),
+              // height: h * 0.1,
+              width: w,
+              color: ColorsTheme.primaryColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.flight),
-                        SizedBox(width: 10,),
-                        Text("${widget.noOfFlights} Flights"),
-                      ],
-                    ),
+                  Text(widget.tripName, style: ThemeTexts.textStyleTitle2),
+                  SizedBox(height: 5),
+                  Text("My Trip", style: ThemeTexts.textStyleTitle3),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.flight),
+                      SizedBox(width: 10,),
+                      Text("${widget.noOfFlights} Flights"),
+                    ],
                   ),
-                  Container(
-                    height: h * 0.7,
+                ),
+                SingleChildScrollView(
+                  child: Container(
+                    height: h * 0.5,
                     width: w,
                     child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
                       valueListenable:
@@ -241,10 +241,10 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                       },
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

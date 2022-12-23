@@ -86,12 +86,15 @@ class FlightCardScreen{
                   mainAxisAlignment:
                   MainAxisAlignment.spaceBetween,
                   children: [
-                    flightDetails(
-                        cityName: departureCity,
-                        cityShortCode: departureCityShortCode,
-                        cityTime: departureCityTime,
-                        crossAlignment:
-                        CrossAxisAlignment.start),
+                    Expanded(
+                      child: flightDetails(
+                        textAlign: TextAlign.start,
+                          cityName: departureCity,
+                          cityShortCode: departureCityShortCode,
+                          cityTime: departureCityTime,
+                          crossAlignment:
+                          CrossAxisAlignment.start),
+                    ),
                     RotatedBox(
                       quarterTurns: 0,
                       child: Icon(
@@ -99,12 +102,15 @@ class FlightCardScreen{
                         size: 50,
                         color: ColorsTheme.themeColor,),
                     ),
-                    flightDetails(
-                        cityName: arrivalCity,
-                        cityShortCode: arrivalCityShortCode,
-                        cityTime: arrivalCityTime,
-                        crossAlignment:
-                        CrossAxisAlignment.end),
+                    Expanded(
+                      child: flightDetails(
+                          textAlign: TextAlign.end,
+                          cityName: arrivalCity,
+                          cityShortCode: arrivalCityShortCode,
+                          cityTime: arrivalCityTime,
+                          crossAlignment:
+                          CrossAxisAlignment.end),
+                    ),
                   ],
                 ),
               )
@@ -175,12 +181,15 @@ class FlightCardScreen{
                       mainAxisAlignment:
                       MainAxisAlignment.spaceBetween,
                       children: [
-                        flightDetails(
-                            cityName: departureCity,
-                            cityShortCode: departureCityShortCode,
-                            cityTime: departureCityTime,
-                            crossAlignment:
-                            CrossAxisAlignment.start),
+                        Expanded(
+                          child: flightDetails(
+                              textAlign: TextAlign.start,
+                              cityName: departureCity,
+                              cityShortCode: departureCityShortCode,
+                              cityTime: departureCityTime,
+                              crossAlignment:
+                              CrossAxisAlignment.start),
+                        ),
                         RotatedBox(
                           quarterTurns: 0,
                           child: Icon(
@@ -188,12 +197,15 @@ class FlightCardScreen{
                             size: 50,
                             color: ColorsTheme.themeColor,),
                         ),
-                        flightDetails(
-                            cityName: arrivalCity,
-                            cityShortCode: arrivalCityShortCode,
-                            cityTime: arrivalCityTime,
-                            crossAlignment:
-                            CrossAxisAlignment.end),
+                        Expanded(
+                          child: flightDetails(
+                              textAlign: TextAlign.end,
+                              cityName: arrivalCity,
+                              cityShortCode: arrivalCityShortCode,
+                              cityTime: arrivalCityTime,
+                              crossAlignment:
+                              CrossAxisAlignment.end),
+                        ),
                       ],
                     ),
                   )
@@ -263,11 +275,14 @@ class FlightCardScreen{
                   MainAxisAlignment.spaceBetween,
                   children: [
 
-                    flightDetails(
-                      cityName: departureCity,
-                      cityShortCode: departureCityShortCode,
-                      cityTime: departureCityTime.toString(),
-                      crossAlignment: CrossAxisAlignment.start,
+                    Expanded(
+                      child: flightDetails(
+                        textAlign: TextAlign.start,
+                        cityName: departureCity,
+                        cityShortCode: departureCityShortCode,
+                        cityTime: departureCityTime.toString(),
+                        crossAlignment: CrossAxisAlignment.start,
+                      ),
                     ),
 
                     RotatedBox(
@@ -278,11 +293,14 @@ class FlightCardScreen{
                         color: ColorsTheme.themeColor,),
                     ),
 
-                    flightDetails(
-                      cityName: arrivalCity,
-                      cityShortCode: arrivalCityShortCode,
-                      cityTime: arrivalCityTime.toString(),
-                      crossAlignment: CrossAxisAlignment.end,
+                    Expanded(
+                      child: flightDetails(
+                        textAlign: TextAlign.end,
+                        cityName: arrivalCity,
+                        cityShortCode: arrivalCityShortCode,
+                        cityTime: arrivalCityTime.toString(),
+                        crossAlignment: CrossAxisAlignment.end,
+                      ),
                     ),
                   ],
                 ),
@@ -301,16 +319,18 @@ class FlightCardScreen{
       {required String cityName,
         required String cityShortCode,
         required String cityTime,
-        required CrossAxisAlignment crossAlignment}) {
+        required CrossAxisAlignment crossAlignment,
+        required TextAlign textAlign,
+      }) {
     return Column(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: crossAlignment,
       children: [
         Text(cityName,
-            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
-        SizedBox(height: 10),
-        Text(cityShortCode,
             style: ThemeTexts.textStyleTitle1.copyWith(color: Colors.black)),
+        SizedBox(height: 10),
+        Text(cityShortCode,textAlign: textAlign,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
         SizedBox(height: 10),
         Text(cityTime,
             style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.themeColor)),

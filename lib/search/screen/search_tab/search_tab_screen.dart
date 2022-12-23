@@ -23,15 +23,13 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsTheme.primaryColor,
+      backgroundColor: ColorsTheme.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-                children: [
-                  topBarGreen(),
-                  index == 1 ? SearchTabByRoute() : index == 2 ? SearchTabByFlightCode() : Container()
-                ],
-          ),
+        child: ListView(
+              children: [
+                topBarGreen(),
+                index == 1 ? SearchTabByRoute() : index == 2 ? SearchTabByFlightCode() : Container()
+              ],
         ),
       ),
     );
@@ -39,11 +37,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget topBarGreen() {
     return Container(
+      color: ColorsTheme.primaryColor,
       padding: EdgeInsets.all(15),
       child: Stack(
         children: [
           Positioned(
-            right: 0,
+            right: 30,
             child: Image.asset(
               "assets/images/plane.png",
               fit: BoxFit.fill,
@@ -67,11 +66,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                       ),
                   ),
-                  // GestureDetector(
-                  //     onTap: (){
-                  //       scanQRCode();
-                  //     },
-                  //     child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
+                  GestureDetector(
+                      onTap: (){
+                        scanQRCode();
+                      },
+                      child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
 
                 ],
               ),
@@ -101,12 +100,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         textColor: index == 2 ? ColorsTheme.white : Colors.white54,
                         borderColor: index == 2 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
                         borderWidth: index == 2 ? 3 : 1),
-                    // GestureDetector(
-                    //     onTap: (){
-                    //       // Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchQrCode()));
-                    //       scanQRCode();
-                    //     },
-                    //     child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
                   ],
               ),
             ],
@@ -116,22 +109,26 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Future<void> scanQRCode() async {
+
+  Future<Object?> scanQRCode() async {
     try {
       final qrCode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
-        'BACK',
-        false,
-        ScanMode.DEFAULT,
+        'Cancel',
+        true,
+        ScanMode.QR,
       );
 
-      if (!mounted) return;
+      if (!mounted) return null;
 
       setState(() {
         this.qrCode = qrCode;
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchQRCode(qrCode: qrCode,)));
       });
     } on PlatformException {
       qrCode = 'Failed to get platform version.';
     }
+    return null;
   }
 }
+

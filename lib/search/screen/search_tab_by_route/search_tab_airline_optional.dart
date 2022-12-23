@@ -72,7 +72,9 @@ class _SearchTabAirlineOptionalState extends State<SearchTabAirlineOptional> {
                       query = "";
                       searchAirlineController.clear();
                     });
-                  }
+                  },
+                  context: context,
+                backIconStatus: true
               ),
               Expanded(
                 child: Container(

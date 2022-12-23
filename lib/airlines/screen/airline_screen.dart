@@ -75,7 +75,8 @@ class _AirlineScreenState extends State<AirlineScreen> {
                       query = "";
                       searchAirlineController.clear();
                     });
-                  }
+                  }, context: context,
+                  backIconStatus: false
               ),
               Expanded(
                 child: Container(

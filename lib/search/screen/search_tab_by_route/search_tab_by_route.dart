@@ -61,163 +61,170 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
       children: [
         /// WHITE CONTAINER
         Container(
-          decoration: ReusingWidgets().curveDecorationContainer(),
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ReusingWidgets.byRouteNewContainer(
-                    sizedBoxHeight: 0,
-                    context: context,
-                    title1: 'From',
-                    title2: 'Departure',
-                    airportName: departureAirport,
-                    airportShortName: "($depIata)",
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    onTapAirport: () async{
-                      final List<dynamic> newValue = await Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return SearchTabArrivalDepartureAirport();
-                      }));
-
-                      setState(() {
-                        departureAirport = newValue[0];
-                        departureAirportShortName = newValue[1];
-                        depIata = newValue[2];
-                      });
-                    },
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(top: 40),
-                    child: Image.asset("assets/images/flightIcon.png",width:  w * 0.22,height:  w * 0.15,),
-                  ),
-                  ReusingWidgets.byRouteNewContainer(
-                    context: context,
-                    title1: 'To',
-                    title2: 'Arrival',
-                    airportName: arrivalAirport,
-                    airportShortName: "($arrIata)",
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    onTapAirport: () async{
-                      final List<dynamic> newValue = await Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return SearchTabArrivalDepartureAirport();
-                      }));
-
-                      setState(() {
-                        arrivalAirport = newValue[0];
-                        arrivalAirportShortName = newValue[1];
-                        arrIata = newValue[2];
-                      });
-                    },
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Date",
-                        style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
-                      ),
-                      SizedBox(height: 5),
-                      InkWell(
-                        onTap: () {
-                          setState((){
-                            selectDate(context);
-                          });
-                        },
-                        child:  Row(
-                          children: [
-                            Icon(Icons.calendar_month, color: ColorsTheme.textColor),
-                            SizedBox(width: 1),
-                            Text(
-                              "${dateDay.toUpperCase()},${selectedDate.day}-${selectedDate.month}-${selectedDate.year}",
-                              style: ThemeTexts.textStyleValueGrey,
-                            )
-                          ],
-                        ),
-                      ),
-                      ReusingWidgets.divider(context: context),
-                    ],
-                  ),
-                  ReusingWidgets.byRouteAirlineNewContainer(
-                      airlineName: airlineOptional,
-                      airlineShortName: airlineIcao,
+          color:  ColorsTheme.primaryColor,
+          child: Container(
+            decoration: ReusingWidgets().curveDecorationContainer(),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ReusingWidgets.byRouteNewContainer(
+                      sizedBoxHeight: 0,
                       context: context,
-                      onTapAirline: () async{
+                      title1: 'From',
+                      title2: 'Departure',
+                      airportName: departureAirport,
+                      airportShortName: "($depIata)",
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      onTapAirport: () async{
                         final List<dynamic> newValue = await Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return SearchTabAirlineOptional();
+                          return SearchTabArrivalDepartureAirport();
                         }));
 
                         setState(() {
-                          airlineOptional = newValue[0];
-                          airlineOptionalShortName = newValue[1];
-                          airlineIcao = newValue[2];
+                          departureAirport = newValue[0];
+                          departureAirportShortName = newValue[1];
+                          depIata = newValue[2];
                         });
-                      }),
-
-                ],
-              ),
-
-              SizedBox(height: 30),
-              ReusingWidgets.searchButton(
-                  onPress: () {
-                    setState(() {
-                      /// If search don't exist
-                      // showAlertDialog(context);
-
-                      /// If search exist
-                      if(departureAirport == "DPT Airport"){
-                        ReusingWidgets().snackBar(context: context, text: 'Please Select Departure Airport');
-                      }
-                      else if(arrivalAirport == "ARR Airport")
-                        {
-                          ReusingWidgets().snackBar(context: context, text: 'Please Select Arrival Airport');
-                        }
-                      else {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                          print("departureAirportShortName$depIata");
-                          print("arrivalAirportShortName$arrIata");
-                          print("airlineOptional$airlineIcao");
-                          print("dayDate$dateDay");
-
-                          var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-                          return SearchButtonByRoute(
-                            departureAirport: depIata,
-                            arrivalAirport: arrIata,
-                            airlineOptional: airlineIcao,
-                            dateDay: dateDay,
-                            currentDate: currentDate,
-                          );
+                      },
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 40),
+                      child: Image.asset("assets/images/flightIcon.png",width:  w * 0.22,height:  w * 0.15,),
+                    ),
+                    ReusingWidgets.byRouteNewContainer(
+                      context: context,
+                      title1: 'To',
+                      title2: 'Arrival',
+                      airportName: arrivalAirport,
+                      airportShortName: "($arrIata)",
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      onTapAirport: () async{
+                        final List<dynamic> newValue = await Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return SearchTabArrivalDepartureAirport();
                         }));
 
-                        modelMyFlights = ModelSearch(
-                          arrivalCity: arrivalAirport,
-                          departureCity: departureAirport,
-                          arrivalCityShortName: arrIata,
-                          departureCityShortName: depIata,
-                          flightCode: ""
-                        );
-                        dataBox!.add(modelMyFlights!);
-                      }
-                    });
-                  },
-                  context: context,
-                  text: 'SEARCH', style: ThemeTexts.textStyleTitle2,
-              ),
-            ],
+                        setState(() {
+                          arrivalAirport = newValue[0];
+                          arrivalAirportShortName = newValue[1];
+                          arrIata = newValue[2];
+                        });
+                      },
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Date",
+                          style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                        ),
+                        SizedBox(height: 5),
+                        InkWell(
+                          onTap: () {
+                            setState((){
+                              selectDate(context);
+                            });
+                          },
+                          child:  Row(
+                            children: [
+                              Icon(Icons.calendar_month, color: ColorsTheme.textColor),
+                              SizedBox(width: 1),
+                              Text(
+                                "${dateDay.toUpperCase()},${selectedDate.day}-${selectedDate.month}-${selectedDate.year}",
+                                style: ThemeTexts.textStyleValueGrey,
+                              )
+                            ],
+                          ),
+                        ),
+                        ReusingWidgets.divider(context: context),
+                      ],
+                    ),
+                    ReusingWidgets.byRouteAirlineNewContainer(
+                        airlineName: airlineOptional,
+                        airlineShortName: airlineIcao,
+                        context: context,
+                        onTapAirline: () async{
+                          final List<dynamic> newValue = await Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return SearchTabAirlineOptional();
+                          }));
+
+                          setState(() {
+                            airlineOptional = newValue[0];
+                            airlineOptionalShortName = newValue[1];
+                            airlineIcao = newValue[2];
+                          });
+                        }),
+
+                  ],
+                ),
+
+                SizedBox(height: 30),
+                ReusingWidgets.searchButton(
+                    onPress: () {
+                      setState(() {
+                        /// If search don't exist
+                        // showAlertDialog(context);
+
+                        /// If search exist
+                        if(departureAirport == "DPT Airport"){
+                          ReusingWidgets().snackBar(context: context, text: 'Please Select Departure Airport');
+                        }
+                        else if(arrivalAirport == "ARR Airport")
+                          {
+                            ReusingWidgets().snackBar(context: context, text: 'Please Select Arrival Airport');
+                          }
+                        else {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                            print("departureAirportShortName$depIata");
+                            print("arrivalAirportShortName$arrIata");
+                            print("airlineOptional$airlineIcao");
+                            print("dayDate$dateDay");
+
+                            var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+                            return SearchButtonByRoute(
+                              depIata: depIata,
+                              arrIata: arrIata,
+                              airlineOptional: airlineIcao,
+                              dateDay: dateDay,
+                              currentDate: currentDate,
+
+
+
+                              departureAirport: departureAirport,
+                              arrivalAirport: arrivalAirport,
+                            );
+                          }));
+
+                          modelMyFlights = ModelSearch(
+                            arrivalCity: arrivalAirport,
+                            departureCity: departureAirport,
+                            arrivalCityShortName: arrIata,
+                            departureCityShortName: depIata,
+                            flightCode: ""
+                          );
+                          dataBox!.add(modelMyFlights!);
+                        }
+                      });
+                    },
+                    context: context,
+                    text: 'SEARCH', style: ThemeTexts.textStyleTitle2,
+                ),
+              ],
+            ),
           ),
         ),
 
@@ -240,104 +247,98 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 ),
               ),
               SizedBox(height: 10),
-               SizedBox(
-                  height: h * 0.4,
-                  width: w,
-                  child: ValueListenableBuilder<Box<ModelSearch>>(
-                    valueListenable:
-                    Hive.box<ModelSearch>("modelSearch").listenable(),
-                    builder: (context, box, _) {
-                      final items = box.values.toList().cast<ModelSearch>();
+               ValueListenableBuilder<Box<ModelSearch>>(
+                 valueListenable:
+                 Hive.box<ModelSearch>("modelSearch").listenable(),
+                 builder: (context, box, _) {
+                   final items = box.values.toList().cast<ModelSearch>();
 
-                      if (items.isEmpty) {
-                        return NoSearchFound();
-                      } else {
-                        return Flex(
-                            direction: Axis.vertical,
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: box.values.length,
-                                  itemBuilder: (context, index) {
-                                    ModelSearch? currentTask = box.getAt(index);
-                                    return
-                                      currentTask!.departureCity!.isNotEmpty ?
-                                    Card(
-                                    color: ColorsTheme.lightGreenPrimary,
-                                      elevation: 5,
-                                      child: Container(
-                                        width: w,
-                                        padding: EdgeInsets.all(5),
-                                        margin: EdgeInsets.all(5),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: (){
-                                                setState(() {
-                                                  departureAirport = currentTask.departureCity!;
-                                                  depIata = currentTask.departureCityShortName!;
-                                                  arrivalAirport = currentTask.arrivalCity!;
-                                                  arrIata = currentTask.arrivalCityShortName!;
-                                                });
-                                              },
-                                              child: SizedBox(
-                                                width: w * 0.7,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(Icons.history,color: ColorsTheme.primaryColor,),
-                                                    SizedBox(width: 10,),
-                                                    // Flexible(
-                                                    //   child: RichText(
-                                                    //     text: TextSpan(
-                                                    //       style: TextStyle(color: Colors.black, fontSize: 60),
-                                                    //       children: [
-                                                    //         TextSpan(text: "${currentTask!.departureCityShortName}   ", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
-                                                    //         WidgetSpan(child: Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,)),
-                                                    //         TextSpan(text: "   ${currentTask.arrivalCityShortName}", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
-                                                    //       ],
-                                                    //     ),
-                                                    //     textScaleFactor: 1,
-                                                    //   ),
-                                                    // ),
-                                                     Row(
-                                                      children: [
-                                                        Text(
-                                                            // "${currentTask!.departureCityShortName}   ",
-                                                            currentTask.departureCity!.length > 7 ? '${currentTask.departureCity!.substring(0, 7)}...  ' : currentTask.departureCity!,
+                   if (items.isEmpty) {
+                     return NoSearchFound();
+                   } else {
+                     return ListView.builder(
+                       reverse: true,
+                       shrinkWrap: true,
+                       physics: NeverScrollableScrollPhysics(),
+                       scrollDirection: Axis.vertical,
+                       itemCount: box.values.length,
+                       itemBuilder: (context, index) {
+                         ModelSearch? currentTask = box.getAt(index);
+                         return
+                           currentTask!.departureCity!.isNotEmpty ?
+                         Card(
+                         color: ColorsTheme.lightGreenPrimary,
+                           elevation: 5,
+                           child: Container(
+                             width: w,
+                             padding: EdgeInsets.all(5),
+                             margin: EdgeInsets.all(5),
+                             child: Row(
+                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               children: [
+                                 GestureDetector(
+                                   onTap: (){
+                                     setState(() {
+                                       departureAirport = currentTask.departureCity!;
+                                       depIata = currentTask.departureCityShortName!;
+                                       arrivalAirport = currentTask.arrivalCity!;
+                                       arrIata = currentTask.arrivalCityShortName!;
+                                     });
+                                   },
+                                   child: SizedBox(
+                                     width: w * 0.7,
+                                     child: Row(
+                                       mainAxisAlignment: MainAxisAlignment.start,
+                                       children: [
+                                         Icon(Icons.history,color: ColorsTheme.primaryColor,),
+                                         SizedBox(width: 10,),
+                                         // Flexible(
+                                         //   child: RichText(
+                                         //     text: TextSpan(
+                                         //       style: TextStyle(color: Colors.black, fontSize: 60),
+                                         //       children: [
+                                         //         TextSpan(text: "${currentTask!.departureCityShortName}   ", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
+                                         //         WidgetSpan(child: Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,)),
+                                         //         TextSpan(text: "   ${currentTask.arrivalCityShortName}", style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                         //       ],
+                                         //     ),
+                                         //     textScaleFactor: 1,
+                                         //   ),
+                                         // ),
+                                          Row(
+                                           children: [
+                                             Text(
+                                                 // "${currentTask!.departureCityShortName}   ",
+                                                 currentTask.departureCity!.length > 7 ? '${currentTask.departureCity!.substring(0, 7)}...  ' : currentTask.departureCity!,
 
-                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
-                                                        Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
-                                                        Text(
-                                                            // "   ${currentTask.arrivalCityShortName}",
-                                                            currentTask.arrivalCity!.length > 7 ? '  ${currentTask.arrivalCity!.substring(0, 7)}...  ' : currentTask.arrivalCity!,
-                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                                 style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
+                                             Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
+                                             Text(
+                                                 // "   ${currentTask.arrivalCityShortName}",
+                                                 currentTask.arrivalCity!.length > 7 ? '  ${currentTask.arrivalCity!.substring(0, 7)}...  ' : currentTask.arrivalCity!,
+                                                 style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
 
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            IconButton(icon: Icon(Icons.clear),color: Colors.grey,
-                                              onPressed: (){
-                                                currentTask.delete();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                    : Container();
-                                  },
-                                ),
-                              ),]
-                        );
-                      }
-                    },
-                  ),
-                ),
+                                           ],
+                                         )
+                                       ],
+                                     ),
+                                   ),
+                                 ),
+                                 IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                   onPressed: (){
+                                     currentTask.delete();
+                                   },
+                                 ),
+                               ],
+                             ),
+                           ),
+                         )
+                         : Container();
+                       },
+                     );
+                   }
+                 },
+               ),
             ],
           ),
         ),

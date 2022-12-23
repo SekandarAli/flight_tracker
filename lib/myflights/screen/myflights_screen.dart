@@ -41,15 +41,16 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
 
     return Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              InkWell(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
-                  }));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //   return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
+                  // }));
                 },
                 child: Container(
                   padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
@@ -66,10 +67,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       ),
                 ),
               ),
+            ),
 
-              /// CREATE NEW TRIP STARTS
+            /// CREATE NEW TRIP STARTS
 
-              Container(
+            Expanded(
+              flex: 9,
+              child: Container(
                 padding: EdgeInsets.only(top: 30),
                 decoration: ReusingWidgets().curveDecorationContainer(),
                 child: Column(
@@ -188,66 +192,68 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                           onTap: () {},)
                       ],
                     ),
+                    // Spacer(),
 
-                    SizedBox(
-                      height: h * 0.7,
-                      width: w,
-                      child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
-                        valueListenable:
-                        Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
-                        builder: (context, box, _) {
-                          final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
+                    SingleChildScrollView(
+                      child: SizedBox(
+                        height: h * 0.5,
+                        width: w,
+                        child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
+                          valueListenable:
+                          Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
+                          builder: (context, box, _) {
+                            final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
-
-                          if (items.isEmpty) {
-                            viewAllTrips = false;
-                            return NoFlightFound();
-                          } else {
-                            viewAllTrips = true;
-                            return Flex(
-                                direction: Axis.vertical,
-                                children: [
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: box.values.length,
-                                      itemBuilder: (context, index) {
-                                        ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                        return FlightCardScreen().flightCardSimple(
-                                          onTap: (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
-                                            }));
-                                          },
-                                          onDismiss: (direction){
-                                            setState(() {
-                                              currentTask.delete();
-                                            });
-                                          },
-                                          direction: DismissDirection.horizontal,
-                                          context: context,
-                                            flightCode: currentTask!.flightCode!,
-                                            flightStatus: currentTask.flightStatus!,
-                                            departureCity: currentTask.departureCity!,
-                                            departureCityShortCode: currentTask.departureCityShortCode!,
-                                            departureCityTime: currentTask.departureCityTime!,
-                                            arrivalCity: currentTask.arrivalCity!,
-                                            arrivalCityShortCode: currentTask.arrivalCityShortCode!,
-                                            arrivalCityTime: currentTask.arrivalCityTime!,
-                                        );
-                                      },
-                                    ),
-                                  ),]
-                            );
-                          }
-                        },
+                            if (items.isEmpty) {
+                              viewAllTrips = false;
+                              return NoFlightFound();
+                            } else {
+                              viewAllTrips = true;
+                              return Flex(
+                                  direction: Axis.vertical,
+                                  children: [
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: box.values.length,
+                                        itemBuilder: (context, index) {
+                                          ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+                                          return FlightCardScreen().flightCardSimple(
+                                            onTap: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
+                                              }));
+                                            },
+                                            onDismiss: (direction){
+                                              setState(() {
+                                                currentTask.delete();
+                                              });
+                                            },
+                                            direction: DismissDirection.horizontal,
+                                            context: context,
+                                              flightCode: currentTask!.flightCode!,
+                                              flightStatus: currentTask.flightStatus!,
+                                              departureCity: currentTask.departureCity!,
+                                              departureCityShortCode: currentTask.departureCityShortCode!,
+                                              departureCityTime: currentTask.departureCityTime!,
+                                              arrivalCity: currentTask.arrivalCity!,
+                                              arrivalCityShortCode: currentTask.arrivalCityShortCode!,
+                                              arrivalCityTime: currentTask.arrivalCityTime!,
+                                          );
+                                        },
+                                      ),
+                                    ),]
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
 
-            ],
-          ),
+          ],
         ),
       ),
     );

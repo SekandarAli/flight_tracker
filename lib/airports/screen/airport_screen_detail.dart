@@ -100,29 +100,27 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                 return Container(
                                   color: Colors.white,
                                   padding: EdgeInsets.all(10),
-                                  child: Flexible(
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.all(5),
-                                      itemCount: snapshot.data!.response!.length,
-                                      itemBuilder: (context, index) {
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.all(5),
+                                    itemCount: snapshot.data!.response!.length,
+                                    itemBuilder: (context, index) {
 
-                                        String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
-                                        String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
-                                        String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
-                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
+                                      String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                      String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
+                                      String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
+                                      String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
 
-                                        return
-                                          cardContainer(
-                                              departureTime: arrivalTime,
-                                              departureDestination: arrivalDestination,
-                                              departureFlightNo: flight_iata,
-                                              onTap: ()async {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
-                                                }));
-                                              });
-                                      },
-                                    ),
+                                      return
+                                        cardContainer(
+                                            departureTime: arrivalTime,
+                                            departureDestination: arrivalDestination,
+                                            departureFlightNo: flight_iata,
+                                            onTap: ()async {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
+                                              }));
+                                            });
+                                    },
                                   ),
                                 );
                               } else {
@@ -157,29 +155,27 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                 return Container(
                                   color: Colors.white,
                                   padding: EdgeInsets.all(10),
-                                  child: Flexible(
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.all(5),
-                                      itemCount: snapshot.data!.response!.length,
-                                      itemBuilder: (context, index) {
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.all(5),
+                                    itemCount: snapshot.data!.response!.length,
+                                    itemBuilder: (context, index) {
 
-                                        String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
-                                        String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
-                                        String departureFlightNo = snapshot.data!.response![index].flightIata  ?? "Unknown";
-                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
+                                      String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
+                                      String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
+                                      String departureFlightNo = snapshot.data!.response![index].flightIata  ?? "Unknown";
+                                      String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
 
-                                        return
-                                          cardContainer(
-                                              departureTime: departureTime,
-                                              departureDestination: departureDestination,
-                                              departureFlightNo: departureFlightNo,
-                                              onTap: ()async {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
-                                            }));
-                                          });
-                                      },
-                                    ),
+                                      return
+                                        cardContainer(
+                                            departureTime: departureTime,
+                                            departureDestination: departureDestination,
+                                            departureFlightNo: departureFlightNo,
+                                            onTap: ()async {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                                            return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
+                                          }));
+                                        });
+                                    },
                                   ),
                                 );
                               } else {

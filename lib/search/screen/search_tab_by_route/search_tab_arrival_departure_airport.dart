@@ -40,6 +40,7 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
   void setResults(String query) {
     afterSearch = beforeSearch
         .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
+        elem['city_name'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
 
@@ -75,7 +76,8 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                       query = "";
                       searchAirportController.clear();
                     });
-                  }
+                  }, context: context,
+                  backIconStatus: true
               ),
               Expanded(
                 child: Container(

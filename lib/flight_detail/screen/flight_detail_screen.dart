@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/notifications/notification_service.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flight_tracker/flight_detail/model/model_airport_track_screen.dart';
 import 'package:flight_tracker/flight_detail/services/services_airports_track_screen.dart';
@@ -38,22 +39,25 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   String departureCityShortCode = "---";
   String departureCityTime = '---';
   String arrivalCity = "---";
+  String airlineName = "---";
   String arrivalCityShortCode = "---";
+  String airlineShortCode = "---";
   String arrivalCityTime = "---";
   String arrivalCityDate = '---';
-  String departureLat = "09:30";
-  String arrivalLat = "12:15";
+  // String departureLat = "09:30";
+  // String arrivalLat = "12:15";
   String departureTerminal = "---";
   String arrivalTerminal = "---";
   String departureGate = "---";
   String arrivalGate = "---";
-  String duration = "---";
+  var duration = "---";
   String baggage = "---";
   String departureAirport = "---";
   String arrivalAirport = "---";
   String flightStatus = "---";
   int? updated;
-  var distance = "---";
+  // var distance = "---";
+  String flagCountry = "---";
 
   LocalNotificationService? service;
 
@@ -69,7 +73,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   void initState() {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
-    widget.flight_iata != null ? futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata) : null;
+    widget.flight_iata.isNotEmpty ? futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata) : null;
     // widget.flight_iata = "IX142";
     // futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata!);
     service = LocalNotificationService();
@@ -84,87 +88,87 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         :
     Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
-      bottomNavigationBar: Container(
-          alignment: Alignment.center,
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ReusingWidgets.searchButton(
-                  onPress: () {
-                    setState(() {
-                      trackFlight = !trackFlight;
-
-                      if (trackFlight == false) {
-                        modelMyFlights = ModelMyFlightsUpcoming(
-                          flightCode: flightCode,
-                          departureCityDate: departureCityDate,
-                          departureCity: departureCity,
-                          departureCityShortCode: departureCityShortCode,
-                          departureCityTime: departureLat,
-                          arrivalCityDate: departureCityDate,
-                          arrivalCity: arrivalCity,
-                          arrivalCityShortCode: arrivalCityShortCode,
-                          arrivalCityTime: arrivalLat,
-                          flightStatus: flightStatus,
-                          flightIata: widget.flight_iata,
-                          isSelected: false,
-                        );
-                        dataBox!.add(modelMyFlights!);
-                        /// Notification
-
-                        var date1 = DateTime.now();
-                        var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
-                        print("dates1 $date1");
-                        print("dates2 $date2");
-
-                        Duration duration = date1.difference(date2);
-                        print("duration${duration}");
-
-                        var noOfHours = duration.inHours;
-                        print("durationInHours${noOfHours}");
-
-
-                        service!.showScheduleNotification(
-                            id: 0,
-                            title: "Flight Track Update",
-                            body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
-                            hours: noOfHours - 1);
-
-
-                        service!.showScheduleNotification(
-                            id: 1,
-                            title: "Flight Track Update",
-                            body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
-                            hours: noOfHours);
-
-                        print(modelMyFlights!.arrivalCity);
-                      }
-                      else {
-                        modelMyFlights!.delete();
-                        LocalNotificationService().localNotificationService.cancel(0);
-                      }
-                    });
-                  },
-                  context: context,
-                  text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
-                  style: ThemeTexts.textStyleTitle3.copyWith(
-                      color: ColorsTheme.white,
-                      fontWeight: FontWeight.normal)),
-
-              ReusingWidgets.searchButton(
-                  onPress: () {
-                    dialogueAddToTrip(
-                        context: context
-                    );
-                  },
-                  context: context,
-                  text: "ADD TO TRIPS",
-                  style: ThemeTexts.textStyleTitle3.copyWith(
-                      color: ColorsTheme.white,
-                      fontWeight: FontWeight.normal))
-            ],
-          )),
+      // bottomNavigationBar: Container(
+      //     alignment: Alignment.center,
+      //     height: 70,
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //       children: [
+      //         ReusingWidgets.searchButton(
+      //             onPress: () {
+      //               setState(() {
+      //                 trackFlight = !trackFlight;
+      //
+      //                 if (trackFlight == false) {
+      //                   modelMyFlights = ModelMyFlightsUpcoming(
+      //                     flightCode: flightCode,
+      //                     departureCityDate: departureCityDate,
+      //                     departureCity: departureCity,
+      //                     departureCityShortCode: departureCityShortCode,
+      //                     departureCityTime: departureLat,
+      //                     arrivalCityDate: departureCityDate,
+      //                     arrivalCity: arrivalCity,
+      //                     arrivalCityShortCode: arrivalCityShortCode,
+      //                     arrivalCityTime: arrivalLat,
+      //                     flightStatus: flightStatus,
+      //                     flightIata: widget.flight_iata,
+      //                     isSelected: false,
+      //                   );
+      //                   dataBox!.add(modelMyFlights!);
+      //                   /// Notification
+      //
+      //                   var date1 = DateTime.now();
+      //                   var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
+      //                   print("dates1 $date1");
+      //                   print("dates2 $date2");
+      //
+      //                   Duration duration = date1.difference(date2);
+      //                   print("duration${duration}");
+      //
+      //                   var noOfHours = duration.inHours;
+      //                   print("durationInHours${noOfHours}");
+      //
+      //
+      //                   service!.showScheduleNotification(
+      //                       id: 0,
+      //                       title: "Flight Track Update",
+      //                       body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
+      //                       hours: noOfHours - 1);
+      //
+      //
+      //                   service!.showScheduleNotification(
+      //                       id: 1,
+      //                       title: "Flight Track Update",
+      //                       body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
+      //                       hours: noOfHours);
+      //
+      //                   print(modelMyFlights!.arrivalCity);
+      //                 }
+      //                 else {
+      //                   modelMyFlights!.delete();
+      //                   LocalNotificationService().localNotificationService.cancel(0);
+      //                 }
+      //               });
+      //             },
+      //             context: context,
+      //             text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+      //             style: ThemeTexts.textStyleTitle3.copyWith(
+      //                 color: ColorsTheme.white,
+      //                 fontWeight: FontWeight.normal)),
+      //
+      //         ReusingWidgets.searchButton(
+      //             onPress: () {
+      //               dialogueAddToTrip(
+      //                   context: context
+      //               );
+      //             },
+      //             context: context,
+      //             text: "ADD TO TRIPS",
+      //             style: ThemeTexts.textStyleTitle3.copyWith(
+      //                 color: ColorsTheme.white,
+      //                 fontWeight: FontWeight.normal))
+      //       ],
+      //     )),
       body: SafeArea(
         child: FutureBuilder(
             future: futureList,
@@ -174,21 +178,28 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   flightCode = snapshot.data!.response!.flightIata ?? "---";
                   departureCity = snapshot.data!.response!.depCity ?? "---";
                   arrivalCity = snapshot.data!.response!.arrCity ?? "---";
-                  departureCityShortCode = snapshot.data!.response!.depCountry ?? "---";
-                  arrivalCityShortCode = snapshot.data!.response!.arrCountry ?? "---";
-                  departureCityDate = snapshot.data!.response!.depTime ?? "---";
-                  arrivalCityDate = snapshot.data!.response!.arrTime ?? "---";
+                  departureCityShortCode = snapshot.data!.response!.depIata ?? "---";
+                  arrivalCityShortCode = snapshot.data!.response!.arrIata ?? "---";
+                  // departureCityDate = snapshot.data!.response!.depTime ?? "---";
+                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
+                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
+                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  // arrivalCityDate = snapshot.data!.response!.arrTime ?? "---";
                   departureTerminal = snapshot.data!.response!.depTerminal ?? "---";
                   arrivalTerminal = snapshot.data!.response!.arrTerminal ?? "---";
                   departureGate = snapshot.data!.response!.depGate ?? "---";
                   arrivalGate = snapshot.data!.response!.arrGate ?? "---";
                   updated = snapshot.data!.response!.updated!;
-                  distance = DateTime.fromMillisecondsSinceEpoch(updated! * 1000).toString();
+                  // distance = DateTime.fromMillisecondsSinceEpoch(updated! * 1000).toString();
                   duration = snapshot.data!.response!.duration.toString() ?? "---";
                   baggage = snapshot.data!.response!.arrBaggage ?? "---";
                   departureAirport = snapshot.data!.response!.depName ?? "---";
                   arrivalAirport = snapshot.data!.response!.arrName ?? "---";
                   flightStatus = snapshot.data!.response!.status ?? "---";
+                  flagCountry = snapshot.data!.response!.flag ?? "---";
+                  airlineName = snapshot.data!.response!.airlineName ?? "---";
+                  airlineShortCode = snapshot.data!.response!.airlineIcao ?? "---";
 
                   return SingleChildScrollView(
                     child: Column(
@@ -262,9 +273,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                         'Flight Code is $flightCode and its Status is $flightStatus \n Flight is departing from $departureAirport to $arrivalAirport',
                         subject: 'Flight Track Update');
                   }
-                  // else if (value == 2) {
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
-                  // }
                 },
               ),
             ],
@@ -301,19 +309,32 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             SizedBox(height: 24),
             CustomFlightDetails(
                 departureTitle: 'Departure Airport',
-                departureSubTitle: departureAirport.substring(0,20),
+                departureSubTitle: departureAirport.length > 17 ? '${departureAirport.substring(0, 17)}...' : departureAirport,
                 arrivalTitle: "Arrival Airport",
-                arrivalSubTitle: arrivalAirport.substring(0,20)
+                arrivalSubTitle: arrivalAirport.length > 17 ? '${arrivalAirport.substring(0, 17)}...' : arrivalAirport,
             ),
             SizedBox(height: 20),
             CustomFlightDetails(
-                departureTitle: 'Departure Time',
+                departureTitle: 'Departure Date',
                 departureSubTitle: departureCityDate,
-                arrivalTitle: "Arrival Time",
+                arrivalTitle: "Arrival Date",
                 arrivalSubTitle: arrivalCityDate
             ),
             SizedBox(height: 20),
-
+            CustomFlightDetails(
+                departureTitle: 'Departure City',
+                departureSubTitle: departureCity,
+                arrivalTitle: "Arrival City",
+                arrivalSubTitle: arrivalCity
+            ),
+            SizedBox(height: 15),
+            CustomFlightDetails(
+                departureTitle: 'Airline Name',
+                departureSubTitle: airlineName.length > 17 ? '${airlineName.substring(0, 17)}...' : airlineName,
+                arrivalTitle: "Airline Code",
+                arrivalSubTitle: airlineShortCode
+            ),
+            SizedBox(height: 15),
             CustomFlightDetails(
                 departureTitle: 'Departure Terminal',
                 departureSubTitle: departureTerminal,
@@ -329,10 +350,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             ),
             SizedBox(height: 15),
             CustomFlightDetails(
-                departureTitle: 'Departure City',
-                departureSubTitle: departureCity,
-                arrivalTitle: "Arrival City",
-                arrivalSubTitle: arrivalCity
+                departureTitle: 'Duration',
+                departureSubTitle: "$duration minutes",
+                arrivalTitle: "Airline of Country",
+                arrivalSubTitle: flagCountry
             ),
 
             SizedBox(height: 15),
@@ -354,13 +375,13 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                               modelMyFlights = ModelMyFlightsUpcoming(
                                 flightCode: flightCode,
                                 departureCityDate: departureCityDate,
-                                departureCity: departureCity,
-                                departureCityShortCode: departureCityShortCode,
-                                departureCityTime: departureLat,
-                                arrivalCityDate: departureCityDate,
-                                arrivalCity: arrivalCity,
-                                arrivalCityShortCode: arrivalCityShortCode,
-                                arrivalCityTime: arrivalLat,
+                                departureCity: departureCityShortCode,
+                                departureCityShortCode: departureAirport,
+                                departureCityTime: departureCityTime,
+                                arrivalCityDate: arrivalCityDate,
+                                arrivalCity: arrivalCityShortCode,
+                                arrivalCityShortCode: arrivalAirport,
+                                arrivalCityTime: arrivalCityTime,
                                 flightStatus: flightStatus,
                                 flightIata: widget.flight_iata,
                                 isSelected: false,
@@ -374,10 +395,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                               print("dates2 $date2");
 
                               Duration duration = date1.difference(date2);
-                              print("duration${duration}");
+                              print("duration$duration");
 
                               var noOfHours = duration.inHours;
-                              print("durationInHours${noOfHours}");
+                              print("durationInHours$noOfHours");
 
 
                               service!.showScheduleNotification(
@@ -409,8 +430,39 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
                     ReusingWidgets.searchButton(
                         onPress: () {
-                          dialogueAddToTrip(
-                              context: context
+                          openDialogue(
+                              createTripController: createTripController,
+                              context: context,
+                              onTap: ()async {
+                                var newTask = ModelMyFlightsCreateTrip(
+                                    tripName: createTripController.text.toString(),
+                                    noOfFlights: '',
+                                    tripImage: '',
+                                    isSelected: false,
+                                    modelMyFlightsUpcoming: [ModelMyFlightsUpcoming(
+                                      flightCode: flightCode,
+                                      departureCityDate: departureCityDate,
+                                      departureCity: departureCity,
+                                      departureCityShortCode: departureCityShortCode,
+                                      departureCityTime: departureCityTime,
+                                      arrivalCityDate: arrivalCityDate,
+                                      arrivalCity: arrivalCity,
+                                      arrivalCityTime: arrivalCityTime,
+                                      arrivalCityShortCode: arrivalCityShortCode,
+                                      flightStatus: flightStatus,
+                                      flightIata: widget.flight_iata,
+                                      isSelected: false,
+                                    )]
+                                );
+
+                                taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+
+                                await taskBox!.add(newTask);
+                                Navigator.pop(context);
+
+                                ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
+
+                              }
                           );
                         },
                         context: context,
@@ -429,6 +481,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   Widget CustomFlightCountryName({
     required String cityName,
     required String cityShortCode,
+    required String cityTime,
     required CrossAxisAlignment crossAlignment
   }) {
     return Column(
@@ -439,6 +492,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         SizedBox(height: 10),
         Text(cityShortCode,
             style: ThemeTexts.textStyleTitle1.copyWith(color: Colors.black)),
+        SizedBox(height: 10),
+        Text(cityTime,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.themeColor,fontSize: 20)),
         SizedBox(height: 10),
       ],
     );
@@ -496,20 +552,22 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             child: CustomFlightCountryName(
                 cityName: departureCity,
                 cityShortCode: departureCityShortCode,
-                crossAlignment: CrossAxisAlignment.start),
+                crossAlignment: CrossAxisAlignment.start,
+                cityTime: departureCityTime),
           ),
           Padding(
             padding: EdgeInsets.only(top: 0),
             child: Image.asset("assets/images/flightIcon.png",
-              width:  MediaQuery.of(context).size.width * 0.3,
-              height:  MediaQuery.of(context).size.width * 0.3,
+              width:  MediaQuery.of(context).size.width * 0.25,
+              height:  MediaQuery.of(context).size.width * 0.25,
             ),
           ),
           Expanded(
             child: CustomFlightCountryName(
                 cityName: arrivalCity,
                 cityShortCode: arrivalCityShortCode,
-                crossAlignment: CrossAxisAlignment.end),
+                crossAlignment: CrossAxisAlignment.end,
+                cityTime: arrivalCityTime),
           ),
         ],
       ),
@@ -545,252 +603,189 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Future<String?> dialogueAddToTrip({
-    required BuildContext context,
-  }) => showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) setState) {
-            return
-            AlertDialog(
-              insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
-              titlePadding: EdgeInsets.all(0),
-              contentPadding: EdgeInsets.all(0),
-              title: Container(
-                  padding: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width ,
-                  color: ColorsTheme.primaryColor,
-                  child: Text("Add To Trip",style: ThemeTexts.textStyleTitle2,)),
-              content: Column(
-                children: [
-                  InkWell(
-                    onTap: (){
-                      createTripController.clear();
-                      openDialogue(
-                          createTripController: createTripController,
-                          context: context,
-                          onTap: ()async {
-                            var newTask = ModelMyFlightsCreateTrip(
-                                tripName: createTripController.text.toString(),
-                                noOfFlights: '',
-                                tripImage: '',
-                                isSelected: false,
-                                modelMyFlightsUpcoming: [ModelMyFlightsUpcoming(
-                                  flightCode: flightCode,
-                                  departureCityDate: departureCityDate,
-                                  departureCity: departureCity,
-                                  departureCityShortCode: departureCityShortCode,
-                                  departureCityTime: departureLat,
-                                  arrivalCityDate: departureCityDate,
-                                  arrivalCity: arrivalCity,
-                                  arrivalCityTime: arrivalLat,
-                                  arrivalCityShortCode: arrivalCityShortCode,
-                                  flightStatus: flightStatus,
-                                  flightIata: widget.flight_iata,
-                                  isSelected: false,
-                                )]
-                            );
-
-                            taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-
-                            await taskBox!.add(newTask);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-
-                            ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
-
-                          }
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.only(left: 30,top: 20,bottom: 10),
-                      child: Row(
-                        children: [
-                         Icon(Icons.create_new_folder_outlined),
-                         SizedBox(width: 10),
-                         Text("Create New Trip",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 30,top: 5,bottom: 10),
-                      child: Row(
-                        children: [
-                         Icon(Icons.add_box_outlined),
-                         SizedBox(width: 10),
-                         Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    color: ColorsTheme.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          color: ColorsTheme.white,
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          child: ValueListenableBuilder<
-                              Box<ModelMyFlightsCreateTrip>>(
-                            valueListenable: Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
-                            builder: (context, box, _) {
-                              final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-
-                              if (items.isEmpty) {
-                                return Container();
-                              } else {
-                                return ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: box.values.length,
-                                  itemBuilder: (context, index) {
-                                    ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          currentTask.isSelected =! currentTask.isSelected!;
-
-                                            // Hive.box('modelMyFlightsTrip').putAt(index,modelMyFlights);
-
-
-                                          // var newTask = ModelMyFlightsCreateTrip(
-                                          //     tripName: "",
-                                          //     noOfFlights: '',
-                                          //     tripImage: '',
-                                          //     isSelected: false,
-                                          //     modelMyFlightsUpcoming: modelMyFlights
-                                          // );
-                                          //
-                                          // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                                          //
-                                          // if (task != null) {
-                                          //   task!.tripName = newTask.tripName;
-                                          //   modelItemsList = selectedItems;
-                                          //   task!.save();
-                                          //   Navigator.pop(context);
-                                          // }
-                                          //
-                                          // else {
-                                          //   await taskBox!.add(newTask);
-                                          //   Navigator.pop(context);
-                                          // }
-
-                                          /// ///
-                                          // if (currentTask.isSelected == true) {
-                                          //   var newTask = ModelMyFlightsCreateTrip(
-                                          //       tripName: currentTask.tripName.toString(),
-                                          //       noOfFlights: '',
-                                          //       tripImage: '',
-                                          //       isSelected: false,
-                                          //       modelMyFlightsUpcoming: modelMyFlightsNew = [ModelMyFlightsUpcoming(
-                                          //         flightCode: flightCode,
-                                          //         departureCityDate: departureCityDate,
-                                          //         departureCity: departureCity,
-                                          //         departureCityShortCode: departureCityShortCode,
-                                          //         departureCityTime: departureLat,
-                                          //         arrivalCityDate: departureCityDate,
-                                          //         arrivalCity: arrivalCity,
-                                          //         arrivalCityTime: arrivalLat,
-                                          //         arrivalCityShortCode: arrivalCityShortCode,
-                                          //         flightStatus: flightStatus,
-                                          //         flightIata: widget.flight_iata,
-                                          //         isSelected: false,
-                                          //       )]
-                                          //   );
-                                          //
-                                          //   taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                                          //
-                                          //   await taskBox!.add(newTask);
-                                          //
-                                          // ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
-                                          // }
-                                          // else if (currentTask.isSelected == false) {
-                                          //   print("faalse");
-                                          //   print(currentTask.isSelected);
-                                          //   modelMyFlightsNew.delete();
-                                          // }
-                                          // else {
-                                          //   print("aaaaaaaaaaa");
-                                          // }
-                                        });
-                                      },
-                                      child: Container(
-                                        color: Colors.white,
-                                        padding: EdgeInsets.all(5),
-                                        child: Row(
-                                          children: [
-                                            currentTask!.isSelected == true ?
-                                            Icon(Icons.check_box,
-                                              color: ColorsTheme.primaryColor,) :
-                                            Icon(Icons.check_box_outline_blank),
-                                            Text(
-                                              currentTask.tripName,
-                                              style: ThemeTexts.textStyleTitle3
-                                                  .copyWith(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  letterSpacing: 0),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                        child: Text('CANCEL')),
-                    SizedBox(width: 20),
-                    ElevatedButton(onPressed: () async {
-                      // var newTask = ModelMyFlightsCreateTrip(
-                      //     tripName: "",
-                      //     noOfFlights: '',
-                      //     tripImage: '',
-                      //     isSelected: false,
-                      //     modelMyFlightsUpcoming: modelMyFlights
-                      // );
-                      //
-                      // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                      //
-                      // if (task != null) {
-                      //   task!.tripName = newTask.tripName;
-                      //   modelItemsList = selectedItems;
-                      //   task!.save();
-                      //   Navigator.pop(context);
-                      // }
-                      //
-                      // else {
-                      //   await taskBox!.add(newTask);
-                      //   Navigator.pop(context);
-                      // }
-                        Navigator.pop(context);
-                    },
-                        child: Text('ADD')),
-                  ],
-                ),
-              ],
-            );
-          }
-        );
-      });
+  // Future<String?> dialogueAddToTrip({
+  //   required BuildContext context,
+  // }) => showDialog<String>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return StatefulBuilder(
+  //         builder: (BuildContext context, void Function(void Function()) setState) {
+  //           return
+  //           AlertDialog(
+  //             insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
+  //             titlePadding: EdgeInsets.all(0),
+  //             contentPadding: EdgeInsets.all(0),
+  //             title: Container(
+  //                 padding: EdgeInsets.all(20),
+  //                 width: MediaQuery.of(context).size.width ,
+  //                 color: ColorsTheme.primaryColor,
+  //                 child: Text("Add To Trip",style: ThemeTexts.textStyleTitle2,)),
+  //             content: Column(
+  //               children: [
+  //                 InkWell(
+  //                   onTap: (){
+  //                     createTripController.clear();
+  //                     openDialogue(
+  //                         createTripController: createTripController,
+  //                         context: context,
+  //                         onTap: ()async {
+  //                           var newTask = ModelMyFlightsCreateTrip(
+  //                               tripName: createTripController.text.toString(),
+  //                               noOfFlights: '',
+  //                               tripImage: '',
+  //                               isSelected: false,
+  //                               modelMyFlightsUpcoming: [ModelMyFlightsUpcoming(
+  //                                 flightCode: flightCode,
+  //                                 departureCityDate: departureCityDate,
+  //                                 departureCity: departureCity,
+  //                                 departureCityShortCode: departureCityShortCode,
+  //                                 departureCityTime: departureLat,
+  //                                 arrivalCityDate: departureCityDate,
+  //                                 arrivalCity: arrivalCity,
+  //                                 arrivalCityTime: arrivalLat,
+  //                                 arrivalCityShortCode: arrivalCityShortCode,
+  //                                 flightStatus: flightStatus,
+  //                                 flightIata: widget.flight_iata,
+  //                                 isSelected: false,
+  //                               )]
+  //                           );
+  //
+  //                           taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+  //
+  //                           await taskBox!.add(newTask);
+  //                           Navigator.pop(context);
+  //                           Navigator.pop(context);
+  //
+  //                           ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
+  //
+  //                         }
+  //                     );
+  //                   },
+  //                   child: Container(
+  //                     padding: EdgeInsets.only(left: 30,top: 20,bottom: 10),
+  //                     child: Row(
+  //                       children: [
+  //                        Icon(Icons.create_new_folder_outlined),
+  //                        SizedBox(width: 10),
+  //                        Text("Create New Trip",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 InkWell(
+  //                   child: Container(
+  //                     padding: EdgeInsets.only(left: 30,top: 5,bottom: 10),
+  //                     child: Row(
+  //                       children: [
+  //                        Icon(Icons.add_box_outlined),
+  //                        SizedBox(width: 10),
+  //                        Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Container(
+  //                   height: MediaQuery.of(context).size.height * 0.3,
+  //                   color: ColorsTheme.white,
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                     children: [
+  //                       Container(
+  //                         color: ColorsTheme.white,
+  //                         width: MediaQuery.of(context).size.width * 0.75,
+  //                         child: ValueListenableBuilder<
+  //                             Box<ModelMyFlightsCreateTrip>>(
+  //                           valueListenable: Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
+  //                           builder: (context, box, _) {
+  //                             final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+  //
+  //                             if (items.isEmpty) {
+  //                               return Container();
+  //                             } else {
+  //                               return ListView.builder(
+  //                                 scrollDirection: Axis.vertical,
+  //                                 itemCount: box.values.length,
+  //                                 itemBuilder: (context, index) {
+  //                                   ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+  //                                   return GestureDetector(
+  //                                     onTap: () {
+  //                                       setState(() {
+  //                                         currentTask.isSelected =! currentTask.isSelected!;
+  //                                       });
+  //                                     },
+  //                                     child: Container(
+  //                                       color: Colors.white,
+  //                                       padding: EdgeInsets.all(5),
+  //                                       child: Row(
+  //                                         children: [
+  //                                           currentTask!.isSelected == true ?
+  //                                           Icon(Icons.check_box,
+  //                                             color: ColorsTheme.primaryColor,) :
+  //                                           Icon(Icons.check_box_outline_blank),
+  //                                           Text(
+  //                                             currentTask.tripName,
+  //                                             style: ThemeTexts.textStyleTitle3
+  //                                                 .copyWith(
+  //                                                 color: Colors.black,
+  //                                                 fontWeight: FontWeight.w600,
+  //                                                 letterSpacing: 0),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ),
+  //                                   );
+  //                                 },
+  //                               );
+  //                             }
+  //                           },
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             actions: [
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: [
+  //                   ElevatedButton(onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                       child: Text('CANCEL')),
+  //                   SizedBox(width: 20),
+  //                   ElevatedButton(onPressed: () async {
+  //                     // var newTask = ModelMyFlightsCreateTrip(
+  //                     //     tripName: "",
+  //                     //     noOfFlights: '',
+  //                     //     tripImage: '',
+  //                     //     isSelected: false,
+  //                     //     modelMyFlightsUpcoming: modelMyFlights
+  //                     // );
+  //                     //
+  //                     // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+  //                     //
+  //                     // if (task != null) {
+  //                     //   task!.tripName = newTask.tripName;
+  //                     //   modelItemsList = selectedItems;
+  //                     //   task!.save();
+  //                     //   Navigator.pop(context);
+  //                     // }
+  //                     //
+  //                     // else {
+  //                     //   await taskBox!.add(newTask);
+  //                     //   Navigator.pop(context);
+  //                     // }
+  //                       Navigator.pop(context);
+  //                   },
+  //                       child: Text('ADD')),
+  //                 ],
+  //               ),
+  //             ],
+  //           );
+  //         }
+  //       );
+  //     });
 
   Future<String?> openDialogue({
     required TextEditingController createTripController,
@@ -800,7 +795,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Create New Trip'),
+          title: Text('Trip Name'),
           content: textFormFields(
               width: MediaQuery.of(context).size.width / 2,
               hintText: "Enter Trip Name",

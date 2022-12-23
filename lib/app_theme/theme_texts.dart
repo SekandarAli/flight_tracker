@@ -23,6 +23,14 @@ class ThemeTexts {
     decoration: TextDecoration.none
   );
 
+  static const textStyleTitle2Black = TextStyle(
+    fontSize: 15,
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1,
+    decoration: TextDecoration.none
+  );
+
   static const textStyleTitle3 = TextStyle(
     fontSize: 12,
     color: Colors.white,

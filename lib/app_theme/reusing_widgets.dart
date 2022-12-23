@@ -66,15 +66,36 @@ class ReusingWidgets {
     required TextEditingController textEditingController,
     required Function(String value) onChange,
     required Function() onTapClear,
+    required bool backIconStatus,
+    required BuildContext context,
+
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        backIconStatus == true ? Padding(
+          padding: EdgeInsets.only(left: 5,top: 10),
+          child: Row(
+            children: [
+              IconButton(onPressed: (){
+                Navigator.pop(context);
+              }, icon: Icon(Icons.arrow_back)),
+              Text(
+                "Search",
+                style: ThemeTexts.textStyleTitle1,
+              ),
+            ],
+          ),
+        ) :
         Padding(
           padding: EdgeInsets.only(left: 20,top: 20),
-          child: Text(
-            "Search",
-            style: ThemeTexts.textStyleTitle1,
+          child: Row(
+            children: [
+              Text(
+                "Search",
+                style: ThemeTexts.textStyleTitle1,
+              ),
+            ],
           ),
         ),
         Container(
@@ -350,22 +371,24 @@ class ReusingWidgets {
             style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
           ),
            SizedBox(height: 0),
-           InkWell(
-             onTap: (){
-               onTapAirport();
-             },
-             child: Column(
-               children: [
-                 Text(
-                   airportName.length > 12 ? '${airportName.substring(0, 11)}...' : airportName,
-                  style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
-                 ),
-                 SizedBox(height: 5),
-                 // Text(
-                 //   airportShortName,
-                 //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
-                 // ),
-               ],
+           Material(
+             child: InkWell(
+               onTap: (){
+                 onTapAirport();
+               },
+               child: Column(
+                 children: [
+                   Text(
+                     airportName.length > 12 ? '${airportName.substring(0, 11)}...' : airportName,
+                    style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                   ),
+                   SizedBox(height: 5),
+                   // Text(
+                   //   airportShortName,
+                   //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+                   // ),
+                 ],
+               ),
              ),
            ),
           // divider(context: context),
@@ -514,7 +537,7 @@ class ReusingWidgets {
                   onTapClearIcon();
                 }, icon: Icon(clearIcon)),
                 hintText: ' e.g: ABC - 1234',
-                hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey,fontSize: 17),
+                hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey),
               ),
             ),
         ),
@@ -731,8 +754,8 @@ class ReusingWidgets {
           width: 2,
           style: BorderStyle.solid),
       borderRadius: BorderRadius.only(
-        topRight: Radius.circular(40),
-        topLeft: Radius.circular(40),
+        topRight: Radius.circular(50),
+        topLeft: Radius.circular(50),
       ),
     );
   }

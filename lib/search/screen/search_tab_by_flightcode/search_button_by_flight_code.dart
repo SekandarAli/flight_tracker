@@ -1,16 +1,23 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 
+import 'package:flight_tracker/airlines/model/model_airline_detail.dart';
+import 'package:flight_tracker/city_name/model.dart';
+import 'package:flight_tracker/city_name/service.dart';
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 import '../../../../app_theme/theme_texts.dart';
+import '../../../airlines/services/services_airline_details.dart';
 import '../../../app_theme/color.dart';
 import '../../../app_theme/reusing_widgets.dart';
+import '../../../flight_detail/model/model_airport_track_screen.dart';
 import '../../../flight_detail/screen/flight_detail_screen.dart';
+import '../../../flight_detail/services/services_airports_track_screen.dart';
 import '../../model/model_search_flight.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
@@ -26,7 +33,7 @@ class SearchButtonByFlightCode extends StatefulWidget {
 
 class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
 
-  Future<ModelSearchFlight>? futureList;
+  Future<ModelAirportTrackScreen>? futureList;
 
   bool cardExpand = false;
   bool trackFlight = true;
@@ -34,16 +41,22 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
+  String flightCode = "---";
+  String departureCityDate = '---';
+  String departureCity = "---";
+  String departureCityShortCode = "---";
+  String departureCityTime = '---';
+  String arrivalCity = "---";
+  String arrivalCityShortCode = "---";
+  String arrivalCityTime = "---";
+  String arrivalCityDate = '---';
+  String flightStatus = "---";
+
   @override
   void initState() {
     super.initState();
-    futureList = ServicesSearchFlight().GetAllPosts(
-      depIata: "",
-      arrIata: "",
-      airlineIcao: "",
-      flightIata: widget.flightCode,
-      day: widget.dateDay
-    );
+    futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flightCode);
+
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   }
 
@@ -68,103 +81,78 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
             future: futureList,
             builder: (context,snapshot) {
               if (snapshot.hasData) {
-                if (snapshot.data!.response!.isNotEmpty) {
-                  return Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Flexible(
-                          child: ListView.builder(
-                            padding: EdgeInsets.all(5),
-                            itemCount: snapshot.data!.response!.length,
-                            itemBuilder: (context, index) {
+                if (snapshot.data!.response != null) {
 
-                              String flightCode = snapshot.data!.response![index].flightIata ?? "---";
-                              // Status flightStatus = snapshot.data!.response![index].status!;
-                              String departureCity = snapshot.data!.response![index].depIata ?? "---";
-                              String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
-                              String airlineCityOptional = snapshot.data!.response![index].airlineIcao ?? "---";
-                              String departureCityShortName = snapshot.data!.response![index].depIcao ?? "---";
-                              String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "---";
-                              String departureCityTime = snapshot.data!.response![index].depTime!;
-                              String arrivalCityTime = snapshot.data!.response![index].arrTime!;
-                              String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
-                              DateTime updated = snapshot.data!.response![index].updated!;
-                              List<String> dateDay = snapshot.data!.response![index].days!;
-                              String airlineShortName = snapshot.data!.response![index].airlineIata ?? "---";
+                  flightCode = snapshot.data!.response!.flightIata ?? "---";
+                  departureCity = snapshot.data!.response!.depIata ?? "---";
+                  arrivalCity = snapshot.data!.response!.arrIata ?? "---";
+                  departureCityShortCode = snapshot.data!.response!.depName ?? "---";
+                  arrivalCityShortCode = snapshot.data!.response!.arrName ?? "---";
+                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
+                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
+                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  flightStatus = snapshot.data!.response!.status ?? "---";
 
-                              print("aaaaa$flightCode");
-                              print("aaaaa$dateDay");
-                              print("vvv${widget.flightCode}");
-                              print("vvv${widget.dateDay}");
 
-                              return
-                                (widget.flightCode == flightCode.toLowerCase() || widget.flightCode == flightCode)
-                                    && dateDay.contains(widget.dateDay) ?
-                                FlightCardScreen().flightCardWithCardExpand(
-                                    onTap: (){
-                                      setState((){
-                                        cardExpand =! cardExpand;
-                                      });
-                                    },
-                                    context: context,
-                                    flightCode: flightCode,
-                                    flightStatus: airlineShortName.toString(),
-                                    departureCity: departureCity,
-                                    departureCityShortCode: departureCityShortName,
-                                    departureCityTime: departureCityTime,
-                                    arrivalCity: arrivalCity,
-                                    arrivalCityShortCode: arrivalCityShortName,
-                                    arrivalCityTime: arrivalCityTime,
-                                    cardExpandRow: cardExpand == true ? Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade100,
-                                        borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(width: w * 0.3),
-                                          TextButton(onPressed: () {
-
-                                            Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
-                                            }));
-
-                                          }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
-                                          TextButton(onPressed: () {
-                                            modelMyFlights = ModelMyFlightsUpcoming(
-                                                flightCode: flightCode,
-                                                departureCity: departureCity,
-                                                departureCityShortCode: departureCityShortName,
-                                                departureCityTime: departureCityTime,
-                                                arrivalCityDate: updated.toString(),
-                                                arrivalCity: arrivalCity,
-                                                arrivalCityShortCode: arrivalCityShortName,
-                                                arrivalCityTime: arrivalCityTime,
-                                                flightStatus: flightCode.toString(),
-                                                flightIata: flight_iata,
-                                                isSelected: false
-                                            );
-                                            dataBox!.add(modelMyFlights!);
-                                            ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
-                                          }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
-                                        ],
-                                      ),
-                                    ) : Container()
-                                )
-                                    : Container();
-                            },
+                  return
+                    FlightCardScreen().flightCardWithCardExpand(
+                        onTap: (){
+                          setState((){
+                            cardExpand =! cardExpand;
+                          });
+                        },
+                        context: context,
+                        flightCode: flightCode,
+                        flightStatus: flightStatus,
+                        departureCity: departureCity,
+                        departureCityShortCode: departureCityShortCode,
+                        departureCityTime: departureCityTime,
+                        arrivalCity: arrivalCity,
+                        arrivalCityShortCode: arrivalCityShortCode,
+                        arrivalCityTime: arrivalCityTime,
+                        cardExpandRow: cardExpand == true ? Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: w * 0.3),
+                              TextButton(onPressed: () {
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                  return FlightDetailScreen(flight_iata: flightCode,openTrack: true,);
+                                }));
+
+                              }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                              TextButton(onPressed: () {
+                                modelMyFlights = ModelMyFlightsUpcoming(
+                                    flightCode: flightCode,
+                                    departureCity: departureCity,
+                                    departureCityShortCode: departureCityShortCode,
+                                    departureCityTime: departureCityTime,
+                                    arrivalCityDate: arrivalCityDate,
+                                    arrivalCity: arrivalCity,
+                                    arrivalCityShortCode: arrivalCityShortCode,
+                                    arrivalCityTime: arrivalCityTime,
+                                    flightStatus: flightStatus,
+                                    flightIata: flightCode,
+                                    isSelected: false
+                                );
+                                dataBox!.add(modelMyFlights!);
+                                ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
+                              }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                            ],
+                          ),
+                        ) : Container()
+                    );
                 } else {
-                  return NoResultFoundScreen();
+                  return NoFlightFound();
                 }
               } else if (snapshot.hasError) {
                 return Center(
@@ -182,27 +170,4 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
       ),
     );
   }
-
-
-
-
-  //
-  // Widget flightDetails(
-  //     {required String cityName,
-  //       required String cityShortCode,
-  //       required String cityTime,
-  //       required CrossAxisAlignment crossAlignment}) {
-  //   return Column(
-  //     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     crossAxisAlignment: crossAlignment,
-  //     children: [
-  //       Text("$cityName - $cityShortCode",
-  //           style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey.shade600)),
-  //       SizedBox(height: 10),
-  //       Text(cityTime,
-  //           style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black,fontWeight: FontWeight.bold)),
-  //       SizedBox(height: 10),
-  //     ],
-  //   );
-  // }
 }

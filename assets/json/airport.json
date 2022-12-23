@@ -2705,7 +2705,8 @@
       "icao_code": "OPKC",
       "lat": 24.904345,
       "lng": 67.163292,
-      "country_code": "PK"
+      "country_code": "PK",
+      "city_name": "Karachi"
     },
     {
       "name": "Rafael Nunez International Airport",
@@ -3577,7 +3578,8 @@
       "icao_code": "OPLA",
       "lat": 31.521331,
       "lng": 74.403324,
-      "country_code": "PK"
+      "country_code": "PK",
+      "city_name": "Lahore"
     },
     {
       "name": "Oita Airport",
@@ -5488,7 +5490,9 @@
       "icao_code": "OPPS",
       "lat": 33.992298,
       "lng": 71.516145,
-      "country_code": "PK"
+      "country_code": "PK",
+      "city_name": "Peshawer"
+
     },
     {
       "name": "Presidente Peron International Airport",
@@ -9440,7 +9444,8 @@
       "icao_code": "OPGD",
       "lat": 25.232305,
       "lng": 62.332426,
-      "country_code": "PK"
+      "country_code": "PK",
+      "city_name": "Gwadar"
     },
     {
       "name": "Tozeur Nefta International Airport",

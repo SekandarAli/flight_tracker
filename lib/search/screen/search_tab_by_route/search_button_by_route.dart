@@ -15,18 +15,25 @@ import '../../services/services_search_flight.dart';
 class SearchButtonByRoute extends StatefulWidget {
    SearchButtonByRoute({
      super.key,
-     required this.departureAirport,
-     required this.arrivalAirport,
+     required this.depIata,
+     required this.arrIata,
      this.airlineOptional,
      this.dateDay,
-     this.currentDate
+     this.currentDate,
+
+     this.departureAirport,this.arrivalAirport
+
    });
 
-  var departureAirport;
-  var arrivalAirport;
+  var depIata;
+  var arrIata;
   var airlineOptional;
   var dateDay;
   var currentDate;
+
+   var departureAirport;
+   var arrivalAirport;
+
 
   @override
   State<SearchButtonByRoute> createState() => _SearchButtonByRouteState();
@@ -47,8 +54,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     futureList = ServicesSearchFlight().GetAllPosts(
-        depIata: widget.departureAirport,
-        arrIata: widget.arrivalAirport,
+        depIata: widget.depIata,
+        arrIata: widget.arrIata,
         airlineIcao: widget.airlineOptional,
         day: widget.dateDay,
         flightIata: "",
@@ -62,7 +69,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("${widget.departureAirport} - ${widget.arrivalAirport}",style: ThemeTexts.textStyleTitle3,),
+        title: Text("${widget.departureAirport.toString().substring(0,12)} - ${widget.arrivalAirport.toString().substring(0,12)}",
+          style: ThemeTexts.textStyleTitle3,),
         actions: [
           Center(child: Text(widget.currentDate.toString())),
           SizedBox(width: 10),
@@ -88,20 +96,19 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                             itemBuilder: (context, index) {
 
                               String flightCode = snapshot.data!.response![index].flightIata ?? "---";
-                              // Status flightStatus = snapshot.data!.response![index].status!;
                               String departureCity = snapshot.data!.response![index].depIata ?? "---";
-                              String airlineShortName = snapshot.data!.response![index].airlineIata ?? "---";
                               String arrivalCity = snapshot.data!.response![index].arrIata ?? "---";
+                              String airlineShortName = snapshot.data!.response![index].airlineIata ?? "---";
                               String airlineCityOptional = snapshot.data!.response![index].airlineIcao ?? "---";
-                              String departureCityShortName = snapshot.data!.response![index].depIcao ?? "---";
-                              String arrivalCityShortName = snapshot.data!.response![index].arrIcao ?? "---";
+                              String departureCityShortName = widget.departureAirport ?? "---";
+                              String arrivalCityShortName = widget.arrivalAirport ?? "---";
                               String departureCityTime = snapshot.data!.response![index].depTime!;
                               String arrivalCityTime = snapshot.data!.response![index].arrTime!;
                               String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
                               DateTime updated = snapshot.data!.response![index].updated!;
                               List<String> dateDay = snapshot.data!.response![index].days!;
 
-                              print("print${widget.departureAirport}");
+                              print("print${widget.depIata}");
                               print("print${widget.airlineOptional}");
                               print("print$departureCity");
                               print("print$airlineCityOptional");
@@ -111,8 +118,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
 
 
                               return
-                                (widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity && dateDay.contains(widget.dateDay)) ||
-                              (widget.departureAirport == departureCity && widget.arrivalAirport == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay)) ?
+                                (widget.depIata == departureCity && widget.arrIata == arrivalCity && dateDay.contains(widget.dateDay)) ||
+                              (widget.depIata == departureCity && widget.arrIata == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay)) ?
                                 FlightCardScreen().flightCardWithCardExpand(
                                   onTap: (){
                                     setState((){
@@ -121,7 +128,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                   },
                                     context: context,
                                     flightCode: flightCode,
-                                    flightStatus: airlineShortName.toString(),
+                                    flightStatus: "",
                                     departureCity: departureCity,
                                     departureCityShortCode: departureCityShortName,
                                     departureCityTime: departureCityTime,
@@ -157,7 +164,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                 arrivalCity: arrivalCity,
                                                 arrivalCityShortCode: arrivalCityShortName,
                                                 arrivalCityTime: arrivalCityTime,
-                                                flightStatus: flightCode.toString(),
+                                                flightStatus: "",
                                                 flightIata: flight_iata,
                                                 isSelected: false
                                             );
@@ -177,7 +184,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                     ),
                   );
                 } else {
-                  return NoResultFoundScreen();
+                  return NoFlightFound();
                 }
               } else if (snapshot.hasError) {
                 return Center(
