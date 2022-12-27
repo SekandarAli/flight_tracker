@@ -1,24 +1,17 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-
-import 'package:flight_tracker/airlines/model/model_airline_detail.dart';
-import 'package:flight_tracker/city_name/model.dart';
-import 'package:flight_tracker/city_name/service.dart';
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
-import 'package:flight_tracker/search/services/services_search_flight.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import '../../../../app_theme/theme_texts.dart';
-import '../../../airlines/services/services_airline_details.dart';
 import '../../../app_theme/color.dart';
 import '../../../app_theme/reusing_widgets.dart';
 import '../../../flight_detail/model/model_airport_track_screen.dart';
 import '../../../flight_detail/screen/flight_detail_screen.dart';
 import '../../../flight_detail/services/services_airports_track_screen.dart';
-import '../../model/model_search_flight.dart';
 
 class SearchButtonByFlightCode extends StatefulWidget {
    SearchButtonByFlightCode({required this.flightCode,required this.dateDay,required this.currentDate}) : super();
@@ -67,6 +60,9 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(onPressed: () {
+          Navigator.pop(context);
+          }, icon: Icon(Icons.arrow_back,color: Colors.white,),),
         actions: [
           Center(child: Text(widget.currentDate.toString())),
           SizedBox(width: 10),

@@ -160,3 +160,29 @@ class NoResultFoundScreen extends StatelessWidget {
     );
   }
 }
+
+
+class AlertDialougeBox extends StatelessWidget {
+  const AlertDialougeBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Center(
+        child: AlertDialog(
+          title: Text("No Flights Found"),
+          content: Text("Try again or try searching by flight code.\n\n"
+              "Hint: For connecting flights try to search for each leg separately."),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {Navigator.pop(context);},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}

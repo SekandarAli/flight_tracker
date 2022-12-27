@@ -40,13 +40,12 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
   void setResults(String query) {
     afterSearch = beforeSearch
         .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
-        elem['city_name'].toString().toLowerCase().contains(query.toLowerCase()) ||
         elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
   }
 
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/json/airport.json');
+    final String response = await rootBundle.loadString('assets/json/city.json');
     final data = await json.decode(response);
     setState(() {
       beforeSearch = data["response"];
@@ -119,10 +118,10 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                       shrinkWrap: true,
                                       itemCount: beforeSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = beforeSearch[index]["iata_code"] ?? "---";
+                                        String cityName = beforeSearch[index]["city_code"] ?? "---";
                                         String countryShortName = beforeSearch[index]["country_code"] ?? "---";
                                         String airportName = beforeSearch[index]["name"] ?? "---";
-                                        String iataValue = beforeSearch[index]["iata_code"] ?? "---";
+                                        String iataValue = beforeSearch[index]["city_code"] ?? "---";
 
                                         return
                                           InkWell(
@@ -147,10 +146,10 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                       shrinkWrap: true,
                                       itemCount: afterSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = afterSearch[index]["iata_code"] ?? "---";
+                                        String cityName = afterSearch[index]["city_code"] ?? "---";
                                         String countryShortName = afterSearch[index]["country_code"] ?? "---";
                                         String airportName = afterSearch[index]["name"] ?? "---";
-                                        String iataCode = afterSearch[index]["iata_code"] ?? "---";
+                                        String iataCode = afterSearch[index]["city_code"] ?? "---";
 
                                         return
                                           InkWell(

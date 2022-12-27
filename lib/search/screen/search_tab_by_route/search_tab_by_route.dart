@@ -57,6 +57,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
 
+    print("aaaaaaaa");
     return Column(
       children: [
         /// WHITE CONTAINER
@@ -309,13 +310,13 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                            children: [
                                              Text(
                                                  // "${currentTask!.departureCityShortName}   ",
-                                                 currentTask.departureCity!.length > 7 ? '${currentTask.departureCity!.substring(0, 7)}...  ' : currentTask.departureCity!,
+                                                 currentTask.departureCity!.length > 9 ? '${currentTask.departureCity!.substring(0, 9)}...  ' : "${currentTask.departureCity!}\t",
 
                                                  style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
                                              Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
                                              Text(
                                                  // "   ${currentTask.arrivalCityShortName}",
-                                                 currentTask.arrivalCity!.length > 7 ? '  ${currentTask.arrivalCity!.substring(0, 7)}...  ' : currentTask.arrivalCity!,
+                                                 currentTask.arrivalCity!.length > 9 ? '  ${currentTask.arrivalCity!.substring(0, 9)}...  ' : "\t${currentTask.arrivalCity!}",
                                                  style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
 
                                            ],

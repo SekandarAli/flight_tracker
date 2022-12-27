@@ -13,6 +13,7 @@ class Assets {
   static const String imagesPlane = 'assets/images/plane.png';
   static const String jsonAirline = 'assets/json/airline.json';
   static const String jsonAirport = 'assets/json/airport.json';
+  static const String jsonCities = 'assets/json/city.json';
   static const String lottieCreatetripbg = 'assets/lottie/createtripbg.json';
   static const String lottieFlightloading = 'assets/lottie/flightloading.json';
   static const String lottieLottietrip = 'assets/lottie/lottietrip.json';

@@ -69,7 +69,10 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("${widget.departureAirport.toString().substring(0,12)} - ${widget.arrivalAirport.toString().substring(0,12)}",
+        title: Text(
+              "${widget.departureAirport.length > 12 ? '${widget.departureAirport.substring(0, 12)}...' : widget.departureAirport} - "
+                  "${widget.arrivalAirport.length > 12 ? '${widget.arrivalAirport.substring(0, 12)}...' : widget.arrivalAirport}",
+
           style: ThemeTexts.textStyleTitle3,),
         actions: [
           Center(child: Text(widget.currentDate.toString())),

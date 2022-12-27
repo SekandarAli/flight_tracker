@@ -26,6 +26,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
   @override
   void initState() {
     super.initState();
+    print(widget.iataValue);
     futureList = ServicesAirlineDetails().GetAllPosts(widget.iataValue);
   }
 

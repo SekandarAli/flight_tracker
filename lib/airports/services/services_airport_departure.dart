@@ -1,6 +1,6 @@
-import 'package:flight_tracker/airports/model/model_airport_dep_arr.dart';
 import 'package:http/http.dart' as http;
 import '../../api_key/api_key.dart';
+import '../model/model_dep_arr.dart';
 
 class ServicesAirportsDeparture{
 

@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
-import 'package:flight_tracker/airports/model/model_airport_dep_arr.dart';
+import 'dart:convert';
+import 'package:flight_tracker/airports/model/model_airport_arrival.dart';
+import 'package:flight_tracker/airports/model/model_airport_departure.dart';
 import 'package:flight_tracker/airports/services/services_airport_arrival.dart';
 import 'package:flight_tracker/airports/services/services_airport_departure.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -8,9 +10,10 @@ import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../flight_detail/screen/flight_detail_screen.dart';
+import '../../../flight_detail/screen/flight_detail_screen.dart';
+import '../model/model_dep_arr.dart';
 
 class AirportScreenDetail extends StatefulWidget {
    AirportScreenDetail({required this.airportName,required this.iataValue}) : super();
@@ -25,15 +28,42 @@ class AirportScreenDetail extends StatefulWidget {
 class _AirportScreenDetailState extends State<AirportScreenDetail> {
 
   Future<ModelAirportDepArr>? futureListDeparture;
-  Future<ModelAirportDepArr>? futureListArrival;
+  Future<ModelAirportDeparture>? futureListArrival;
 
+  List cityList = [];
 
   @override
   void initState() {
     super.initState();
+    // setState(() {
+    //
+    // });
+    futureListDeparture = ServicesAirportsDeparture().GetAllPosts(widget.iataValue);
+    futureListArrival = ServicesAirportsArrival().GetAllPosts(widget.iataValue);
+    readJsonCity();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+  String? getCityName(String cityCode){
+    String city = '';
+    for (int i = 0; i < cityList.length ; i++) {
+      if(cityCode == cityList[i]["city_code"]){
+        city= cityList[i]["name"];
+      }
+    }
+    return city;
+  }
+
+  Future<void> readJsonCity() async {
+    final String response = await rootBundle.loadString('assets/json/city.json');
+    final data = await json.decode(response);
     setState(() {
-      futureListDeparture = ServicesAirportsDeparture().GetAllPosts(widget.iataValue);
-      futureListArrival = ServicesAirportsArrival().GetAllPosts(widget.iataValue);
+      cityList = data["response"];
     });
   }
 
@@ -93,7 +123,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                       ? Container(
                         height: h * 0.7,
                         child: FutureBuilder(
-                          future: futureListDeparture,
+                          future: futureListArrival,
                           builder: (context,snapshot) {
                             if (snapshot.hasData) {
                               if (snapshot.data!.response!.isNotEmpty) {
@@ -106,18 +136,21 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                     itemBuilder: (context, index) {
 
                                       String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
-                                      String arrivalDestination = snapshot.data!.response![index].airlineIata ?? "---";
+                                      String arrivalDestination = snapshot.data!.response![index].depIata ?? "---";
                                       String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
                                       String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
+
+                                      print("${arrivalDestination}aaaaa");
 
                                       return
                                         cardContainer(
                                             departureTime: arrivalTime,
-                                            departureDestination: arrivalDestination,
+                                            // departureDestination: arrivalDestination,
+                                            departureDestination: getCityName(arrivalDestination.toString())!.isEmpty?  "Not Found" : getCityName(arrivalDestination.toString())!,
                                             departureFlightNo: flight_iata,
                                             onTap: ()async {
                                               Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
+                                                return FlightDetailScreen(flight_iata: flight_iata,openTrack: true);
                                               }));
                                             });
                                     },
@@ -148,7 +181,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                       : Container(
                         height: h * 0.7,
                         child: FutureBuilder(
-                          future: futureListArrival,
+                          future: futureListDeparture,
                           builder: (context,snapshot) {
                             if (snapshot.hasData) {
                               if (snapshot.data!.response!.isNotEmpty) {
@@ -161,14 +194,14 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                     itemBuilder: (context, index) {
 
                                       String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
-                                      String departureDestination = snapshot.data!.response![index].airlineIata ?? "Unknown";
+                                      String departureDestination = snapshot.data!.response![index].arrIata ?? "Unknown";
                                       String departureFlightNo = snapshot.data!.response![index].flightIata  ?? "Unknown";
                                       String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";
 
                                       return
                                         cardContainer(
                                             departureTime: departureTime,
-                                            departureDestination: departureDestination,
+                                            departureDestination: getCityName(departureDestination.toString())!.isEmpty?  "Not Found" : getCityName(departureDestination.toString())!,
                                             departureFlightNo: departureFlightNo,
                                             onTap: ()async {
                                           Navigator.push(context, MaterialPageRoute(builder: (context){

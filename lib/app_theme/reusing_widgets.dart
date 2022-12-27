@@ -4,6 +4,7 @@ import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class ReusingWidgets {
   /// TAP BAR ///
@@ -527,7 +528,8 @@ class ReusingWidgets {
               style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
               cursorColor: ColorsTheme.primaryColor,
               maxLength: 7,
-              cursorWidth: 5,
+              cursorWidth: 3,
+              cursorHeight: 20,
               decoration: InputDecoration(
                 counterText: "",
                 border: InputBorder.none,

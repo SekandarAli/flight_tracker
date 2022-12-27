@@ -35,11 +35,12 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
 
     return Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Container(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 0,
+              child: Container(
                 padding: EdgeInsets.only(top: 20,left: 20,right: 20,bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -55,14 +56,17 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
                   ],
                 ),
               ),
+            ),
 
-              Container(
+            Expanded(
+              flex: 1,
+              child: Container(
                 padding: EdgeInsets.only(top: 30),
                 decoration: ReusingWidgets().curveDecorationContainer(),
                 child: Column(
                   children: [
                     SizedBox(
-                      height: h * 0.9,
+                      height: h * 0.8,
                       width: w,
                       child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
                         valueListenable:
@@ -115,8 +119,8 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

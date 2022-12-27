@@ -45,7 +45,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
         child: Column(
           children: [
             Expanded(
-              flex: 1,
+              flex: 0,
               child: GestureDetector(
                 onTap: (){
                   // Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -72,7 +72,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
             /// CREATE NEW TRIP STARTS
 
             Expanded(
-              flex: 9,
+              flex: 1,
               child: Container(
                 padding: EdgeInsets.only(top: 30),
                 decoration: ReusingWidgets().curveDecorationContainer(),
@@ -194,58 +194,56 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                     ),
                     // Spacer(),
 
-                    SingleChildScrollView(
-                      child: SizedBox(
-                        height: h * 0.5,
-                        width: w,
-                        child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
-                          valueListenable:
-                          Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
-                          builder: (context, box, _) {
-                            final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
+                    SizedBox(
+                      height: h * 0.5,
+                      width: w,
+                      child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
+                        valueListenable:
+                        Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),
+                        builder: (context, box, _) {
+                          final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
-                            if (items.isEmpty) {
-                              viewAllTrips = false;
-                              return NoFlightFound();
-                            } else {
-                              viewAllTrips = true;
-                              return Flex(
-                                  direction: Axis.vertical,
-                                  children: [
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: box.values.length,
-                                        itemBuilder: (context, index) {
-                                          ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                          return FlightCardScreen().flightCardSimple(
-                                            onTap: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
-                                              }));
-                                            },
-                                            onDismiss: (direction){
-                                              setState(() {
-                                                currentTask.delete();
-                                              });
-                                            },
-                                            direction: DismissDirection.horizontal,
-                                            context: context,
-                                              flightCode: currentTask!.flightCode!,
-                                              flightStatus: currentTask.flightStatus!,
-                                              departureCity: currentTask.departureCity!,
-                                              departureCityShortCode: currentTask.departureCityShortCode!,
-                                              departureCityTime: currentTask.departureCityTime!,
-                                              arrivalCity: currentTask.arrivalCity!,
-                                              arrivalCityShortCode: currentTask.arrivalCityShortCode!,
-                                              arrivalCityTime: currentTask.arrivalCityTime!,
-                                          );
-                                        },
-                                      ),
-                                    ),]
-                              );
-                            }
-                          },
-                        ),
+                          if (items.isEmpty) {
+                            viewAllTrips = false;
+                            return NoFlightFound();
+                          } else {
+                            viewAllTrips = true;
+                            return Flex(
+                                direction: Axis.vertical,
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: box.values.length,
+                                      itemBuilder: (context, index) {
+                                        ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+                                        return FlightCardScreen().flightCardSimple(
+                                          onTap: (){
+                                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                                              return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
+                                            }));
+                                          },
+                                          onDismiss: (direction){
+                                            setState(() {
+                                              currentTask.delete();
+                                            });
+                                          },
+                                          direction: DismissDirection.horizontal,
+                                          context: context,
+                                            flightCode: currentTask!.flightCode!,
+                                            flightStatus: currentTask.flightStatus!,
+                                            departureCity: currentTask.departureCity!,
+                                            departureCityShortCode: currentTask.departureCityShortCode!,
+                                            departureCityTime: currentTask.departureCityTime!,
+                                            arrivalCity: currentTask.arrivalCity!,
+                                            arrivalCityShortCode: currentTask.arrivalCityShortCode!,
+                                            arrivalCityTime: currentTask.arrivalCityTime!,
+                                        );
+                                      },
+                                    ),
+                                  ),]
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
