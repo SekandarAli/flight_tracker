@@ -21,36 +21,62 @@ class SearchTabArrivalDepartureAirport extends StatefulWidget {
 
 class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepartureAirport> {
 
-  TextEditingController searchAirportController = TextEditingController();
-  List beforeSearch = [];
 
+  TextEditingController searchAirportController = TextEditingController();
+
+  List beforeSearch = [];
   List afterSearch = [];
+  List cityList = [];
   String query = '';
 
   @override
   void initState() {
     super.initState();
+    readJson();
+    readJsonCity();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+  String? getCityName(String cityCode){
+    String city = '';
+    for (int i = 0; i < cityList.length ; i++) {
+      if(cityCode == cityList[i]["city_code"]){
+        city= cityList[i]["name"];
+      }
+    }
+    return city;
+  }
+
+  Future<void> readJsonCity() async {
+    final String response = await rootBundle.loadString('assets/json/city.json');
+    final data = await json.decode(response);
     setState(() {
-      readJson();
+      cityList = data["response"];
     });
   }
 
-
-
-  void setResults(String query) {
-    afterSearch = beforeSearch
-        .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
-        elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
-  }
-
-
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/json/city.json');
+    final String response =
+    await rootBundle.loadString('assets/json/airport.json');
     final data = await json.decode(response);
     setState(() {
       beforeSearch = data["response"];
     });
   }
+
+  void setResults(String query) {
+    afterSearch = beforeSearch
+        .where((elem) => elem['iata_code'].toString().toLowerCase().contains(query.toLowerCase()) ||
+        elem['city_name'].toString().toLowerCase().contains(query.toLowerCase()) ||
+        elem['name'].toString().toLowerCase().contains(query.toLowerCase())).toList();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,10 +144,11 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                       shrinkWrap: true,
                                       itemCount: beforeSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = beforeSearch[index]["city_code"] ?? "---";
+                                        String cityName = beforeSearch[index]["iata_code"] ?? "---";
                                         String countryShortName = beforeSearch[index]["country_code"] ?? "---";
                                         String airportName = beforeSearch[index]["name"] ?? "---";
-                                        String iataValue = beforeSearch[index]["city_code"] ?? "---";
+                                        String iataValue = beforeSearch[index]["iata_code"] ?? "---";
+                                        print(beforeSearch.length);
 
                                         return
                                           InkWell(
@@ -129,13 +156,9 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                                 Navigator.pop(context,[airportName,countryShortName,iataValue]);
                                               },
                                               child: ListTile(
-                                                title: Text(
-                                                  "$cityName,"" $countryShortName",
-                                                  style: ThemeTexts
-                                                      .textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
-                                                subtitle: Text(airportName,
-                                                    style: ThemeTexts
-                                                        .textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+                                                title: Text("$cityName  ${getCityName(iataValue.toString())!}", style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
+                                                subtitle: Text("$countryShortName - $airportName",style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+
                                               ));
                                         // : Container();
                                       },
@@ -146,24 +169,21 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                       shrinkWrap: true,
                                       itemCount: afterSearch.length,
                                       itemBuilder: (context, index) {
-                                        String cityName = afterSearch[index]["city_code"] ?? "---";
+                                        String cityName = afterSearch[index]["iata_code"] ?? "---";
                                         String countryShortName = afterSearch[index]["country_code"] ?? "---";
                                         String airportName = afterSearch[index]["name"] ?? "---";
-                                        String iataCode = afterSearch[index]["city_code"] ?? "---";
+                                        String iataValue = afterSearch[index]["iata_code"] ?? "---";
+                                        print("aaaaa${afterSearch.length}");
 
                                         return
                                           InkWell(
                                               onTap: () async {
-                                                Navigator.pop(context,[airportName,countryShortName,iataCode]);
+                                                Navigator.pop(context,[airportName,countryShortName,iataValue]);
                                               },
                                               child: ListTile(
-                                                title: Text(
-                                                  "$cityName,"" $countryShortName",
-                                                  style: ThemeTexts
-                                                      .textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
-                                                subtitle: Text(airportName,
-                                                    style: ThemeTexts
-                                                        .textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+                                                title: Text("$cityName  ${getCityName(iataValue.toString())!}", style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
+                                                subtitle: Text("$countryShortName - $airportName",style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+
                                               ));
                                         // : Container();
                                       },

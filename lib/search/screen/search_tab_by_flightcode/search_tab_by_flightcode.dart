@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -23,7 +25,6 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
 
   TextEditingController flightCodeController = TextEditingController();
-  // Rx<TextEditingController> flightCodeController2 = TextEditingController().obs;
 
   Box<ModelSearch>? dataBoxSearch;
   ModelSearch? modelMyFlightsSearch;
@@ -55,6 +56,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
     super.initState();
     dataBoxSearch = Hive.box<ModelSearch>("modelSearch");
     dateDay = DateFormat('EEEE').format(selectedDate).substring(0,3).toLowerCase();
+
   }
 
 
@@ -65,7 +67,10 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
     currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
 
-    print("object");
+    setState(() {
+      print("object");
+    });
+
     return Column(
       children: [
 
@@ -141,8 +146,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                         }
 
                         else {
-                            futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
-                            modelMyFlightsSearch = ModelSearch(
+                          setState(() {});
+                          modelMyFlightsSearch = ModelSearch(
                               flightCode: flightCodeController.text,
                               arrivalCity: "",
                               departureCity: "",
@@ -150,9 +155,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                               departureCityShortName: "",
                             );
 
-                            setState(() {
-                               dataBoxSearch!.add(modelMyFlightsSearch!);
-                          });
+                          futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
+                          Future.delayed(Duration(milliseconds: 700)).then((value) => dataBoxSearch!.add(modelMyFlightsSearch!));
                         }
 
                       }, context: context,
@@ -167,59 +171,67 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
         ),
 
         SizedBox(
-          height: 0,
-          width: w,
-          child: FutureBuilder(
-            future: futureList,
-            builder: (context,snapshot) {
-              print("454545");
-              if (snapshot.hasData) {
-                print("aaaa");
-                if (snapshot.data!.response != null) {
+            height: 0,
+            width: w,
+            child: FutureBuilder(
+                future: futureList,
+                builder: (context,snapshot) {
+                  print("future");
 
-                  Future(() async{
-                    await Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => SearchButtonByFlightCode(
-                          flightCode: flightCodeController.text,
-                          dateDay: null,
-                          currentDate: currentDate,
-                        )));
-                  });
-
-                  return Container();
-                }  else {
-                  Future(() {
-                    print("14141");
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("No Flights Found"),
-                          content: Text("Try again or try searching by flight code.\n\n"
-                              "Hint: For connecting flights try to search for each leg separately."),
-                          actions: [
-                            TextButton(
-                              child: Text("OK"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ));
-                  });
-                  return Container();
-                }
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "error 2${snapshot.error}",
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-
-          ),
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      print("hasData");
+                      if (snapshot.data!.response != null) {
+                        Future(() async {
+                          await
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchButtonByFlightCode(
+                                    flightCode: flightCodeController.text,
+                                    dateDay: null,
+                                    currentDate: currentDate,
+                                  )));
+                        });
+                        return Container();
+                      } else {
+                        Future(() {
+                          showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    title: Text("No Flights Found"),
+                                    content: Text(
+                                        "Try again or try searching by flight code.\n\n"
+                                            "Hint: For connecting flights try to search for each leg separately."),
+                                    actions: [
+                                      TextButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ));
+                        });
+                        return Container();
+                      }
+                    }
+                    else if (snapshot.hasError) {
+                      print("noData");
+                      return Center(
+                        child: Text(
+                          "error 2${snapshot.error}",
+                        ),
+                      );
+                    }
+                    else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                })
         ),
 
 
@@ -325,8 +337,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime.utc(2022,12,10),
-      lastDate: DateTime(2024),
+      firstDate: DateTime.utc(2022,12,28),
+      lastDate: DateTime(2023,12,31),
       helpText: "Flight Track Date",
       initialEntryMode: DatePickerEntryMode.calendar,
     );

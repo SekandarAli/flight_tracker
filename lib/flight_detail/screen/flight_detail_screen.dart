@@ -30,9 +30,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   bool trackFlight = true;
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
-
   Future<ModelAirportTrackScreen>? futureList;
-
   String flightCode = "---";
   String departureCityDate = '---';
   String departureCity = "---";
@@ -55,7 +53,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   String flightStatus = "---";
   int? updated;
   String flagCountry = "---";
-
   LocalNotificationService? service;
 
   ///   ///   ///   ///   ///
@@ -63,7 +60,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   Box<ModelMyFlightsCreateTrip>? taskBox;
   ModelMyFlightsCreateTrip? task;
   List<ModelMyFlightsUpcoming>? modelItemsList;
-
   TextEditingController createTripController = TextEditingController();
 
   @override
@@ -71,8 +67,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     super.initState();
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     widget.flight_iata.isNotEmpty ? futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata) : null;
-    // widget.flight_iata = "IX142";
-    // futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata!);
     service = LocalNotificationService();
     service!.initialize();
   }
@@ -85,87 +79,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         :
     Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
-      // bottomNavigationBar: Container(
-      //     alignment: Alignment.center,
-      //     height: 70,
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //       children: [
-      //         ReusingWidgets.searchButton(
-      //             onPress: () {
-      //               setState(() {
-      //                 trackFlight = !trackFlight;
-      //
-      //                 if (trackFlight == false) {
-      //                   modelMyFlights = ModelMyFlightsUpcoming(
-      //                     flightCode: flightCode,
-      //                     departureCityDate: departureCityDate,
-      //                     departureCity: departureCity,
-      //                     departureCityShortCode: departureCityShortCode,
-      //                     departureCityTime: departureCityTime,
-      //                     arrivalCityDate: departureCityDate,
-      //                     arrivalCity: arrivalCity,
-      //                     arrivalCityShortCode: arrivalCityShortCode,
-      //                     arrivalCityTime: arrivalCityTime,
-      //                     flightStatus: flightStatus,
-      //                     flightIata: widget.flight_iata,
-      //                     isSelected: false,
-      //                   );
-      //                   dataBox!.add(modelMyFlights!);
-      //                   /// Notification
-      //
-      //                   var date1 = DateTime.now();
-      //                   var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
-      //                   print("dates1 $date1");
-      //                   print("dates2 $date2");
-      //
-      //                   Duration duration = date1.difference(date2);
-      //                   print("duration${duration}");
-      //
-      //                   var noOfHours = duration.inHours;
-      //                   print("durationInHours${noOfHours}");
-      //
-      //
-      //                   service!.showScheduleNotification(
-      //                       id: 0,
-      //                       title: "Flight Track Update",
-      //                       body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
-      //                       hours: noOfHours - 1);
-      //
-      //
-      //                   service!.showScheduleNotification(
-      //                       id: 1,
-      //                       title: "Flight Track Update",
-      //                       body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
-      //                       hours: noOfHours);
-      //
-      //                   print(modelMyFlights!.arrivalCity);
-      //                 }
-      //                 else {
-      //                   modelMyFlights!.delete();
-      //                   LocalNotificationService().localNotificationService.cancel(0);
-      //                 }
-      //               });
-      //             },
-      //             context: context,
-      //             text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
-      //             style: ThemeTexts.textStyleTitle3.copyWith(
-      //                 color: ColorsTheme.white,
-      //                 fontWeight: FontWeight.normal)),
-      //
-      //         ReusingWidgets.searchButton(
-      //             onPress: () {
-      //               dialogueAddToTrip(
-      //                   context: context
-      //               );
-      //             },
-      //             context: context,
-      //             text: "ADD TO TRIPS",
-      //             style: ThemeTexts.textStyleTitle3.copyWith(
-      //                 color: ColorsTheme.white,
-      //                 fontWeight: FontWeight.normal))
-      //       ],
-      //     )),
       body: SafeArea(
         child: FutureBuilder(
             future: futureList,
@@ -177,18 +90,15 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   arrivalCity = snapshot.data!.response!.arrCity ?? "---";
                   departureCityShortCode = snapshot.data!.response!.depIata ?? "---";
                   arrivalCityShortCode = snapshot.data!.response!.arrIata ?? "---";
-                  // departureCityDate = snapshot.data!.response!.depTime ?? "---";
                   departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
                   departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
                   arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
                   arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
-                  // arrivalCityDate = snapshot.data!.response!.arrTime ?? "---";
                   departureTerminal = snapshot.data!.response!.depTerminal ?? "---";
                   arrivalTerminal = snapshot.data!.response!.arrTerminal ?? "---";
                   departureGate = snapshot.data!.response!.depGate ?? "---";
                   arrivalGate = snapshot.data!.response!.arrGate ?? "---";
                   updated = snapshot.data!.response!.updated!;
-                  // distance = DateTime.fromMillisecondsSinceEpoch(updated! * 1000).toString();
                   duration = snapshot.data!.response!.duration.toString() ?? "---";
                   baggage = snapshot.data!.response!.arrBaggage ?? "---";
                   departureAirport = snapshot.data!.response!.depName ?? "---";

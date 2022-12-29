@@ -45,6 +45,9 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   var dateDay;
   DateTime selectedDate = DateTime.now();
 
+  var currentDate;
+
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +59,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
 
     print("aaaaaaaa");
     return Column(
@@ -195,7 +199,6 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                             print("airlineOptional$airlineIcao");
                             print("dayDate$dateDay");
 
-                            var currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
                             return SearchButtonByRoute(
                               depIata: depIata,
                               arrIata: arrIata,
@@ -228,6 +231,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
             ),
           ),
         ),
+
+        ///Future Builder Starts
+
+
 
         /// Recent Searches Starts
         Container(

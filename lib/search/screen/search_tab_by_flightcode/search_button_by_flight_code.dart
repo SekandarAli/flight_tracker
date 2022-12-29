@@ -55,6 +55,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
 
   @override
   Widget build(BuildContext context) {
+    // print("build");
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -76,7 +77,9 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
           child: FutureBuilder(
             future: futureList,
             builder: (context,snapshot) {
+              // print("1");
               if (snapshot.hasData) {
+                // print("2");
                 if (snapshot.data!.response != null) {
 
                   flightCode = snapshot.data!.response!.flightIata ?? "---";

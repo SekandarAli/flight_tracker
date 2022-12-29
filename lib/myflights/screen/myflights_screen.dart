@@ -180,7 +180,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         // myUpComingFlightsText(text: "My Upcoming Flights", icon: Icons.flight_outlined),
-                        viewAllTrips == false
+                        viewAllTrips == true
                             ?
                         myUpComingFlightsText(text: "View All Trips",color: ColorsTheme.primaryColor,
                           onTap: () {

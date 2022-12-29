@@ -54,7 +54,6 @@ class _MyAppState extends State<MyApp> {
         // textTheme: GoogleFonts.montserratTextTheme(
         //   Theme.of(context).textTheme,),
       ),
-      // home: HomePage(),
       home: BottomNavBarScreen(),
       // home: SearchButtonByFlightCode(currentDate: "",flightCode: "ek612",dateDay: ""),
       // home: FlightDetailScreen(flight_iata: "IX142", openTrack: true,),

@@ -15,7 +15,7 @@
 //
 // import '../../airlines/model/city_name_model.dart';
 // import '../../flight_detail/screen/flight_detail_screen.dart';
-// import '../model/model_dep_arr.dart';
+// import '../model/model_airport_departure.dart';
 //
 // class AirportScreenDetail extends StatefulWidget {
 //   AirportScreenDetail({required this.airportName,required this.iataValue}) : super();

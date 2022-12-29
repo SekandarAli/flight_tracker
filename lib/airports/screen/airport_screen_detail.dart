@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'package:flight_tracker/airports/model/model_airport_arrival.dart';
-import 'package:flight_tracker/airports/model/model_airport_departure.dart';
 import 'package:flight_tracker/airports/services/services_airport_arrival.dart';
 import 'package:flight_tracker/airports/services/services_airport_departure.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -11,9 +10,10 @@ import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import '../../../flight_detail/screen/flight_detail_screen.dart';
-import '../model/model_dep_arr.dart';
+import '../model/model_airport_departure.dart';
 
 class AirportScreenDetail extends StatefulWidget {
    AirportScreenDetail({required this.airportName,required this.iataValue}) : super();
@@ -27,17 +27,14 @@ class AirportScreenDetail extends StatefulWidget {
 
 class _AirportScreenDetailState extends State<AirportScreenDetail> {
 
-  Future<ModelAirportDepArr>? futureListDeparture;
-  Future<ModelAirportDeparture>? futureListArrival;
+  Future<ModelAirportDeparture>? futureListDeparture;
+  Future<ModelAirportArrival>? futureListArrival;
 
   List cityList = [];
 
   @override
   void initState() {
     super.initState();
-    // setState(() {
-    //
-    // });
     futureListDeparture = ServicesAirportsDeparture().GetAllPosts(widget.iataValue);
     futureListArrival = ServicesAirportsArrival().GetAllPosts(widget.iataValue);
     readJsonCity();
@@ -193,7 +190,9 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                     itemCount: snapshot.data!.response!.length,
                                     itemBuilder: (context, index) {
 
-                                      String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
+                                      // String departureTime = snapshot.data!.response![index].depTime  ?? "Unknown";
+                                      var time = snapshot.data!.response![index].depTimeTs!;
+                                      String departureTime = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
                                       String departureDestination = snapshot.data!.response![index].arrIata ?? "Unknown";
                                       String departureFlightNo = snapshot.data!.response![index].flightIata  ?? "Unknown";
                                       String flight_iata = snapshot.data!.response![index].flightIata  ?? "Unknown";

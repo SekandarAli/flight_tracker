@@ -27,43 +27,14 @@ class _AirlineScreenState extends State<AirlineScreen> {
 
   TextEditingController searchAirlineController = TextEditingController();
   List beforeSearch = [];
-  List cityy = [];
-
   List afterSearch = [];
   String query = '';
-   late List<CityNameModel> cityName = [CityNameModel(cityCode: 'ISB', cityName: 'Islamabad'),
-    CityNameModel(cityCode: 'DXB', cityName: 'Dubai'),
-    CityNameModel(cityCode: 'KHI', cityName: 'Karachi'),
-    CityNameModel(cityCode: 'LHE', cityName: 'Lahore'),
-    CityNameModel(cityCode: 'CLR', cityName: 'California'),
-    CityNameModel(cityCode: 'VRG', cityName: 'Virgina'),
-    CityNameModel(cityCode: 'GRG', cityName: 'Gorgiea'),
-  ];
-
-  String? getCityName(String cityCode){
-    String city = '';
-    // log('Need city code ${cityCode}');
-    for (int i = 0; i < cityy.length ; i++) {
-      if(cityCode == cityy[i]["city_code"]){
-        // log('city code ${cityy[i]["name"]}');
-        city= cityy[i]["name"];
-
-      }
-    }
-    // log('city : $city');
-    return city;
-
-  }
-
-
 
   @override
   void initState() {
     super.initState();
-
     setState(() {
       readJson();
-      readJsonCity();
     });
   }
 
@@ -73,25 +44,6 @@ class _AirlineScreenState extends State<AirlineScreen> {
     setState(() {
       beforeSearch = data["response"];
     });
-  }
-
-
-  Future<void> readJsonCity() async {
-    final String response = await rootBundle.loadString('assets/json/city.json');
-   // final String response = await rootBundle.loadString('assets/json/airline.json');
-    final data = await json.decode(response);
-    setState(() {
-      cityy = data["response"];
-    });
-    cityName = [];
-    for (int i = 0; i < cityy.length ; i++) {
-      cityName.add(CityNameModel(cityCode: cityy[i]["city_code"], cityName: cityy[i]["name"]));
-    }
-
-  for (var element in cityName) {
-    // log(element.cityName.toString());
-  }
-
   }
 
   void setResults(String query) {
@@ -208,7 +160,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
                                               },
                                               child: ListTile(
                                                 title: Text(airlineName!,style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
-                                                subtitle: Text(getCityName(iataValue.toString())!/*countryShortName!*/,style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
+                                                subtitle: Text(/*getCityName(iataValue.toString())!*/countryShortName!,style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
                                               ));
                                       },
                                     )

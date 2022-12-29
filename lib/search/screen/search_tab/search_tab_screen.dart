@@ -18,7 +18,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  int index = 1;
+  int index = 2;
   String qrCode = 'No data Found';
   @override
   Widget build(BuildContext context) {

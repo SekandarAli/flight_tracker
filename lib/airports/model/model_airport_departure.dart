@@ -141,24 +141,16 @@ class Agent {
 class Connection {
   Connection({
     this.type,
-    this.ispCode,
-    this.ispName,
   });
 
   String? type;
-  int? ispCode;
-  String? ispName;
 
   factory Connection.fromJson(Map<String, dynamic> json) => Connection(
     type: json["type"] == null ? null : json["type"],
-    ispCode: json["isp_code"] == null ? null : json["isp_code"],
-    ispName: json["isp_name"] == null ? null : json["isp_name"],
   );
 
   Map<String, dynamic> toJson() => {
     "type": type == null ? null : type,
-    "isp_code": ispCode == null ? null : ispCode,
-    "isp_name": ispName == null ? null : ispName,
   };
 }
 
@@ -284,23 +276,29 @@ class Key {
 
 class Params {
   Params({
-    this.arrIata,
+    this.depIata,
     this.lang,
   });
 
-  String? arrIata;
+  DepIata? depIata;
   String? lang;
 
   factory Params.fromJson(Map<String, dynamic> json) => Params(
-    arrIata: json["arr_iata"] == null ? null : json["arr_iata"],
+    depIata: json["dep_iata"] == null ? null : depIataValues.map![json["dep_iata"]],
     lang: json["lang"] == null ? null : json["lang"],
   );
 
   Map<String, dynamic> toJson() => {
-    "arr_iata": arrIata == null ? null : arrIata,
+    "dep_iata": depIata == null ? null : depIataValues.reverse[depIata],
     "lang": lang == null ? null : lang,
   };
 }
+
+enum DepIata { ORD }
+
+final depIataValues = EnumValues({
+  "ORD": DepIata.ORD
+});
 
 class Response {
   Response({
@@ -326,6 +324,8 @@ class Response {
     this.arrBaggage,
     this.arrTime,
     this.arrTimeUtc,
+    this.arrEstimated,
+    this.arrEstimatedUtc,
     this.csAirlineIata,
     this.csFlightNumber,
     this.csFlightIata,
@@ -337,11 +337,9 @@ class Response {
     this.aircraftIcao,
     this.arrTimeTs,
     this.depTimeTs,
+    this.arrEstimatedTs,
     this.depEstimatedTs,
     this.depActualTs,
-    this.arrEstimated,
-    this.arrEstimatedUtc,
-    this.arrEstimatedTs,
   });
 
   String? airlineIata;
@@ -349,8 +347,8 @@ class Response {
   String? flightIata;
   String? flightIcao;
   String? flightNumber;
-  String? depIata;
-  String? depIcao;
+  DepIata? depIata;
+  DepIcao? depIcao;
   String? depTerminal;
   String? depGate;
   String? depTime;
@@ -359,14 +357,16 @@ class Response {
   String? depEstimatedUtc;
   String? depActual;
   String? depActualUtc;
-  ArrIata? arrIata;
-  ArrIcao? arrIcao;
-  ArrTerminal? arrTerminal;
-  dynamic arrGate;
-  dynamic arrBaggage;
+  String? arrIata;
+  String? arrIcao;
+  String? arrTerminal;
+  String? arrGate;
+  String? arrBaggage;
   String? arrTime;
   String? arrTimeUtc;
-  String? csAirlineIata;
+  String? arrEstimated;
+  String? arrEstimatedUtc;
+  CsAirlineIata? csAirlineIata;
   String? csFlightNumber;
   String? csFlightIata;
   Status? status;
@@ -377,11 +377,9 @@ class Response {
   String? aircraftIcao;
   int? arrTimeTs;
   int? depTimeTs;
+  int? arrEstimatedTs;
   int? depEstimatedTs;
   int? depActualTs;
-  String? arrEstimated;
-  String? arrEstimatedUtc;
-  int? arrEstimatedTs;
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
     airlineIata: json["airline_iata"] == null ? null : json["airline_iata"],
@@ -389,8 +387,8 @@ class Response {
     flightIata: json["flight_iata"] == null ? null : json["flight_iata"],
     flightIcao: json["flight_icao"] == null ? null : json["flight_icao"],
     flightNumber: json["flight_number"] == null ? null : json["flight_number"],
-    depIata: json["dep_iata"] == null ? null : json["dep_iata"],
-    depIcao: json["dep_icao"] == null ? null : json["dep_icao"],
+    depIata: json["dep_iata"] == null ? null : depIataValues.map![json["dep_iata"]],
+    depIcao: json["dep_icao"] == null ? null : depIcaoValues.map![json["dep_icao"]],
     depTerminal: json["dep_terminal"] == null ? null : json["dep_terminal"],
     depGate: json["dep_gate"] == null ? null : json["dep_gate"],
     depTime: json["dep_time"] == null ? null : json["dep_time"],
@@ -399,14 +397,16 @@ class Response {
     depEstimatedUtc: json["dep_estimated_utc"] == null ? null : json["dep_estimated_utc"],
     depActual: json["dep_actual"] == null ? null : json["dep_actual"],
     depActualUtc: json["dep_actual_utc"] == null ? null : json["dep_actual_utc"],
-    arrIata: json["arr_iata"] == null ? null : arrIataValues.map![json["arr_iata"]],
-    arrIcao: json["arr_icao"] == null ? null : arrIcaoValues.map![json["arr_icao"]],
-    arrTerminal: json["arr_terminal"] == null ? null : arrTerminalValues.map![json["arr_terminal"]],
-    arrGate: json["arr_gate"],
-    arrBaggage: json["arr_baggage"],
+    arrIata: json["arr_iata"] == null ? null : json["arr_iata"],
+    arrIcao: json["arr_icao"] == null ? null : json["arr_icao"],
+    arrTerminal: json["arr_terminal"] == null ? null : json["arr_terminal"],
+    arrGate: json["arr_gate"] == null ? null : json["arr_gate"],
+    arrBaggage: json["arr_baggage"] == null ? null : json["arr_baggage"],
     arrTime: json["arr_time"] == null ? null : json["arr_time"],
     arrTimeUtc: json["arr_time_utc"] == null ? null : json["arr_time_utc"],
-    csAirlineIata: json["cs_airline_iata"] == null ? null : json["cs_airline_iata"],
+    arrEstimated: json["arr_estimated"] == null ? null : json["arr_estimated"],
+    arrEstimatedUtc: json["arr_estimated_utc"] == null ? null : json["arr_estimated_utc"],
+    csAirlineIata: json["cs_airline_iata"] == null ? null : csAirlineIataValues.map![json["cs_airline_iata"]],
     csFlightNumber: json["cs_flight_number"] == null ? null : json["cs_flight_number"],
     csFlightIata: json["cs_flight_iata"] == null ? null : json["cs_flight_iata"],
     status: json["status"] == null ? null : statusValues.map![json["status"]],
@@ -417,11 +417,9 @@ class Response {
     aircraftIcao: json["aircraft_icao"] == null ? null : json["aircraft_icao"],
     arrTimeTs: json["arr_time_ts"] == null ? null : json["arr_time_ts"],
     depTimeTs: json["dep_time_ts"] == null ? null : json["dep_time_ts"],
+    arrEstimatedTs: json["arr_estimated_ts"] == null ? null : json["arr_estimated_ts"],
     depEstimatedTs: json["dep_estimated_ts"] == null ? null : json["dep_estimated_ts"],
     depActualTs: json["dep_actual_ts"] == null ? null : json["dep_actual_ts"],
-    arrEstimated: json["arr_estimated"] == null ? null : json["arr_estimated"],
-    arrEstimatedUtc: json["arr_estimated_utc"] == null ? null : json["arr_estimated_utc"],
-    arrEstimatedTs: json["arr_estimated_ts"] == null ? null : json["arr_estimated_ts"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -430,8 +428,8 @@ class Response {
     "flight_iata": flightIata == null ? null : flightIata,
     "flight_icao": flightIcao == null ? null : flightIcao,
     "flight_number": flightNumber == null ? null : flightNumber,
-    "dep_iata": depIata == null ? null : depIata,
-    "dep_icao": depIcao == null ? null : depIcao,
+    "dep_iata": depIata == null ? null : depIataValues.reverse[depIata],
+    "dep_icao": depIcao == null ? null : depIcaoValues.reverse[depIcao],
     "dep_terminal": depTerminal == null ? null : depTerminal,
     "dep_gate": depGate == null ? null : depGate,
     "dep_time": depTime == null ? null : depTime,
@@ -440,14 +438,16 @@ class Response {
     "dep_estimated_utc": depEstimatedUtc == null ? null : depEstimatedUtc,
     "dep_actual": depActual == null ? null : depActual,
     "dep_actual_utc": depActualUtc == null ? null : depActualUtc,
-    "arr_iata": arrIata == null ? null : arrIataValues.reverse[arrIata],
-    "arr_icao": arrIcao == null ? null : arrIcaoValues.reverse[arrIcao],
-    "arr_terminal": arrTerminal == null ? null : arrTerminalValues.reverse[arrTerminal],
-    "arr_gate": arrGate,
-    "arr_baggage": arrBaggage,
+    "arr_iata": arrIata == null ? null : arrIata,
+    "arr_icao": arrIcao == null ? null : arrIcao,
+    "arr_terminal": arrTerminal == null ? null : arrTerminal,
+    "arr_gate": arrGate == null ? null : arrGate,
+    "arr_baggage": arrBaggage == null ? null : arrBaggage,
     "arr_time": arrTime == null ? null : arrTime,
     "arr_time_utc": arrTimeUtc == null ? null : arrTimeUtc,
-    "cs_airline_iata": csAirlineIata == null ? null : csAirlineIata,
+    "arr_estimated": arrEstimated == null ? null : arrEstimated,
+    "arr_estimated_utc": arrEstimatedUtc == null ? null : arrEstimatedUtc,
+    "cs_airline_iata": csAirlineIata == null ? null : csAirlineIataValues.reverse[csAirlineIata],
     "cs_flight_number": csFlightNumber == null ? null : csFlightNumber,
     "cs_flight_iata": csFlightIata == null ? null : csFlightIata,
     "status": status == null ? null : statusValues.reverse[status],
@@ -458,38 +458,46 @@ class Response {
     "aircraft_icao": aircraftIcao == null ? null : aircraftIcao,
     "arr_time_ts": arrTimeTs == null ? null : arrTimeTs,
     "dep_time_ts": depTimeTs == null ? null : depTimeTs,
+    "arr_estimated_ts": arrEstimatedTs == null ? null : arrEstimatedTs,
     "dep_estimated_ts": depEstimatedTs == null ? null : depEstimatedTs,
     "dep_actual_ts": depActualTs == null ? null : depActualTs,
-    "arr_estimated": arrEstimated == null ? null : arrEstimated,
-    "arr_estimated_utc": arrEstimatedUtc == null ? null : arrEstimatedUtc,
-    "arr_estimated_ts": arrEstimatedTs == null ? null : arrEstimatedTs,
   };
 }
 
-enum ArrIata { LHE }
+enum CsAirlineIata { AA, DL, UA, B6, OO, MQ, THE_9_E, ZW, G7, YX, QK, AS, CM, OH, THE_9_K, JL, NH, KE }
 
-final arrIataValues = EnumValues({
-  "LHE": ArrIata.LHE
+final csAirlineIataValues = EnumValues({
+  "AA": CsAirlineIata.AA,
+  "AS": CsAirlineIata.AS,
+  "B6": CsAirlineIata.B6,
+  "CM": CsAirlineIata.CM,
+  "DL": CsAirlineIata.DL,
+  "G7": CsAirlineIata.G7,
+  "JL": CsAirlineIata.JL,
+  "KE": CsAirlineIata.KE,
+  "MQ": CsAirlineIata.MQ,
+  "NH": CsAirlineIata.NH,
+  "OH": CsAirlineIata.OH,
+  "OO": CsAirlineIata.OO,
+  "QK": CsAirlineIata.QK,
+  "9E": CsAirlineIata.THE_9_E,
+  "9K": CsAirlineIata.THE_9_K,
+  "UA": CsAirlineIata.UA,
+  "YX": CsAirlineIata.YX,
+  "ZW": CsAirlineIata.ZW
 });
 
-enum ArrIcao { OPLA }
+enum DepIcao { KORD }
 
-final arrIcaoValues = EnumValues({
-  "OPLA": ArrIcao.OPLA
+final depIcaoValues = EnumValues({
+  "KORD": DepIcao.KORD
 });
 
-enum ArrTerminal { M, MAIN }
-
-final arrTerminalValues = EnumValues({
-  "M": ArrTerminal.M,
-  "MAIN": ArrTerminal.MAIN
-});
-
-enum Status { LANDED, SCHEDULED, ACTIVE }
+enum Status { ACTIVE, SCHEDULED, CANCELLED }
 
 final statusValues = EnumValues({
   "active": Status.ACTIVE,
-  "landed": Status.LANDED,
+  "cancelled": Status.CANCELLED,
   "scheduled": Status.SCHEDULED
 });
 
