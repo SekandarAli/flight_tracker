@@ -142,7 +142,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    currentTask!.tripName,
+                                                    currentTask!.tripName.length > 10 ? '${currentTask.tripName.substring(0, 10)}...' : currentTask.tripName,
                                                     style: ThemeTexts.textStyleTitle3.copyWith(
                                                         color: Colors.white,
                                                         fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             },
                           ),
                         ),
-                        Spacer(),
+                        // Spacer(),
 
                       ],
                     ),
@@ -194,9 +194,8 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                     ),
                     // Spacer(),
 
-                    SizedBox(
-                      height: h * 0.5,
-                      width: w,
+                    Expanded(
+
                       child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
                         valueListenable:
                         Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").listenable(),

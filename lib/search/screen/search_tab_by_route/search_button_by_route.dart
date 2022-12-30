@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
@@ -111,13 +113,14 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               DateTime updated = snapshot.data!.response![index].updated!;
                               List<String> dateDay = snapshot.data!.response![index].days!;
 
-                              print("print${widget.depIata}");
-                              print("print${widget.airlineOptional}");
-                              print("print$departureCity");
-                              print("print$airlineCityOptional");
-                              print("print${widget.dateDay}");
-                              print("print${dateDay}");
-                              print("print${dateDay.contains(widget.dateDay)}");
+                              // print("print${widget.depIata}");
+                              // print("print${widget.airlineOptional}");
+                              // print("print$departureCity");
+                              // print("print$airlineCityOptional");
+                              // print("print${widget.dateDay}");
+                              // print("print${dateDay}");
+                              // print("print${dateDay.contains(widget.dateDay)}");
+
 
 
                               return
@@ -203,25 +206,6 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget flightDetails(
-      {required String cityName,
-        required String cityShortCode,
-        required String cityTime,
-        required CrossAxisAlignment crossAlignment}) {
-    return Column(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: crossAlignment,
-      children: [
-        Text("$cityName - $cityShortCode",
-            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.grey.shade600)),
-        SizedBox(height: 10),
-        Text(cityTime,
-            style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.black,fontWeight: FontWeight.bold)),
-        SizedBox(height: 10),
-      ],
     );
   }
 }

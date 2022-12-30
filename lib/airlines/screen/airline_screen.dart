@@ -39,7 +39,7 @@ class _AirlineScreenState extends State<AirlineScreen> {
   }
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/json/airline.json');
+    final String response = await DefaultAssetBundle.of(context).loadString('assets/json/airline.json');
     final data = await json.decode(response);
     setState(() {
       beforeSearch = data["response"];

@@ -44,10 +44,11 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
     return Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 0,
+              child: Container(
                 padding: EdgeInsets.only(top: 20,left: 20,right: 20,bottom: 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -59,11 +60,14 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                   ],
                 ),
               ),
-              SizedBox(height: 10),
-              // Spacer(),
-              Container(
-                height: h * 0.8,
-                width: w,
+            ),
+            SizedBox(height: 20),
+            // Spacer(),
+            Expanded(
+              flex: 1,
+              child: Container(
+                // height: h * 0.8,
+                // width: w,
                 decoration: ReusingWidgets().curveDecorationContainer(),
                 child: ListView(
                   padding: EdgeInsets.all(12),
@@ -125,8 +129,8 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

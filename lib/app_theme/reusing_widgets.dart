@@ -360,9 +360,11 @@ class ReusingWidgets {
     required CrossAxisAlignment crossAxisAlignment,
     required Function() onTapAirport,
      double? sizedBoxHeight,
+    required TextEditingController? airportName1,
+    required TextEditingController? airportShortName1,
   }) {
     return Container(
-      padding: EdgeInsets.only(top: 0),
+      padding: EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: crossAxisAlignment,
         children: [
@@ -372,26 +374,53 @@ class ReusingWidgets {
             style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
           ),
            SizedBox(height: 0),
-           Material(
-             child: InkWell(
-               onTap: (){
-                 onTapAirport();
-               },
-               child: Column(
-                 children: [
-                   Text(
-                     airportName.length > 12 ? '${airportName.substring(0, 11)}...' : airportName,
-                    style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
-                   ),
-                   SizedBox(height: 5),
-                   // Text(
-                   //   airportShortName,
-                   //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
-                   // ),
-                 ],
-               ),
-             ),
-           ),
+          Material(
+            color: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.26,
+              height: MediaQuery.of(context).size.height * 0.08,
+              padding: EdgeInsets.only(bottom: 2),
+              // decoration: BoxDecoration(
+              //   color: ColorsTheme.white,
+              //   border: Border.all(color: ColorsTheme.primaryColor,),
+              //   borderRadius: BorderRadius.all(
+              //     Radius.circular(3),
+              //   ),
+              // ),
+              child: InkWell(
+                onTap: (){
+                  onTapAirport();
+                },
+                child: TextFormField(
+                  enabled: false,
+                  controller: airportName1,
+                  style:  ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                  cursorColor: ColorsTheme.primaryColor,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: title2,
+                    hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                  ),
+                ),
+              ),
+            ),
+          ),
+           // Material(
+           //   child: InkWell(
+           //     onTap: (){
+           //       onTapAirport();
+           //     },
+           //     child: Column(
+           //       children: [
+           //         Text(
+           //           airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
+           //          style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+           //         ),
+           //         SizedBox(height: 5),
+           //       ],
+           //     ),
+           //   ),
+           // ),
           // divider(context: context),
           // SizedBox(height: 10),
           // Text(
@@ -420,20 +449,54 @@ class ReusingWidgets {
     required String airlineShortName,
     required BuildContext context,
     required Function() onTapAirline,
+    required TextEditingController? airlineName1,
+    required TextEditingController? airlineShortName1,
+
   }){
     return InkWell(
       onTap: (){
         onTapAirline();
       },
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
         child: Column(
           children: [
-            Text(
-              airlineName.length > 18 ? '${airlineName.substring(0, 18)}...' : airlineName,
-              style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+            // Text(
+            //   airlineName.length > 18 ? '${airlineName.substring(0, 18)}...' : airlineName,
+            //   style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+            // ),
+            // SizedBox(height: 5),
+            Material(
+              color: Colors.transparent,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.05,
+                padding: EdgeInsets.only(bottom: 0),
+                // decoration: BoxDecoration(
+                //   color: ColorsTheme.white,
+                //   border: Border.all(color: ColorsTheme.primaryColor,),
+                //   borderRadius: BorderRadius.all(
+                //     Radius.circular(3),
+                //   ),
+                // ),
+                child: InkWell(
+                  onTap: (){
+                    onTapAirline();
+                  },
+                  child: TextFormField(
+                    enabled: false,
+                    controller: airlineName1,
+                    style:  ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                    cursorColor: ColorsTheme.primaryColor,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Airline(Optional)",
+                      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                    ),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 5),
             Text(
               airlineShortName,
               style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
@@ -444,14 +507,6 @@ class ReusingWidgets {
       ),
     );
   }
-
-
-          /// BY ROUTE NEW///
-
-
-               /// BY FLIGHT CODE ///
-
-
 
   // static Widget byFlightCodeContainer({
   //   required String flightCodeText,
@@ -531,6 +586,7 @@ class ReusingWidgets {
               cursorWidth: 3,
               cursorHeight: 20,
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 counterText: "",
                 border: InputBorder.none,
                 prefixIcon: IconButton(onPressed: (){},

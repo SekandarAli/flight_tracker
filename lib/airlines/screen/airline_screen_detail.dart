@@ -152,7 +152,6 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                             String date = snapshot.data!.response![index].updated.toString()  ?? "---";
                                             DateTime y = DateTime.parse(date);
                                             final DateFormat formatter = DateFormat('dd-MM-yyyy');
-                                            print("aaa${formatter.format(y)}");
 
 
                                             String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";

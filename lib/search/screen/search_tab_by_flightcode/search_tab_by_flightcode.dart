@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:developer';
-
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -67,9 +65,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
     currentDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
 
-    setState(() {
-      print("object");
-    });
+    print("object");
+
 
     return Column(
       children: [
@@ -134,9 +131,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                 ),
 
                 SizedBox(height: 10),
-                StatefulBuilder(
-                    builder: (BuildContext context, StateSetter mySetState) {
-                      return ReusingWidgets.searchButton(onPress: () async {
+
+                      ReusingWidgets.searchButton(onPress: () async {
 
                         /// If search don't exist
                         // showAlertDialog(context);
@@ -161,10 +157,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                       }, context: context,
                         text: 'SEARCH',
-                        style: ThemeTexts.textStyleTitle2,);
-                    }
-                ),
-
+                        style: ThemeTexts.textStyleTitle2,
+                      )
               ],
             ),
           ),
@@ -229,7 +223,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                     }
                   }
                   else {
-                    return Center(child: CircularProgressIndicator());
+                    return Container();
                   }
                 })
         ),

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flight_tracker/airports/services/services_airports.dart';
 import 'package:flight_tracker/app_theme/color.dart';
@@ -148,13 +149,11 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                         String countryShortName = beforeSearch[index]["country_code"] ?? "---";
                                         String airportName = beforeSearch[index]["name"] ?? "---";
                                         String iataValue = beforeSearch[index]["iata_code"] ?? "---";
-                                        print(beforeSearch.length);
+                                        String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
 
                                         return
                                           InkWell(
-                                              onTap: () async {
-                                                Navigator.pop(context,[airportName,countryShortName,iataValue]);
-                                              },
+                                              onTap: () async => Navigator.pop(context,[shortAirportName,countryShortName,iataValue]),
                                               child: ListTile(
                                                 title: Text("$cityName  ${getCityName(iataValue.toString())!}", style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
                                                 subtitle: Text("$countryShortName - $airportName",style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
@@ -173,18 +172,17 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                         String countryShortName = afterSearch[index]["country_code"] ?? "---";
                                         String airportName = afterSearch[index]["name"] ?? "---";
                                         String iataValue = afterSearch[index]["iata_code"] ?? "---";
-                                        print("aaaaa${afterSearch.length}");
+                                        String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
 
                                         return
                                           InkWell(
-                                              onTap: () async {
-                                                Navigator.pop(context,[airportName,countryShortName,iataValue]);
-                                              },
+                                              onTap: () async => Navigator.pop(context,[shortAirportName,countryShortName,iataValue]),
                                               child: ListTile(
                                                 title: Text("$cityName  ${getCityName(iataValue.toString())!}", style: ThemeTexts.textStyleValueBlack.copyWith(fontWeight: FontWeight.bold,fontSize: 14)),
                                                 subtitle: Text("$countryShortName - $airportName",style: ThemeTexts.textStyleValueBlack2.copyWith(color: ColorsTheme.themeColor)),
 
-                                              ));
+                                              )
+                                          );
                                         // : Container();
                                       },
                                     ),

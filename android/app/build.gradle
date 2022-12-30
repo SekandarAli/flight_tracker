@@ -25,6 +25,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
+}
+
 android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -36,10 +40,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.flight_tracker"
-        minSdkVersion 23
+        minSdkVersion 20
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

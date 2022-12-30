@@ -132,7 +132,9 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                     itemCount: snapshot.data!.response!.length,
                                     itemBuilder: (context, index) {
 
-                                      String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                      // String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                      var time = snapshot.data!.response![index].arrTimeTs!;
+                                      String arrivalTime = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
                                       String arrivalDestination = snapshot.data!.response![index].depIata ?? "---";
                                       String arrivalFlightNo = snapshot.data!.response![index].flightNumber  ?? "---";
                                       String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";

@@ -66,7 +66,7 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: h * 0.8,
+                      height: h * 0.75,
                       width: w,
                       child: ValueListenableBuilder<Box<ModelMyFlightsUpcoming>>(
                         valueListenable:
