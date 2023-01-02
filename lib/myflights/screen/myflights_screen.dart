@@ -48,23 +48,23 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
               flex: 0,
               child: GestureDetector(
                 onTap: (){
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
-                  // }));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
+                  }));
                 },
                 child: Container(
                   padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                              Text("My Flights",
-                                style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2),
-                              ),
-                          Text(DateTime.now().toString().substring(0,10),
-                            style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
-                          )
-                        ],
+                    children: [
+                      Text("My Flights",
+                        style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2),
                       ),
+                      Text(DateTime.now().toString().substring(0,10),
+                        style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -74,7 +74,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
             Expanded(
               flex: 1,
               child: Container(
-                padding: EdgeInsets.only(top: 30),
+                padding: EdgeInsets.only(top: 20),
                 decoration: ReusingWidgets().curveDecorationContainer(),
                 child: Column(
                   children: [
@@ -85,13 +85,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             onTap: () {
                               createTripController.clear();
                               openDialogue(
-                                createTripController: createTripController,
-                                context: context,
-                                onTap: (){
+                                  createTripController: createTripController,
+                                  context: context,
+                                  onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context) {
                                       return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
                                     }));
-                                }
+                                  }
                               );
                             }),
                         Container(
@@ -119,6 +119,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             print(currentTask.tripName);
                                             Navigator.push(context, MaterialPageRoute(builder: (context) {
                                               return MyFlightsOpenCreateNewTrips(
+                                                // noOfFlights: 0,
                                                 noOfFlights: currentTask.modelMyFlightsUpcoming.length,
                                                 tripName: currentTask.tripName,
                                                 currentTask: currentTask,
@@ -150,7 +151,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                   ),
                                                   // SizedBox(height: 5),
                                                   // Text(
-                                                  //   "${currentTask.modelMyFlightsUpcoming!.length} Flights",
+                                                  //   "${currentTask!.modelMyFlightsUpcoming!.length} Flights",
                                                   //   style: ThemeTexts.textStyleTitle3.copyWith(
                                                   //       color: Colors.white,
                                                   //       letterSpacing: 0),
@@ -228,14 +229,14 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                           },
                                           direction: DismissDirection.horizontal,
                                           context: context,
-                                            flightCode: currentTask!.flightCode!,
-                                            flightStatus: currentTask.flightStatus!,
-                                            departureCity: currentTask.departureCity!,
-                                            departureCityShortCode: currentTask.departureCityShortCode!,
-                                            departureCityTime: currentTask.departureCityTime!,
-                                            arrivalCity: currentTask.arrivalCity!,
-                                            arrivalCityShortCode: currentTask.arrivalCityShortCode!,
-                                            arrivalCityTime: currentTask.arrivalCityTime!,
+                                          flightCode: currentTask!.flightCode!,
+                                          flightStatus: currentTask.flightStatus!,
+                                          departureCity: currentTask.departureCity!,
+                                          departureCityShortCode: currentTask.departureCityShortCode!,
+                                          departureCityTime: currentTask.departureCityTime!,
+                                          arrivalCity: currentTask.arrivalCity!,
+                                          arrivalCityShortCode: currentTask.arrivalCityShortCode!,
+                                          arrivalCityTime: currentTask.arrivalCityTime!,
                                         );
                                       },
                                     ),
@@ -315,10 +316,10 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
   }
 
   Future<String?> openDialogue({
-  required TextEditingController createTripController,
-  required BuildContext context,
+    required TextEditingController createTripController,
+    required BuildContext context,
     required Function() onTap,
-}) => showDialog<String>(
+  }) => showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -329,9 +330,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
               textController: createTripController),
           actions: [
             TextButton(
-              onPressed: (){
-                onTap();
-              },
+                onPressed: (){
+                  onTap();
+                },
                 child: Text('OK')),
             TextButton(
                 onPressed: () async{

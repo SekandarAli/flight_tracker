@@ -71,8 +71,8 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   task!.save();
                 } else {
                   await taskBox!.add(newTask);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
-                  Navigator.pop(context);
+                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
+                  // Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
 

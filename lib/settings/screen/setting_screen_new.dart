@@ -2,6 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
+import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
 import 'package:flight_tracker/recent_airport_airline_search/model/model_recent_search.dart';
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
@@ -25,6 +26,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
   Box<ModelMyFlightsUpcoming>? dataTrackFlights;
   Box<ModelSearch>? dataRecentSearch;
   Box<ModelRecentSearch>? dataRecentAirportAndAirline;
+  Box<ModelMyFlightsCreateTrip>? dataCreateTrips;
   String editName = "👤";
   TextEditingController nameController = TextEditingController();
 
@@ -34,6 +36,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
     dataTrackFlights = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     dataRecentSearch = Hive.box<ModelSearch>("modelSearch");
     dataRecentAirportAndAirline = Hive.box<ModelRecentSearch>("modelRecentSearch");
+    dataCreateTrips = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   }
 
   @override
@@ -96,11 +99,11 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                     SizedBox(height: 20.0),
                     ReusingWidgets().settingListTiles(
                         onTap: (){
-                          dataRecentAirportAndAirline!.clear();
+                          dataCreateTrips!.clear();
                           ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
                         },
-                        title: "Clear Recent Airports & Airlines",
-                        subTitle: "Remove your recent searches of Airports and Airlines",
+                        title: "Clear All Created Trips",
+                        subTitle: "Remove your created trips of MyFlights",
                         icon: Icons.remove_circle_outline,
                         iconColor: ColorsTheme.dismissibleColor,
                     ),

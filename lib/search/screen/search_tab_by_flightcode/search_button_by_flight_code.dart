@@ -87,10 +87,12 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                   arrivalCity = snapshot.data!.response!.arrIata ?? "---";
                   departureCityShortCode = snapshot.data!.response!.depName ?? "---";
                   arrivalCityShortCode = snapshot.data!.response!.arrName ?? "---";
-                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
-                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
-                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
-                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  String dptTime = snapshot.data!.response!.depTimeTs!.toString().isEmpty ? "" : snapshot.data!.response!.depTimeTs!.toString();
+                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(dptTime) * 1000));
+                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(dptTime) * 1000));
+                  String arrTime = snapshot.data!.response!.arrTimeTs!.toString().isEmpty ? "" : snapshot.data!.response!.arrTimeTs!.toString();
+                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(arrTime) * 1000));
+                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(arrTime) * 1000));
                   flightStatus = snapshot.data!.response!.status ?? "---";
 
 
