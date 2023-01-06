@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+
+import 'dart:io';
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'recent_airport_airline_search/model/model_recent_search.dart';
+
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +28,6 @@ void main() async{
   await Hive.openBox<ModelSearch>("modelSearch");
   await Hive.openBox<ModelRecentSearch>("modelRecentSearch");
 
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
     runApp(MyApp());
   });
@@ -40,6 +42,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    loadJsonFiles();
+  }
+
+   loadJsonFiles() async {
+     // await rootBundle.loadString('assets/json/airport.json');
+     await DefaultAssetBundle.of(context).loadString('assets/json/airline.json',cache: true);
+     await DefaultAssetBundle.of(context).loadString('assets/json/airport.json');
+     await DefaultAssetBundle.of(context).loadString('assets/json/city.json');
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,12 +67,8 @@ class _MyAppState extends State<MyApp> {
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: SearchButtonByFlightCode(currentDate: "",flightCode: "ek612",dateDay: ""),
-      // home: FlightDetailScreen(flight_iata: "IX142", openTrack: true,),
+      // home: HomePage(),
     );
   }
 
 }
-
-
-

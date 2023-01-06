@@ -1,6 +1,8 @@
 
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
@@ -31,6 +33,10 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
   void initState() {
     super.initState();
     taskBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
+      Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.forEach((element) {
+        element.isSelected = false;
+      });
+
   }
 
   @override
@@ -64,36 +70,36 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                 );
 
                 taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-
-                if (task != null) {
-                  task!.tripName = newTask.tripName;
-                  modelItemsList = selectedItems;
-                  task!.save();
-                } else {
                   await taskBox!.add(newTask);
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
-                  // Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
 
-                }
+                // if (task != null) {
+                //   task!.tripName = newTask.tripName;
+                //   modelItemsList = selectedItems;
+                //   task!.save();
+                // } else {
+                //   await taskBox!.add(newTask);
+                //   Navigator.pop(context);
+                //   Navigator.pop(context);
+                //
+                // }
+
 
                 // await taskBox!.add(newTask);
                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightsScreen()));
                 // Navigator.pop(context);
                 // Navigator.pop(context);
                 // Navigator.pop(context);
-
                 // setState(() {
                 //   Navigator.of(context).pop({'itemList': selectedItems});
                 // });
-
 
               },
               icon: Icon(
                 Icons.check,
                 color: Colors.grey.shade600,
-              ))
+              )),
         ],
       ),
       body: Center(
@@ -107,12 +113,13 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
             if (items.isEmpty) {
               return NoFlightFound();
             } else {
-              return Flex(direction: Axis.vertical, children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      ModelMyFlightsUpcoming? currentTask = box.getAt(index);
+              return Flex(direction: Axis.vertical,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          ModelMyFlightsUpcoming? currentTask = box.getAt(index);
 
                       return FlightCardScreen().flightCardWithCheckBox(
                         onTap: (){

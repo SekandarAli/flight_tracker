@@ -40,28 +40,31 @@ class _NoFlightFoundState extends State<NoFlightFound> {
   Widget build(BuildContext context) {
 
     double w = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/images/noflight.jpg',
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: MediaQuery.of(context).size.height * 0.2,
-          fit: BoxFit.fill,
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          "No Flights Found",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: w * 0.05,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/noflight.jpg',
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: MediaQuery.of(context).size.height * 0.2,
+            fit: BoxFit.fill,
           ),
-        ),
-      ],
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "No Flights Found",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: w * 0.05,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -102,6 +105,51 @@ class _NoSearchFoundState extends State<NoSearchFound> {
                 fontSize: w * 0.05,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class NoInternetError extends StatefulWidget {
+  const NoInternetError({Key? key}) : super(key: key);
+
+  @override
+  State<NoInternetError> createState() =>
+      _NoInternetErrorState();
+}
+
+class _NoInternetErrorState extends State<NoInternetError> {
+  @override
+  Widget build(BuildContext context) {
+
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+    return SingleChildScrollView(
+      child: Container(
+        width: w,
+        // height: h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets/lottie/nointernet.json',
+              width: MediaQuery.of(context).size.width * 0.85,
+              height: MediaQuery.of(context).size.height * 0.4,
+              fit: BoxFit.fill,
+            ),
+            Text(
+              "No Internet Connection",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: w * 0.05,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
           ],

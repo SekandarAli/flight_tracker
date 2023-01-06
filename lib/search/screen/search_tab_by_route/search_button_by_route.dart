@@ -50,17 +50,15 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
   bool trackFlight = true;
   bool cardExpand = false;
 
+  Iterable? hiveFlightCode;
+
   @override
   void initState() {
     super.initState();
 
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     futureList = ServicesSearchFlight().GetAllPosts(
-        depIata: widget.depIata,
-        arrIata: widget.arrIata,
-        airlineIcao: widget.airlineOptional,
-        day: widget.dateDay,
-        flightIata: "",
+        depIata: widget.depIata, arrIata: widget.arrIata, airlineIcao: widget.airlineOptional, day: widget.dateDay, flightIata: "",
     );
   }
 
@@ -108,7 +106,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String departureCityShortName = widget.departureAirport ?? "---";
                               String arrivalCityShortName = widget.arrivalAirport ?? "---";
                               String departureCityTime = snapshot.data!.response![index].depTime!;
-                              String arrivalCityTime = snapshot.data!.response![index].arrTime!;
+                              String? arrivalCityTime = snapshot.data!.response![index].arrTime!;
                               String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
                               DateTime updated = snapshot.data!.response![index].updated!;
                               List<String> dateDay = snapshot.data!.response![index].days!;
@@ -120,8 +118,6 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               // print("print${widget.dateDay}");
                               // print("print${dateDay}");
                               // print("print${dateDay.contains(widget.dateDay)}");
-
-
 
                               return
                                 (widget.depIata == departureCity && widget.arrIata == arrivalCity && dateDay.contains(widget.dateDay)) ||
@@ -141,7 +137,8 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                     arrivalCity: arrivalCity,
                                     arrivalCityShortCode: arrivalCityShortName,
                                     arrivalCityTime: arrivalCityTime,
-                                    cardExpandRow: cardExpand == true ? Container(
+                                    cardExpandRow: cardExpand == true ?
+                                    Container(
                                       decoration: BoxDecoration(
                                         color: Colors.grey.shade100,
                                         borderRadius: BorderRadius.only(
@@ -156,11 +153,21 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                           TextButton(onPressed: () {
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
+                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true);
                                             }));
 
-                                          }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
+                                          },
+                                              child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
+
                                           TextButton(onPressed: () {
+
+                                            hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
+
+                                            if(hiveFlightCode!.contains(flightCode)){
+                                              log("Flight Codes$hiveFlightCode");
+                                              ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                                            }
+                                            else {
                                             modelMyFlights = ModelMyFlightsUpcoming(
                                                 flightCode: flightCode,
                                                 departureCity: departureCity,
@@ -172,10 +179,12 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                 arrivalCityTime: arrivalCityTime,
                                                 flightStatus: "",
                                                 flightIata: flight_iata,
-                                                isSelected: false
+                                                isSelected: false,
+                                                trackFlight: "aaa"
                                             );
                                             dataBox!.add(modelMyFlights!);
                                             ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
+                                            }
 
                                           }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
                                         ],

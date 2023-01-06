@@ -60,6 +60,8 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   bool trackFlight = true;
   bool cardExpand = false;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -241,9 +243,15 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
                 SizedBox(height: 30),
                 ReusingWidgets.searchButton(
-                  onPress: () {
 
-                    /// If search exist
+                  context: context,
+                  // text: isLoading?  CircularProgressIndicator(color: Colors.white) : Text('SEARCH'),
+                  text: isLoading? "SEARCH" : 'SEARCH',
+                  style: ThemeTexts.textStyleTitle2,
+                  onPress: () {
+                    Iterable hiveDepartureAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.departureCity);
+                    Iterable hiveArrivalAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.arrivalCity);
+
                     if(departureAirport == "DPT Airport"){
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Departure Airport');
                     }
@@ -251,34 +259,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     {
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Arrival Airport');
                     }
-                    else {
-                      // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      //   print("departureAirportShortName$depIata");
-                      //   print("arrivalAirportShortName$arrIata");
-                      //   print("airlineOptional$airlineIcao");
-                      //   print("dayDate$dateDay");
-                      //
-                      //   return SearchButtonByRoute(
-                      //     depIata: depIata1.text,
-                      //     arrIata: arrIata1.text,
-                      //     airlineOptional: airlineIcao,
-                      //     dateDay: dateDay,
-                      //     currentDate: currentDate,
-                      //     departureAirport: departureAirport,
-                      //     arrivalAirport: arrivalAirport,
-                      //   );
-                      // }));
-
-
-                      modelMyFlights = ModelSearch(
-                          arrivalCity: arrivalAirport,
-                          departureCity: departureAirport,
-                          arrivalCityShortName: arrIata,
-                          departureCityShortName: depIata,
-                          flightCode: ""
-                      );
-
+                    else if(arrivalAirport == departureAirport)
+                    {
+                      ReusingWidgets().snackBar(context: context, text: 'Departure and Arrival Airport are Same');
+                    }
+                    else if(hiveDepartureAirport.contains(departureAirport1.text) && hiveArrivalAirport.contains(arrivalAirport1.text)){
+                      ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
                       setState(() {
+                        isLoading = true;
                         futureList = ServicesSearchFlight().GetAllPosts(
                           depIata: depIata1.text,
                           arrIata: arrIata1.text,
@@ -287,19 +275,30 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           flightIata: "",
                         );
                       });
-
-
-                      // print("departureAirportShortName${depIata1.text}");
-                      // print("arrivalAirportShortName${arrIata1.text}");
-                      // print("airlineOptional$airlineIcao");
-                      // print("dayDate$dateDay");
-
-
-                      Future.delayed(Duration(milliseconds: 700)).then((value) => dataBox!.add(modelMyFlights!));
+                    }
+                    else {
+                      ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
+                      modelMyFlights = ModelSearch(
+                          arrivalCity: arrivalAirport,
+                          departureCity: departureAirport,
+                          arrivalCityShortName: arrIata,
+                          departureCityShortName: depIata,
+                          flightCode: ""
+                      );
+                      setState(() {
+                        isLoading = true;
+                        futureList = ServicesSearchFlight().GetAllPosts(
+                          depIata: depIata1.text,
+                          arrIata: arrIata1.text,
+                          airlineIcao: airlineOptional1.text,
+                          day: dateDay,
+                          flightIata: "",
+                        );
+                      });
+                      Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
                     }
                   },
-                  context: context,
-                  text: 'SEARCH', style: ThemeTexts.textStyleTitle2,
+
                 ),
               ],
             ),
@@ -327,10 +326,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           Flexible(
                             child: ListView.builder(
                               padding: EdgeInsets.all(5),
-                              itemCount: 1,
+                              itemCount: snapshot.data!.response!.length,
                               itemBuilder: (context, index) {
 
-                                log( "${snapshot.data!.response!.length}");
+                                log(snapshot.data!.response!.length.toString());
                                 log("notnull");
                                 Future(() {
                                   showDialog(
@@ -362,32 +361,29 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
                   else {
                     log("null");
+                    // isLoading = false;
                     Future(() async {
+                      isLoading = false;
                       await
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) =>
-                              SearchButtonByRoute(
-                                depIata: depIata1.text,
-                                arrIata: arrIata1.text,
-                                airlineOptional: airlineIcao1.text,
-                                dateDay: dateDay,
-                                currentDate: currentDate,
-                                departureAirport: departureAirport1.text,
-                                arrivalAirport: arrivalAirport1.text,
-                              )
-                      ));
+                          builder: (context) {
+                            isLoading = false;
+                            return SearchButtonByRoute(
+                              depIata: depIata1.text,
+                              arrIata: arrIata1.text,
+                              airlineOptional: airlineIcao1.text,
+                              dateDay: dateDay,
+                              currentDate: currentDate,
+                              departureAirport: departureAirport1.text,
+                              arrivalAirport: arrivalAirport1.text,
+                            );
+                          }));
                     });
                     return Container();
-
-
                   }
-
-
                 } else if (snapshot.hasError) {
                   return Center(
-                    child: Text(
-                      "error 2${snapshot.error}",
-                    ),
+                    child: NoInternetError(),
                   );
                 } else {
                   return Center(child: FunctionProgressIndicator());
@@ -426,6 +422,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 builder: (context, box, _) {
                   final items = box.values.toList().cast<ModelSearch>();
 
+                  // log("${Hive.box<ModelSearch>("modelSearch").values.map((e) => e.departureCity)}");
+
+
+
                   if (items.isEmpty) {
                     return NoSearchFound();
                   } else {
@@ -433,7 +433,6 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                       reverse: true,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
                       itemCount: box.values.length,
                       itemBuilder: (context, index) {
                         ModelSearch? currentTask = box.getAt(index);
@@ -486,14 +485,11 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      // "${currentTask!.departureCityShortName}   ",
-                                                        currentTask.departureCity!.length > 9 ? '${currentTask.departureCity!.substring(0, 9)}...  ' : "${currentTask.departureCity!}\t",
-
+                                                        currentTask.departureCity!.length > 8 ? '${currentTask.departureCity!.substring(0, 8)}...  ' : "${currentTask.departureCity!}\t",
                                                         style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
                                                     Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
                                                     Text(
-                                                      // "   ${currentTask.arrivalCityShortName}",
-                                                        currentTask.arrivalCity!.length > 9 ? '  ${currentTask.arrivalCity!.substring(0, 9)}...  ' : "\t${currentTask.arrivalCity!}",
+                                                        currentTask.arrivalCity!.length > 8 ? '  ${currentTask.arrivalCity!.substring(0, 8)}...  ' : "\t${currentTask.arrivalCity!}",
                                                         style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
 
                                                   ],

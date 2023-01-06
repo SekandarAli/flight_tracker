@@ -44,31 +44,10 @@ class ServicesSearchFlight{
 
     if(response.statusCode == 200){
       final modelData = modelSearchFlightFromJson(response.body.toString());
-      if(modelData.response!.isNotEmpty){
-        //rest of the logic
-
         return modelData;
-      }
-      else{
-        return modelData;
-      }
-
     }
     else{
       throw Exception('Failed to load Data');
     }
-  }
-
-  Future<List<dynamic>> fetchMedia() async {
-    final result = await Future.wait([
-      http.get(Uri.parse('https://iptv-org.github.io/api/streams.json')),
-      http.get(Uri.parse('https://iptv-org.github.io/api/channels.json')),
-    ]);
-
-    final result1 = json.decode(result[0].body) as List<dynamic>;
-    final result2 = json.decode(result[1].body) as List<dynamic>;
-    result1.addAll(result2);
-
-    return result1;
   }
 }

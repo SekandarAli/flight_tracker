@@ -14,14 +14,14 @@ import 'package:hive_flutter/adapters.dart';
 
 import '../../app_theme/reusing_widgets.dart';
 
-class SettingsScreenNew extends StatefulWidget {
-  const SettingsScreenNew({Key? key}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingsScreenNewState createState() => _SettingsScreenNewState();
+  _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenNewState extends State<SettingsScreenNew> {
+class _SettingsScreenState extends State<SettingsScreen> {
   final box = GetStorage();
   Box<ModelMyFlightsUpcoming>? dataTrackFlights;
   Box<ModelSearch>? dataRecentSearch;
@@ -88,8 +88,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                     SizedBox(height: 20.0),
                     ReusingWidgets().settingListTiles(
                         onTap: (){
-                          dataRecentSearch!.clear();
-                          ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
+                          deleteDialogue(boxData: dataRecentSearch!);
                         },
                         title: "Clear Recent Searches",
                         subTitle: "This is irreversible and your data will be remove",
@@ -99,8 +98,7 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                     SizedBox(height: 20.0),
                     ReusingWidgets().settingListTiles(
                         onTap: (){
-                          dataCreateTrips!.clear();
-                          ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
+                          deleteDialogue(boxData: dataCreateTrips!);
                         },
                         title: "Clear All Created Trips",
                         subTitle: "Remove your created trips of MyFlights",
@@ -110,15 +108,13 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
                     SizedBox(height: 20.0),
                     ReusingWidgets().settingListTiles(
                         onTap: (){
-                          dataTrackFlights!.clear();
-                          ReusingWidgets().snackBar(context: context, text: "Track Flights Deleted Successfully!");
+                          deleteDialogue(boxData: dataTrackFlights!);
                         },
                         title: "Clear Track Flights",
                         subTitle: "This is irreversible and your data will be remove",
                         icon: Icons.delete_forever_outlined,
                         iconColor: ColorsTheme.dismissibleColor,
                     ),
-
                     // SizedBox(height: 20.0),
                     // ReusingWidgets().settingListTiles(
                     //     onTap: (){
@@ -138,5 +134,27 @@ class _SettingsScreenNewState extends State<SettingsScreenNew> {
       ),
     );
   }
+
+  Future<String?> deleteDialogue({required var boxData}) => showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to Clear Data?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('CANCEL')),
+            TextButton(
+                onPressed: () {
+                  ReusingWidgets().snackBar(context: context, text: "Data Deleted Successfully!");
+                  boxData.clear();
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK')),
+          ],
+        );
+      });
 
 }

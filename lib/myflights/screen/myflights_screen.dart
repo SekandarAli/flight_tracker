@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'dart:developer';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -26,12 +27,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
   TextEditingController createTripController = TextEditingController();
   ModelMyFlightsCreateTrip? task;
   List<ModelMyFlightsUpcoming>? modelItemsList;
-
-  bool viewAllTrips = false;
+  Box<ModelMyFlightsCreateTrip>? taskBox;
+  bool viewAllTrips = true;
 
   @override
   void initState() {
     super.initState();
+    taskBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   }
 
   @override
@@ -47,11 +49,11 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
             Expanded(
               flex: 0,
               child: GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
-                  }));
-                },
+                // onTap: (){
+                //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+                //     return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
+                //   }));
+                // },
                 child: Container(
                   padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
                   child: Row(
@@ -87,10 +89,25 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                               openDialogue(
                                   createTripController: createTripController,
                                   context: context,
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                      return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
-                                    }));
+                                  onTap: () async{
+
+                                    log("${Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.map((e) {
+                                      return e.tripName;
+                                    })}");
+
+                                    Iterable trips =  taskBox!.values.map((e) => e.tripName);
+
+                                    if(trips.contains(createTripController.text) || trips.contains(createTripController.text.toUpperCase()) || trips.contains(createTripController.text.toLowerCase())){
+                                      log("TRUE");
+                                      ReusingWidgets().snackBar(context: context, text: "Trip Name Already Exist");
+                                    }
+                                    else{
+                                      log("FALSE");
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return MyFlightCreateNewTrip(tripName: createTripController.text.toString());
+                                      }));
+                                    }
+
                                   }
                               );
                             }),
@@ -103,15 +120,20 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                             Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
                             builder: (context, box, _) {
                               final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+                              // log(items.toString());
+                              // log(taskBox.toString());
 
                               if (items.isEmpty) {
                                 return Container();
                               } else {
                                 return ListView.builder(
                                   scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  reverse: false,
                                   itemCount: box.values.length,
                                   itemBuilder: (context, index) {
                                     ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+                                    int reverseIndex = box.values.length - 1 - index;
                                     return Row(
                                       children: [
                                         GestureDetector(
@@ -119,7 +141,6 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                             print(currentTask.tripName);
                                             Navigator.push(context, MaterialPageRoute(builder: (context) {
                                               return MyFlightsOpenCreateNewTrips(
-                                                // noOfFlights: 0,
                                                 noOfFlights: currentTask.modelMyFlightsUpcoming.length,
                                                 tripName: currentTask.tripName,
                                                 currentTask: currentTask,
@@ -180,20 +201,16 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // myUpComingFlightsText(text: "My Upcoming Flights", icon: Icons.flight_outlined),
-                        viewAllTrips == true
-                            ?
+                        viewAllTrips == true ?
                         myUpComingFlightsText(text: "View All Trips",color: ColorsTheme.primaryColor,
                           onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) {
                               return MyFlightsViewAll();
                             }));
                           },) :
-                        myUpComingFlightsText(text: "",color: ColorsTheme.primaryColor,
-                          onTap: () {},)
+                        myUpComingFlightsText(text: "",color: ColorsTheme.primaryColor, onTap: () {},)
                       ],
                     ),
-                    // Spacer(),
 
                     Expanded(
 
@@ -203,9 +220,13 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                         builder: (context, box, _) {
                           final items = box.values.toList().cast<ModelMyFlightsUpcoming>();
 
+                          Iterable hiveFlightCode =  Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
+
+                          log(hiveFlightCode.toString());
+
                           if (items.isEmpty) {
                             viewAllTrips = false;
-                            return NoFlightFound();
+                            return SingleChildScrollView(child: NoFlightFound());
                           } else {
                             viewAllTrips = true;
                             return Flex(
@@ -216,27 +237,32 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       itemCount: box.values.length,
                                       itemBuilder: (context, index) {
                                         ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                        return FlightCardScreen().flightCardSimple(
-                                          onTap: (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
-                                            }));
-                                          },
-                                          onDismiss: (direction){
-                                            setState(() {
-                                              currentTask.delete();
-                                            });
-                                          },
-                                          direction: DismissDirection.horizontal,
-                                          context: context,
-                                          flightCode: currentTask!.flightCode!,
-                                          flightStatus: currentTask.flightStatus!,
-                                          departureCity: currentTask.departureCity!,
-                                          departureCityShortCode: currentTask.departureCityShortCode!,
-                                          departureCityTime: currentTask.departureCityTime!,
-                                          arrivalCity: currentTask.arrivalCity!,
-                                          arrivalCityShortCode: currentTask.arrivalCityShortCode!,
-                                          arrivalCityTime: currentTask.arrivalCityTime!,
+                                        log("qwerty${currentTask.toString()}");
+                                        return StatefulBuilder(
+                                            builder: (BuildContext context, StateSetter mySetState) {
+                                            return FlightCardScreen().flightCardSimple(
+                                              onTap: (){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                  return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
+                                                }));
+                                              },
+                                              onDismiss: (direction){
+                                                mySetState(() {
+                                                  currentTask.delete();
+                                                });
+                                              },
+                                              direction: DismissDirection.horizontal,
+                                              context: context,
+                                              flightCode: currentTask!.flightCode!,
+                                              flightStatus: currentTask.flightStatus!,
+                                              departureCity: currentTask.departureCity!,
+                                              departureCityShortCode: currentTask.departureCityShortCode!,
+                                              departureCityTime: currentTask.departureCityTime!,
+                                              arrivalCity: currentTask.arrivalCity!,
+                                              arrivalCityShortCode: currentTask.arrivalCityShortCode!,
+                                              arrivalCityTime: currentTask.arrivalCityTime!,
+                                            );
+                                          }
                                         );
                                       },
                                     ),
@@ -281,7 +307,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
   }
 
   Widget createTrip({required double width, required Function() onTap}) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         onTap();
       },
@@ -295,12 +321,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon(
-              //   Icons.add_circle_outlined,
-              //   color: ColorsTheme.primaryColor,
-              //   size: width * 0.12,
-              // ),
-              // SizedBox(height: 10),
+
               Text(
                 "Create\nNew",
                 style: ThemeTexts.textStyleTitle2.copyWith(
@@ -319,7 +340,10 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
     required TextEditingController createTripController,
     required BuildContext context,
     required Function() onTap,
-  }) => showDialog<String>(
+  })
+  {
+    return
+    showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -341,7 +365,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                 child: Text('CANCEL')),
           ],
         );
-      });
+      });}
 
   Widget textFormFields({
     required double width,

@@ -159,11 +159,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                 return NoFlightFound();
                               }
                             } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text(
-                                  "error 2${snapshot.error}",
-                                ),
-                              );
+                              return NoInternetError();
                             } else {
                               return Column(
                                 children: [
@@ -216,11 +212,7 @@ class _AirportScreenDetailState extends State<AirportScreenDetail> {
                                 return NoFlightFound();
                               }
                             } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text(
-                                  "error 2${snapshot.error}",
-                                ),
-                              );
+                              return NoInternetError();
                             } else {
                               return Column(
                                 children: [

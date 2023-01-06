@@ -34,9 +34,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   String flightCode = "---";
   String departureCityDate = '---';
   String departureCity = "---";
+  String departureCountry = "---";
   String departureCityShortCode = "---";
   String departureCityTime = '---';
   String arrivalCity = "---";
+  String arrivalCountry = "---";
   String airlineName = "---";
   String arrivalCityShortCode = "---";
   String airlineShortCode = "---";
@@ -56,7 +58,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   LocalNotificationService? service;
 
   ///   ///   ///   ///   ///
-  List<ModelMyFlightsUpcoming> selectedItems = [];
   Box<ModelMyFlightsCreateTrip>? taskBox;
   ModelMyFlightsCreateTrip? task;
   List<ModelMyFlightsUpcoming>? modelItemsList;
@@ -74,15 +75,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     service = LocalNotificationService();
     service!.initialize();
   }
-
-  // ModelMyFlightsUpcoming? modelMyFlightsUpcoming111;
-  // Box<ModelMyFlightsUpcoming>? aaa;
-
-  // void addCart(ModelMyFlightsUpcoming cart) {
-  //   final cartBox = Hive.box('modelMyFlightsUpcoming');
-  //   cartBox.add(cart);
-  // }
-
   @override
   Widget build(BuildContext context) {
 
@@ -99,7 +91,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 if (snapshot.data!.response != null) {
                   flightCode = snapshot.data!.response!.flightIata ?? "---";
                   departureCity = snapshot.data!.response!.depCity ?? "---";
+                  departureCountry = snapshot.data!.response!.depCountry ?? "---";
                   arrivalCity = snapshot.data!.response!.arrCity ?? "---";
+                  arrivalCountry = snapshot.data!.response!.arrCountry ?? "---";
                   departureCityShortCode = snapshot.data!.response!.depIata ?? "---";
                   arrivalCityShortCode = snapshot.data!.response!.arrIata ?? "---";
                   departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
@@ -121,7 +115,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   airlineShortCode = snapshot.data!.response!.airlineIcao ?? "---";
 
                   return SingleChildScrollView(
-                    reverse: true,
+                    reverse: false,
                     child: Column(
                       children: [
                         CustomMapsButton(
@@ -139,9 +133,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
               }
               else if (snapshot.hasError) {
                 return Center(
-                  child: Text(
-                    "error 2${snapshot.error}",
-                  ),
+                  child: NoInternetError(),
+                  // child: Text(
+                  //   "error 2${snapshot.error}",
+                  // ),
                 );
               } else {
                 return Center(child: FunctionProgressIndicator());
@@ -270,6 +265,13 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             ),
             SizedBox(height: 15),
             CustomFlightDetails(
+                departureTitle: 'Departure Country',
+                departureSubTitle: departureCountry,
+                arrivalTitle: "Arrival Country",
+                arrivalSubTitle: arrivalCountry
+            ),
+            SizedBox(height: 15),
+            CustomFlightDetails(
                 departureTitle: 'Duration',
                 departureSubTitle: "$duration minutes",
                 arrivalTitle: "Airline of Country",
@@ -288,10 +290,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   children: [
                     ReusingWidgets.searchButton(
                         onPress: () {
+                          Iterable hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
+                          // log("sss${hiveFlightCode.toString()}");
                           setState(() {
                             trackFlight = !trackFlight;
 
                             if (trackFlight == false) {
+                             if(hiveFlightCode.contains(flightCode)){
+                              // log("$hiveFlightCode");
+                              ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                             }
+                             else {
                               modelMyFlights = ModelMyFlightsUpcoming(
                                 flightCode: flightCode,
                                 departureCityDate: departureCityDate,
@@ -335,10 +344,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                   hours: noOfHours);
 
                               print(modelMyFlights!.arrivalCity);
-                            }
+                            }}
                             else {
                               modelMyFlights!.delete();
-                              LocalNotificationService().localNotificationService.cancel(0);
+                              // LocalNotificationService().localNotificationService.cancel(0);
                             }
                           });
                         },
@@ -350,42 +359,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
                     ReusingWidgets.searchButton(
                         onPress: () {
-                          // openDialogue(
-                          //     createTripController: createTripController,
-                          //     context: context,
-                          //     onTap: ()async {
-                          //       var newTask = ModelMyFlightsCreateTrip(
-                          //           tripName: createTripController.text.toString(),
-                          //           noOfFlights: '',
-                          //           tripImage: '',
-                          //           isSelected: false,
-                          //           modelMyFlightsUpcoming: [
-                          //             ModelMyFlightsUpcoming(
-                          //             flightCode: flightCode,
-                          //             departureCityDate: departureCityDate,
-                          //             departureCity: departureCity,
-                          //             departureCityShortCode: departureCityShortCode,
-                          //             departureCityTime: departureCityTime,
-                          //             arrivalCityDate: arrivalCityDate,
-                          //             arrivalCity: arrivalCity,
-                          //             arrivalCityTime: arrivalCityTime,
-                          //             arrivalCityShortCode: arrivalCityShortCode,
-                          //             flightStatus: flightStatus,
-                          //             flightIata: widget.flight_iata,
-                          //             isSelected: false,
-                          //           )]
-                          //       );
-                          //
-                          //       taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                          //
-                          //       await taskBox!.add(newTask);
-                          //       Navigator.pop(context);
-                          //
-                          //       ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
-                          //
-                          //     }
-                          // );
-
                           dialogueAddToTrip(context: context);
                         },
                         context: context,
@@ -528,12 +501,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
   Future<String?> dialogueAddToTrip({
     required BuildContext context,
-  }) => showDialog<String>(
+  }) {
+    Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.forEach((element) {
+      element.isSelected = false;
+    });
+      return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
+
         return StatefulBuilder(
-            // builder: (BuildContext context, void Function(void Function()) setState) {
             builder: (BuildContext context, StateSetter mySetState) {
+
               return
                 AlertDialog(
                   insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
@@ -558,7 +536,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                     noOfFlights: '',
                                     tripImage: '',
                                     isSelected: false,
-                                    modelMyFlightsUpcoming: [ModelMyFlightsUpcoming(
+                                    modelMyFlightsUpcoming: [
+                                      ModelMyFlightsUpcoming(
                                       flightCode: flightCode,
                                       departureCityDate: departureCityDate,
                                       departureCity: departureCity,
@@ -621,7 +600,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                   valueListenable: Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
                                   builder: (context, box, _) {
                                     final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-
                                     if (items.isEmpty) {
                                       return Container();
                                     } else {
@@ -631,74 +609,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                         itemBuilder: (context, index) {
                                           ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
 
-                                          log(currentTask!.tripName);
-                                          // log(currentTask!.noOfFlights);
-                                          log(currentTask.modelMyFlightsUpcoming.toString());
-
-
-
                                           return InkWell(
                                             onTap: () async{
+
                                               mySetState(() {
+
+                                                // log(currentTask.tripName);
+                                                // log(currentTask.modelMyFlightsUpcoming.toString());
+                                                //
                                                 currentTask.isSelected =! currentTask.isSelected!;
-                                                log(currentTask.isSelected.toString());
-
-                                                /// Add to trip
-
+                                                // log(currentTask.isSelected.toString());
+                                                //
                                                 if (currentTask.isSelected == true) {
                                                   log("TRUE");
-
-                                                  selectedItems = [
-                                                    ModelMyFlightsUpcoming(
-                                                      flightCode: flightCode,
-                                                      departureCityDate: departureCityDate,
-                                                      departureCity: departureCity,
-                                                      departureCityShortCode: departureCityShortCode,
-                                                      departureCityTime: departureCityTime,
-                                                      arrivalCityDate: departureCityDate,
-                                                      arrivalCity: arrivalCity,
-                                                      arrivalCityShortCode: arrivalCityShortCode,
-                                                      arrivalCityTime: arrivalCityTime,
-                                                      flightStatus: flightStatus,
-                                                      flightIata: flightCode,
-                                                      isSelected: false,
-                                                    ),
-                                                    //   ModelMyFlightsUpcoming(
-                                                //       flightCode: "aaaaa",
-                                                //       departureCityDate: "aaaaa",
-                                                //       departureCity: "aaaaa",
-                                                //       departureCityShortCode: "aaaaa",
-                                                //       departureCityTime: "aaaaa",
-                                                //       arrivalCityDate: "aaaaa",
-                                                //       arrivalCity: "aaaaa",
-                                                //       arrivalCityShortCode: "aaaaa",
-                                                //       arrivalCityTime: "aaaaa",
-                                                //       flightStatus: "aaaaa",
-                                                //       flightIata: "aaaaa",
-                                                //       isSelected: false,
-                                                //       departureLat: "aaaaaaa",
-                                                //       arrivalLat: "aaaaaaa"
-                                                //   )
-                                                  ];
-
-
-                                                task = ModelMyFlightsCreateTrip(
-                                                    tripName: currentTask.tripName,
-                                                    noOfFlights: currentTask.noOfFlights,
-                                                    tripImage: '',
-                                                    isSelected: false,
-                                                    modelMyFlightsUpcoming: selectedItems
-                                                );
-
-
-                                                taskBox!.putAt(index, task!);
-                                                // dataBox!.add(modelMyFlights!);
-                                                // taskBox!.put(index, task!);
-                                                // taskBox?.addAll(task!);
-                                                // taskBox!.add(task!);
-                                                // taskBox!.deleteAll(taskBox!.keys); //delete all trips
-                                                // taskBox!.deleteAt(0); //delete from specific index
-
                                                 }
                                                 else {
                                                   log("FALSE");
@@ -710,7 +633,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                               padding: EdgeInsets.all(5),
                                               child: Row(
                                                 children: [
-                                                  currentTask.isSelected == true ?
+                                                  currentTask!.isSelected == true ?
                                                   Icon(Icons.check_box,
                                                     color: ColorsTheme.primaryColor,) :
                                                   Icon(Icons.check_box_outline_blank),
@@ -748,118 +671,33 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                             child: Text('CANCEL')),
                         SizedBox(width: 20),
                         ElevatedButton(onPressed: () async {
-                          // /// Add to trip
-                          //
-                          // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                          //
-                          // List<ModelMyFlightsUpcoming> selectedItems = [
-                          //   ModelMyFlightsUpcoming(
-                          //       flightCode: "aaaaa",
-                          //       departureCityDate: "aaaaa",
-                          //       departureCity: "aaaaa",
-                          //       departureCityShortCode: "aaaaa",
-                          //       departureCityTime: "aaaaa",
-                          //       arrivalCityDate: "aaaaa",
-                          //       arrivalCity: "aaaaa",
-                          //       arrivalCityShortCode: "aaaaa",
-                          //       arrivalCityTime: "aaaaa",
-                          //       flightStatus: "aaaaa",
-                          //       flightIata: "aaaaa",
-                          //       isSelected: false,
-                          //       departureLat: "aaaaaaa",
-                          //       arrivalLat: "aaaaaaa"
-                          //   ),
-                          //   ModelMyFlightsUpcoming(
-                          //       flightCode: "aaaaa",
-                          //       departureCityDate: "aaaaa",
-                          //       departureCity: "aaaaa",
-                          //       departureCityShortCode: "aaaaa",
-                          //       departureCityTime: "aaaaa",
-                          //       arrivalCityDate: "aaaaa",
-                          //       arrivalCity: "aaaaa",
-                          //       arrivalCityShortCode: "aaaaa",
-                          //       arrivalCityTime: "aaaaa",
-                          //       flightStatus: "aaaaa",
-                          //       flightIata: "aaaaa",
-                          //       isSelected: false,
-                          //       departureLat: "aaaaaaa",
-                          //       arrivalLat: "aaaaaaa"
-                          //   )
-                          // ];
-                          //
-                          //
-                          //
-                          // // selectedItems.add(ModelMyFlightsUpcoming(
-                          // //     flightCode: "aaaaa",
-                          // //     departureCityDate: "aaaaa",
-                          // //     departureCity: "aaaaa",
-                          // //     departureCityShortCode: "aaaaa",
-                          // //     departureCityTime: "aaaaa",
-                          // //     arrivalCityDate: "aaaaa",
-                          // //     arrivalCity: "aaaaa",
-                          // //     arrivalCityShortCode: "aaaaa",
-                          // //     arrivalCityTime: "aaaaa",
-                          // //     flightStatus: "aaaaa",
-                          // //     flightIata: "aaaaa",
-                          // //     isSelected: false,
-                          // //     departureLat: "aaaaaaa",
-                          // //     arrivalLat: "aaaaaaa"
-                          // // ));
-                          //
-                          // task = ModelMyFlightsCreateTrip(
-                          //     tripName: !.,
-                          //     noOfFlights: "DUMMY",
-                          //     tripImage: '',
-                          //     isSelected: false,
-                          //     modelMyFlightsUpcoming: selectedItems
-                          // );
-                          // //
-                          // //  taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                          // //
-                          // //  if (task != null) {
-                          // //    task!.tripName = newTask.tripName;
-                          // //    modelItemsList = selectedItems;
-                          // //    task!.save();
-                          // //    Navigator.pop(context);
-                          // //  }
-                          // //
-                          // //  else {
-                          // //    await taskBox!.add(newTask);
-                          // //    Navigator.pop(context);
-                          // //  }
-                          //
-                          // ///
-                          //
-                          //
-                          //
-                          //
-                          //
-                          // // addCart(modelMyFlights!);
-                          //
-                          // // dataBox!.putAt(0,modelMyFlights!);
-                          //
-                          //
-                          // // dataBox!.add(modelMyFlights!);
-                          //
-                          // // taskBox!.put(modelMyFlights!.key, task!);
-                          // taskBox!.putAt(0,task!);
-                          // // taskBox!.put(0, task!);
-                          // // taskBox?.addAll(modelMyFlights!.key);
-                          // // aaa!.add(abc!);
-                          //
-                          // // taskBox!.add(abc);
-                          //
-                          //
-                          //
-                          // // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                          // // taskBox.add(value)
-                          //
-                          //
-                          // // taskBox!.deleteAll(taskBox!.keys); //delete all trips
-                          // // taskBox!.deleteAt(0); //delete from specific index
-                          //
-                          //
-
+                          Iterable hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
+                          Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.forEach((element) {
+                            if(element.isSelected == true){
+                              log(hiveFlightCode.toString());
+                              log(flightCode.toString());
+                              if(hiveFlightCode.contains(flightCode.toString())){
+                                log(hiveFlightCode.toString());
+                                // ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                              }
+                              else{
+                                element.modelMyFlightsUpcoming.add(
+                                ModelMyFlightsUpcoming(
+                                  flightCode: flightCode,
+                                  departureCityDate: departureCityDate,
+                                  departureCity: departureCityShortCode,
+                                  departureCityShortCode: departureAirport,
+                                  departureCityTime: departureCityTime,
+                                  arrivalCityDate: departureCityDate,
+                                  arrivalCity: arrivalCityShortCode,
+                                  arrivalCityShortCode: arrivalCity,
+                                  arrivalCityTime: arrivalCityTime,
+                                  flightStatus: flightStatus,
+                                  flightIata: flightCode,
+                                  isSelected: false,
+                                ));
+                            }}
+                          });
                           Navigator.pop(context);
                           log("ADD");
                         },
@@ -870,9 +708,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 );
             }
         );
-      });
+      });}
 
-  Future<String?> openDialogue({
+Future<String?> openDialogue({
     required TextEditingController createTripController,
     required BuildContext context,
     required Function() onTap,

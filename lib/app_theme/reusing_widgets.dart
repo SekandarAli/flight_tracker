@@ -317,7 +317,7 @@ class ReusingWidgets {
   static Widget searchButton({
     required Function() onPress,
     required BuildContext context,
-    required String text,
+    required var text,
     required TextStyle style,
   }) {
     return Container(
@@ -379,7 +379,7 @@ class ReusingWidgets {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.26,
               height: MediaQuery.of(context).size.height * 0.08,
-              padding: EdgeInsets.only(bottom: 2),
+              padding: EdgeInsets.only(bottom: 0),
               // decoration: BoxDecoration(
               //   color: ColorsTheme.white,
               //   border: Border.all(color: ColorsTheme.primaryColor,),

@@ -18,6 +18,7 @@ class ModelMyFlightsCreateTrip extends HiveObject {
 
   @HiveField(3)
   var modelMyFlightsUpcoming;
+  // List<ModelMyFlightsUpcoming> modelMyFlightsUpcoming;
 
   @HiveField(4)
   bool? isSelected;

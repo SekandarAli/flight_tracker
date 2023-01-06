@@ -198,11 +198,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                 return Center(child: NoFlightFound());
                               }
                             } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text(
-                                  "error 2${snapshot.error}",
-                                ),
-                              );
+                              return NoInternetError();
                             } else {
                               return Center(child: FunctionProgressIndicator());
                             }

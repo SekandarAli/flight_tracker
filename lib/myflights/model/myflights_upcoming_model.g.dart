@@ -27,8 +27,8 @@ class ModelMyFlightsUpcomingAdapter
       arrivalCityShortCode: fields[6] as String?,
       arrivalCityTime: fields[7] as String?,
       arrivalCityDate: fields[8] as String?,
-      departureLat: fields[9] as String?,
-      arrivalLat: fields[10] as String?,
+      trackFlight: fields[9] as String?,
+      details: fields[10] as String?,
       flightStatus: fields[11] as String?,
       isSelected: fields[12] as dynamic,
       flightIata: fields[13] as String?,
@@ -58,9 +58,9 @@ class ModelMyFlightsUpcomingAdapter
       ..writeByte(8)
       ..write(obj.arrivalCityDate)
       ..writeByte(9)
-      ..write(obj.departureLat)
+      ..write(obj.trackFlight)
       ..writeByte(10)
-      ..write(obj.arrivalLat)
+      ..write(obj.details)
       ..writeByte(11)
       ..write(obj.flightStatus)
       ..writeByte(12)

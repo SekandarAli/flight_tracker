@@ -34,10 +34,10 @@ class ModelMyFlightsUpcoming extends HiveObject {
   String? arrivalCityDate;
 
   @HiveField(9)
-  String? departureLat;
+  String? trackFlight;
 
   @HiveField(10)
-  String? arrivalLat;
+  String? details;
 
   @HiveField(11)
   String? flightStatus;
@@ -58,8 +58,8 @@ class ModelMyFlightsUpcoming extends HiveObject {
       this.arrivalCityShortCode,
       this.arrivalCityTime,
       this.arrivalCityDate,
-      this.departureLat,
-      this.arrivalLat,
+      this.trackFlight,
+      this.details,
       this.flightStatus,
       this.isSelected,
       this.flightIata,

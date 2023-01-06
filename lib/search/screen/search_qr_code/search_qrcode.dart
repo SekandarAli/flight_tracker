@@ -62,7 +62,7 @@ class _SearchQRCodeState extends State<SearchQRCode> {
                           padding: EdgeInsets.all(20),
                           margin: EdgeInsets.all(20),
                           child: Text(
-                            widget.qrCode.isEmpty ? "No Result Found" : 'Result :\n${widget.qrCode}',
+                            widget.qrCode == "-1" ? "No Result Found" : 'Result :\n\n${widget.qrCode}',
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,

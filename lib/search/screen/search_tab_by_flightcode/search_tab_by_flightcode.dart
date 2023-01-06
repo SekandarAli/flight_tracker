@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -133,16 +135,25 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                 SizedBox(height: 10),
 
                       ReusingWidgets.searchButton(onPress: () async {
+                        Iterable hiveFlightCode = Hive.box<ModelSearch>("modelSearch").values.map((e) => e.flightCode);
 
-                        /// If search don't exist
-                        // showAlertDialog(context);
+                        log("${hiveFlightCode.contains(flightCodeController.text)}");
 
                         if(flightCodeController.text.isEmpty){
                           ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
                         }
 
+                        else if(hiveFlightCode.contains(flightCodeController.text)){
+                          ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
+                          log("$hiveFlightCode");
+                          setState(() {
+                            futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
+                          });
+                        }
                         else {
+                          ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
                           setState(() {});
+                          log("$hiveFlightCode");
                           modelMyFlightsSearch = ModelSearch(
                               flightCode: flightCodeController.text,
                               arrivalCity: "",
@@ -150,9 +161,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                               arrivalCityShortName: "",
                               departureCityShortName: "",
                             );
-
                           futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
-                          Future.delayed(Duration(milliseconds: 700)).then((value) => dataBoxSearch!.add(modelMyFlightsSearch!));
+                          Future.delayed(Duration(seconds: 2)).then((value) => dataBoxSearch!.add(modelMyFlightsSearch!));
                         }
 
                       }, context: context,

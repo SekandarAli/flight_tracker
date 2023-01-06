@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -192,49 +194,37 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                   child: ListView.builder(
                                     itemCount: widget.currentTask.modelMyFlightsUpcoming!.length,
                                     itemBuilder: (context, index) {
+                                      log("qwerty${widget.currentTask.modelMyFlightsUpcoming[index].toString()}");
                                       return
                                         widget.currentTask.modelMyFlightsUpcoming[index].flightCode!.isNotEmpty ?
-                                      FlightCardScreen().flightCardSimple(
-                                        onTap: (){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                                            return FlightDetailScreen(
-                                                flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,openTrack: true,);
-                                          }));
-                                        },
-                                        // child: Dismissible(
-                                        // key: Key(
-                                        //     UniqueKey().toString()),
-                                        // background: Container(
-                                        //   margin: EdgeInsets.all(5),
-                                        //   padding: EdgeInsets.all(15),
-                                        //   color: ColorsTheme.dismissibleColor,
-                                        //   child: Row(
-                                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //     children: [
-                                        //       Icon(Icons.delete,color: Colors.white,),
-                                        //       Icon(Icons.delete,color: Colors.white,),
-                                        //     ],
-                                        //   ),
-                                        // ),
-                                        // onDismiss: (direction){
-                                        //   setState(() {
-                                        //     print("aaa${ widget.currentTask.modelMyFlightsUpcoming![index].flightCode}");
-                                        //   });
-                                        //   ScaffoldMessenger.of(context).showSnackBar(
-                                        //       SnackBar(
-                                        //           content: Text('Flight Removed Successfully'),
-                                        //           duration: Duration(milliseconds: 700)));
-                                        // },
-                                        direction: DismissDirection.none,
-                                        context: context,
-                                        flightCode: widget.currentTask.modelMyFlightsUpcoming![index].flightCode!,
-                                        flightStatus: widget.currentTask.modelMyFlightsUpcoming![index].flightStatus!,
-                                        departureCity: widget.currentTask.modelMyFlightsUpcoming![index].departureCity!,
-                                        departureCityShortCode:widget.currentTask.modelMyFlightsUpcoming![index].departureCityShortCode!,
-                                        departureCityTime: widget.currentTask.modelMyFlightsUpcoming![index].departureCityTime! ?? "---",
-                                        arrivalCity: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCity!,
-                                        arrivalCityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode!,
-                                        arrivalCityTime: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityTime! ?? "---",
+                                      StatefulBuilder(
+                                          builder: (BuildContext context, StateSetter mySetState) {
+                                          return FlightCardScreen().flightCardSimple(
+                                            onDismiss: (direction){
+                                              setState(() {
+                                                // widget.currentTask.deleteAt(0);
+                                                log("flight${widget.currentTask.modelMyFlightsUpcoming[index].flightCode.toString()}");
+                                                // widget.currentTask.modelMyFlightsUpcoming[index].delete();
+                                              });
+                                            },
+                                            onTap: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                return FlightDetailScreen(
+                                                    flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,openTrack: true,);
+                                              }));
+                                            },
+                                            direction: DismissDirection.horizontal,
+                                            context: context,
+                                            flightCode: widget.currentTask.modelMyFlightsUpcoming![index].flightCode!,
+                                            flightStatus: widget.currentTask.modelMyFlightsUpcoming![index].flightStatus!,
+                                            departureCity: widget.currentTask.modelMyFlightsUpcoming![index].departureCity!,
+                                            departureCityShortCode:widget.currentTask.modelMyFlightsUpcoming![index].departureCityShortCode!,
+                                            departureCityTime: widget.currentTask.modelMyFlightsUpcoming![index].departureCityTime! ?? "---",
+                                            arrivalCity: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCity!,
+                                            arrivalCityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode!,
+                                            arrivalCityTime: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityTime! ?? "---",
+                                          );
+                                        }
                                       )
                                             : Container();
                                     },

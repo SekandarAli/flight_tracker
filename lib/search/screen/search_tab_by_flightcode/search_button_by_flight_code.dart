@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:developer';
+
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
 import 'package:flight_tracker/functions/function_progress_indicator.dart';
 import 'package:flight_tracker/myflights/model/myflights_upcoming_model.dart';
@@ -45,11 +47,12 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
   String arrivalCityDate = '---';
   String flightStatus = "---";
 
+  Iterable? hiveFlightCode;
+
   @override
   void initState() {
     super.initState();
     futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flightCode);
-
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
   }
 
@@ -63,13 +66,17 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
       appBar: AppBar(
         leading: IconButton(onPressed: () {
           Navigator.pop(context);
-          }, icon: Icon(Icons.arrow_back,color: Colors.white,),),
+          },
+          icon: Icon(Icons.arrow_back,color: Colors.white,),),
+
         actions: [
           Center(child: Text(widget.currentDate.toString())),
           SizedBox(width: 10),
         ],
+
         title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
       ),
+
       body: SafeArea(
         child: SizedBox(
           height: h,
@@ -77,11 +84,8 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
           child: FutureBuilder(
             future: futureList,
             builder: (context,snapshot) {
-              // print("1");
               if (snapshot.hasData) {
-                // print("2");
                 if (snapshot.data!.response != null) {
-
                   flightCode = snapshot.data!.response!.flightIata ?? "---";
                   departureCity = snapshot.data!.response!.depIata ?? "---";
                   arrivalCity = snapshot.data!.response!.arrIata ?? "---";
@@ -94,7 +98,6 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                   arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(arrTime) * 1000));
                   arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(arrTime) * 1000));
                   flightStatus = snapshot.data!.response!.status ?? "---";
-
 
                   return
                     FlightCardScreen().flightCardWithCardExpand(
@@ -112,7 +115,8 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                         arrivalCity: arrivalCity,
                         arrivalCityShortCode: arrivalCityShortCode,
                         arrivalCityTime: arrivalCityTime,
-                        cardExpandRow: cardExpand == true ? Container(
+                        cardExpandRow: cardExpand == true ?
+                        Container(
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.only(
@@ -120,6 +124,7 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                               bottomLeft: Radius.circular(10),
                             ),
                           ),
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -130,8 +135,18 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                   return FlightDetailScreen(flight_iata: flightCode,openTrack: true,);
                                 }));
 
-                              }, child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                              },
+                                  child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+
                               TextButton(onPressed: () {
+
+                                hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
+
+                                if(hiveFlightCode!.contains(flightCode)){
+                                  log("Flight Codes$hiveFlightCode");
+                                  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                                }
+                                else{
                                 modelMyFlights = ModelMyFlightsUpcoming(
                                     flightCode: flightCode,
                                     departureCity: departureCity,
@@ -146,8 +161,9 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                                     isSelected: false
                                 );
                                 dataBox!.add(modelMyFlights!);
-                                ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
-                              }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");}
+                                },
+                                  child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
                             ],
                           ),
                         ) : Container()

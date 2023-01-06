@@ -149,7 +149,8 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                         String countryShortName = beforeSearch[index]["country_code"] ?? "---";
                                         String airportName = beforeSearch[index]["name"] ?? "---";
                                         String iataValue = beforeSearch[index]["iata_code"] ?? "---";
-                                        String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
+                                        String shortAirportName = airportName;
+                                        // String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
 
                                         return
                                           InkWell(
@@ -172,7 +173,8 @@ class _SearchTabArrivalDepartureAirportState extends State<SearchTabArrivalDepar
                                         String countryShortName = afterSearch[index]["country_code"] ?? "---";
                                         String airportName = afterSearch[index]["name"] ?? "---";
                                         String iataValue = afterSearch[index]["iata_code"] ?? "---";
-                                        String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
+                                        String shortAirportName = airportName;
+                                        // String shortAirportName = airportName.length > 10 ? '${airportName.substring(0, 10)}...' : airportName;
 
                                         return
                                           InkWell(

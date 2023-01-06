@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
    static  Color lightGreenPrimary = Color(0xffdbf5db);
    static Color lightGreyColor = Colors.grey.shade200;
    static Color myFlightsbg = Colors.grey.shade300;
+   static Color lightGrey = Colors.grey.shade400;
    static Color black = Colors.black;
    static Color white = Colors.white;
    static Color buttonColor = Colors.blue.shade400;
