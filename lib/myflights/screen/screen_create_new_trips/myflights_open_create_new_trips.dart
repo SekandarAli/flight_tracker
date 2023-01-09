@@ -205,12 +205,13 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                                 // widget.currentTask.deleteAt(0);
                                                 log("flight${widget.currentTask.modelMyFlightsUpcoming[index].flightCode.toString()}");
                                                 // widget.currentTask.modelMyFlightsUpcoming[index].delete();
+                                                // widget.cu
                                               });
                                             },
                                             onTap: (){
                                               Navigator.push(context, MaterialPageRoute(builder: (context){
                                                 return FlightDetailScreen(
-                                                    flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,openTrack: true,);
+                                                    flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,);
                                               }));
                                             },
                                             direction: DismissDirection.horizontal,

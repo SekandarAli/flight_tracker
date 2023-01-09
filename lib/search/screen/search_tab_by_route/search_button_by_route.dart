@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
-
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/flight_card/screen/flight_card_screen.dart';
@@ -15,26 +14,24 @@ import '../../model/model_search_flight.dart';
 import '../../services/services_search_flight.dart';
 
 class SearchButtonByRoute extends StatefulWidget {
-   SearchButtonByRoute({
-     super.key,
-     required this.depIata,
-     required this.arrIata,
-     this.airlineOptional,
-     this.dateDay,
-     this.currentDate,
+  SearchButtonByRoute({
+    super.key,
+    required this.depIata,
+    required this.arrIata,
+    this.airlineOptional,
+    this.dateDay,
+    this.currentDate,
+    this.departureAirport,this.arrivalAirport
 
-     this.departureAirport,this.arrivalAirport
-
-   });
+  });
 
   var depIata;
   var arrIata;
   var airlineOptional;
   var dateDay;
   var currentDate;
-
-   var departureAirport;
-   var arrivalAirport;
+  var departureAirport;
+  var arrivalAirport;
 
 
   @override
@@ -47,7 +44,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
-  bool trackFlight = true;
+  // bool trackFlight = true;
   bool cardExpand = false;
 
   Iterable? hiveFlightCode;
@@ -55,12 +52,19 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
   @override
   void initState() {
     super.initState();
-
+    // setState((){});
+    log(widget.depIata);
+    log(widget.arrIata);
+    log(widget.airlineOptional);
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
+    hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
     futureList = ServicesSearchFlight().GetAllPosts(
-        depIata: widget.depIata, arrIata: widget.arrIata, airlineIcao: widget.airlineOptional, day: widget.dateDay, flightIata: "",
+      depIata: widget.depIata, arrIata: widget.arrIata, airlineIcao: widget.airlineOptional, day: widget.dateDay, flightIata: "",
     );
   }
+
+   refresh() => setState((){});
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +72,17 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-              "${widget.departureAirport.length > 12 ? '${widget.departureAirport.substring(0, 12)}...' : widget.departureAirport} - "
-                  "${widget.arrivalAirport.length > 12 ? '${widget.arrivalAirport.substring(0, 12)}...' : widget.arrivalAirport}",
-
-          style: ThemeTexts.textStyleTitle3,),
-        actions: [
-          Center(child: Text(widget.currentDate.toString())),
-          SizedBox(width: 10),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     "${widget.departureAirport.length > 12 ? '${widget.departureAirport.substring(0, 12)}...' : widget.departureAirport} - "
+      //         "${widget.arrivalAirport.length > 12 ? '${widget.arrivalAirport.substring(0, 12)}...' : widget.arrivalAirport}",
+      //
+      //     style: ThemeTexts.textStyleTitle3,),
+      //   actions: [
+      //     Center(child: Text(widget.currentDate.toString())),
+      //     SizedBox(width: 10),
+      //   ],
+      // ),
       body: SafeArea(
         child: SizedBox(
           height: h,
@@ -92,6 +96,17 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                     color: Colors.white,
                     child: Column(
                       children: [
+                        AppBar(
+                          title: Text(
+                            "${widget.departureAirport.length > 12 ? '${widget.departureAirport.substring(0, 12)}...' : widget.departureAirport} - "
+                                "${widget.arrivalAirport.length > 12 ? '${widget.arrivalAirport.substring(0, 12)}...' : widget.arrivalAirport}",
+
+                            style: ThemeTexts.textStyleTitle3,),
+                          actions: [
+                            Center(child: Text(widget.currentDate.toString())),
+                            SizedBox(width: 10),
+                          ],
+                        ),
                         Flexible(
                           child: ListView.builder(
                             padding: EdgeInsets.all(5),
@@ -105,29 +120,22 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               String airlineCityOptional = snapshot.data!.response![index].airlineIcao ?? "---";
                               String departureCityShortName = widget.departureAirport ?? "---";
                               String arrivalCityShortName = widget.arrivalAirport ?? "---";
-                              String departureCityTime = snapshot.data!.response![index].depTime!;
-                              String? arrivalCityTime = snapshot.data!.response![index].arrTime!;
-                              String flight_iata = snapshot.data!.response![index].flightIata ?? "Unknown";
+                              String departureCityTime = snapshot.data!.response![index].depTime ?? "";
+                              String arrivalCityTime = snapshot.data!.response![index].arrTime ?? "";
+                              String flight_iata = snapshot.data!.response![index].flightIata ?? "";
                               DateTime updated = snapshot.data!.response![index].updated!;
                               List<String> dateDay = snapshot.data!.response![index].days!;
 
-                              // print("print${widget.depIata}");
-                              // print("print${widget.airlineOptional}");
-                              // print("print$departureCity");
-                              // print("print$airlineCityOptional");
-                              // print("print${widget.dateDay}");
-                              // print("print${dateDay}");
-                              // print("print${dateDay.contains(widget.dateDay)}");
-
                               return
                                 (widget.depIata == departureCity && widget.arrIata == arrivalCity && dateDay.contains(widget.dateDay)) ||
-                              (widget.depIata == departureCity && widget.arrIata == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay)) ?
+                                    (widget.depIata == departureCity && widget.arrIata == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay)) ?
                                 FlightCardScreen().flightCardWithCardExpand(
-                                  onTap: (){
-                                    setState((){
-                                      cardExpand =! cardExpand;
-                                    });
-                                  },
+                                    onTap: (){
+                                      setState((){
+                                        cardExpand =! cardExpand;
+                                        log(cardExpand.toString());
+                                      });
+                                    },
                                     context: context,
                                     flightCode: flightCode,
                                     flightStatus: "",
@@ -151,24 +159,50 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                         children: [
                                           SizedBox(width: w * 0.3),
                                           TextButton(onPressed: () {
+                                            setState(() {
+                                              cardExpand =! cardExpand;
+                                            });
 
                                             Navigator.push(context, MaterialPageRoute(builder: (context){
-                                              return FlightDetailScreen(flight_iata: flight_iata,openTrack: true);
+                                              return FlightDetailScreen(flight_iata: flight_iata);
                                             }));
 
                                           },
                                               child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
 
                                           TextButton(onPressed: () {
-
+                                            var index = -1;
                                             hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
-
+                                            // modelMyFlights = ModelMyFlightsUpcoming(
+                                            //   flightCode: flightCode,
+                                            //   departureCity: departureCity,
+                                            //   departureCityShortCode: departureCityShortName,
+                                            //   departureCityTime: departureCityTime,
+                                            //   arrivalCityDate: updated.toString(),
+                                            //   arrivalCity: arrivalCity,
+                                            //   arrivalCityShortCode: arrivalCityShortName,
+                                            //   arrivalCityTime: arrivalCityTime,
+                                            //   flightStatus: "",
+                                            //   flightIata: flight_iata,
+                                            //   isSelected: false,
+                                            // );
                                             if(hiveFlightCode!.contains(flightCode)){
                                               log("Flight Codes$hiveFlightCode");
-                                              ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                                              for(int i = 0; i < dataBox!.length ; i++){
+                                                if(dataBox!.values.elementAt(i).flightCode == flightCode){
+                                                  index = i;
+                                                }
+                                              }
+                                              if(index != -1){
+                                                dataBox!.deleteAt(index);
+                                              }
+                                              else{
+                                                print("element not found");
+                                              }
+                                              ReusingWidgets().snackBar(context: context, text: "FLIGHT UNTRACKED");
                                             }
                                             else {
-                                            modelMyFlights = ModelMyFlightsUpcoming(
+                                              modelMyFlights = ModelMyFlightsUpcoming(
                                                 flightCode: flightCode,
                                                 departureCity: departureCity,
                                                 departureCityShortCode: departureCityShortName,
@@ -180,13 +214,17 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                                 flightStatus: "",
                                                 flightIata: flight_iata,
                                                 isSelected: false,
-                                                trackFlight: "aaa"
-                                            );
-                                            dataBox!.add(modelMyFlights!);
-                                            ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");
+                                              );
+                                              dataBox!.add(modelMyFlights!);
+                                              ReusingWidgets().snackBar(context: context, text: "FLIGHT TRACKED");
                                             }
+                                            setState(() {});
 
-                                          }, child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
+                                          }, child: Text(
+                                              hiveFlightCode != null ?
+                                              hiveFlightCode!.contains(flightCode) ?
+                                              "UNTRACK FLIGHT": "TRACK FLIGHT" : "null",
+                                              style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.black,fontWeight: FontWeight.bold))),
                                         ],
                                       ),
                                     ) : Container()
@@ -199,14 +237,30 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                     ),
                   );
                 } else {
-                  return NoFlightFound();
+                  Future(() {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            AlertDialog(
+                              title: Text("No Flights Found"),
+                              content: Text(
+                                  "Try again or try searching by flight code.\n\n"
+                                      "Hint: For connecting flights try to search for each leg separately."),
+                              actions: [
+                                TextButton(
+                                  child: Text("OK"),
+                                  onPressed: () {
+                                    Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                                  },
+                                ),
+                              ],
+                            ));
+                  });
+                  return Container();
                 }
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "error 2${snapshot.error}",
-                  ),
-                );
+                return NoInternetError();
               } else {
                 return Center(child: FunctionProgressIndicator());
               }
@@ -215,6 +269,30 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget flightDetails(
+      {required String cityName,
+        required String cityShortCode,
+        required String cityTime,
+        required CrossAxisAlignment crossAlignment,
+        required TextAlign textAlign,
+      }) {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: crossAlignment,
+      children: [
+        Text(cityName,
+            style: ThemeTexts.textStyleTitle1.copyWith(color: Colors.black)),
+        SizedBox(height: 10),
+        Text(cityShortCode,textAlign: textAlign,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.grey)),
+        SizedBox(height: 10),
+        Text(cityTime,
+            style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.themeColor)),
+        SizedBox(height: 10),
+      ],
     );
   }
 }

@@ -21,6 +21,16 @@ class SearchQRCode extends StatefulWidget {
 class _SearchQRCodeState extends State<SearchQRCode> {
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if( widget.qrCode == "-1")
+      {
+        Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+      }
+  }
+
+  @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;

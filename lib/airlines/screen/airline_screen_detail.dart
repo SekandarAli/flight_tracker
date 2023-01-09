@@ -165,7 +165,7 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                                              InkWell(
                                               onTap: () async {
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: flight_iata,openTrack: true,);
+                                                  return FlightDetailScreen(flight_iata: flight_iata);
                                                 }));
                                               },
                                               child: Padding(

@@ -80,7 +80,7 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
                           return FlightCardScreen().flightCardSimple(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
+                                return FlightDetailScreen(flight_iata: currentTask.flightIata!,);
                               }));
                             },
                             onDismiss: (direction){

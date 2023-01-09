@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ScanMode.QR,
       );
 
-      if (!mounted) return null;
+      // if (!mounted) return null;
 
       setState(() {
         this.qrCode = qrCode;

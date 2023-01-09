@@ -160,6 +160,97 @@ class ReusingWidgets {
 
   /// BY ROUTE ///
 
+  // static Widget byRouteContainer({
+  //   required String departureTitle,
+  //   required String arrivalTitle,
+  //   required BuildContext context,
+  //   required Function() onTapDepartureTitle,
+  //   required Function() onTapArrivalTitle,
+  //   required TextStyle depStyle,
+  //   required TextStyle arrStyle,
+  //   required Function() onTapClearDepartureTitle,
+  //   required Function() onTapClearArrivalTitle,
+  //   required bool clearIconDeparture,
+  //   required bool clearIconArrival,
+  //   required Function() onTapSwapIcon,
+  // }) {
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height * 0.19,
+  //       margin: EdgeInsets.all(0),
+  //       padding: EdgeInsets.all(15),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         border: Border.all(color: Colors.white),
+  //         borderRadius: BorderRadius.all(
+  //           Radius.circular(3),
+  //         ),
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisSize: MainAxisSize.max,
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               InkWell(
+  //                 onTap: (){
+  //                   onTapDepartureTitle();
+  //                 },
+  //                 child: Row(
+  //                   children: [
+  //                     Icon(Icons.flight_takeoff, color: ColorsTheme.black),
+  //                     SizedBox(width: 20),
+  //                     Text(
+  //                       departureTitle.length > 20 ? '${departureTitle.substring(0, 20)}...' : departureTitle,
+  //                       style: depStyle,
+  //                     ),
+  //                     clearIconDeparture == true ? IconButton(onPressed: (){
+  //                       onTapClearDepartureTitle();
+  //                     }, icon: Icon(Icons.clear)) : Container()
+  //                   ],
+  //                 ),
+  //               ),
+  //               Container(
+  //                 color: Colors.white,
+  //                 width: MediaQuery.of(context).size.width * 0.7,
+  //                 child: Divider(
+  //                   // endIndent: 200,
+  //                   thickness: 1,
+  //                 ),
+  //               ),
+  //               InkWell(
+  //                 onTap: (){
+  //                   onTapArrivalTitle();
+  //                 },
+  //                 child: Row(
+  //                   children: [
+  //                     Icon(Icons.flight_land, color: ColorsTheme.black),
+  //                     SizedBox(width: 20),
+  //                     Text(
+  //                       // arrivalTitle,
+  //                       arrivalTitle.length > 20 ? '${arrivalTitle.substring(0, 20)}...' : arrivalTitle,
+  //                       style: arrStyle,
+  //                     ),
+  //                     clearIconArrival == true ? IconButton(onPressed: (){
+  //                       onTapClearArrivalTitle();
+  //                     }, icon: Icon(Icons.clear)) : Container()
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           IconButton(
+  //               onPressed: () {
+  //                 onTapSwapIcon();
+  //               },
+  //               icon: Icon(
+  //                 Icons.swap_vert,
+  //                 size: 30,
+  //               ))
+  //         ],
+  //       ));
+  // }
 
   static Widget optionalAirlineContainer({
     required String airlineTitle,
@@ -260,7 +351,7 @@ class ReusingWidgets {
           /// BY ROUTE NEW///
 
 
-  static Widget byRouteContainer({
+  static Widget byRouteNewContainer({
     required String title1,
     required String title2,
     required String airportName,
@@ -269,8 +360,8 @@ class ReusingWidgets {
     required CrossAxisAlignment crossAxisAlignment,
     required Function() onTapAirport,
      double? sizedBoxHeight,
-    // required TextEditingController? airportName1,
-    // required TextEditingController? airportShortName1,
+    required TextEditingController? airportName1,
+    required TextEditingController? airportShortName1,
   }) {
     return Container(
       padding: EdgeInsets.only(top: 20),
@@ -282,12 +373,12 @@ class ReusingWidgets {
             title1,
             style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
           ),
-           SizedBox(height: 10),
+           SizedBox(height: 0),
           Material(
             color: Colors.transparent,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.26,
-              // height: MediaQuery.of(context).size.height * 0.08,
+              height: MediaQuery.of(context).size.height * 0.08,
               padding: EdgeInsets.only(bottom: 0),
               // decoration: BoxDecoration(
               //   color: ColorsTheme.white,
@@ -299,21 +390,47 @@ class ReusingWidgets {
               child: InkWell(
                 onTap: (){
                   onTapAirport();
-                  },
-                child: Column(
-                  children: [
-                    Text(
-                      // airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
-                      airportName,
-                      style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
-                    ),
-                    SizedBox(height: 5),
-                  ],
+                },
+                child: TextFormField(
+                  enabled: false,
+                  controller: airportName1,
+                  style:  ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                  cursorColor: ColorsTheme.primaryColor,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: title2,
+                    hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                  ),
                 ),
               ),
             ),
           ),
-
+           // Material(
+           //   child: InkWell(
+           //     onTap: (){
+           //       onTapAirport();
+           //     },
+           //     child: Column(
+           //       children: [
+           //         Text(
+           //           airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
+           //          style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+           //         ),
+           //         SizedBox(height: 5),
+           //       ],
+           //     ),
+           //   ),
+           // ),
+          // divider(context: context),
+          // SizedBox(height: 10),
+          // Text(
+          //   title2,
+          //   style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.textColor),
+          // ),
+          // SizedBox(height: 5),
+          // PickDate(),
+          // divider(context: context),
+          // SizedBox(height: 20),
         ],
       ),
     );
@@ -327,13 +444,13 @@ class ReusingWidgets {
         ));
   }
 
-  static Widget byRouteAirlineContainer({
+  static Widget byRouteAirlineNewContainer({
     required String airlineName,
     required String airlineShortName,
     required BuildContext context,
     required Function() onTapAirline,
-    // required TextEditingController? airlineName1,
-    // required TextEditingController? airlineShortName1,
+    required TextEditingController? airlineName1,
+    required TextEditingController? airlineShortName1,
 
   }){
     return InkWell(
@@ -344,11 +461,16 @@ class ReusingWidgets {
         alignment: Alignment.center,
         child: Column(
           children: [
+            // Text(
+            //   airlineName.length > 18 ? '${airlineName.substring(0, 18)}...' : airlineName,
+            //   style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+            // ),
+            // SizedBox(height: 5),
             Material(
               color: Colors.transparent,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.3,
-                // height: MediaQuery.of(context).size.height * 0.05,
+                height: MediaQuery.of(context).size.height * 0.05,
                 padding: EdgeInsets.only(bottom: 0),
                 // decoration: BoxDecoration(
                 //   color: ColorsTheme.white,
@@ -361,15 +483,16 @@ class ReusingWidgets {
                   onTap: (){
                     onTapAirline();
                   },
-                  child: Column(
-                    children: [
-                      Text(
-                        // airlineName.length > 12 ? '${airlineName.substring(0, 12)}...' : airlineName,
-                        airlineName,textAlign: TextAlign.center,
-                        style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
-                      ),
-                      SizedBox(height: 5),
-                    ],
+                  child: TextFormField(
+                    enabled: false,
+                    controller: airlineName1,
+                    style:  ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                    cursorColor: ColorsTheme.primaryColor,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Airline(Optional)",
+                      hintStyle: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                    ),
                   ),
                 ),
               ),
@@ -384,6 +507,45 @@ class ReusingWidgets {
       ),
     );
   }
+
+  // static Widget byFlightCodeContainer({
+  //   required String flightCodeText,
+  //   required BuildContext context,
+  //   required Function() onTapFlightCodeText,
+  //   required TextStyle flightCodeStyle,
+  //   required bool clearIcon,
+  //   required Function() onTapClearIcon,
+  // }) {
+  //   return GestureDetector(
+  //     onTap: (){
+  //       onTapFlightCodeText();
+  //     },
+  //     child: Container(
+  //         height: MediaQuery.of(context).size.height * 0.19,
+  //         margin: EdgeInsets.all(0),
+  //         padding: EdgeInsets.all(15),
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           border: Border.all(color: Colors.white),
+  //           borderRadius: BorderRadius.all(
+  //             Radius.circular(3),
+  //           ),
+  //         ),
+  //         child: Row(
+  //           children: [
+  //             Icon(Icons.numbers, color: ColorsTheme.black),
+  //             SizedBox(width: 20),
+  //             Text(
+  //               flightCodeText,
+  //               style: flightCodeStyle,
+  //             ),
+  //             clearIcon == true ? IconButton(onPressed: (){
+  //               onTapClearIcon();
+  //             }, icon: Icon(Icons.clear)) : Container()
+  //           ],
+  //         )),
+  //   );
+  // }
 
 
   static Widget byFlightCodeNewContainer({
@@ -544,25 +706,6 @@ class ReusingWidgets {
       });
 
 
-  AlertDialog noResultFoundDialog({
-  required BuildContext context,
-
-}) => AlertDialog(
-          title: Text("No Flights Found"),
-          content: Text(
-              "Try again or try searching by flight code.\n\n"
-                  "Hint: For connecting flights try to search for each leg separately."),
-          actions: [
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-
   SnackBar deleteInfoSnackBar = SnackBar(
     backgroundColor: Colors.redAccent,
     duration: Duration(
@@ -624,8 +767,6 @@ class ReusingWidgets {
       ),
     );
   }
-
-
 
   Widget settingListTiles({
     required Function() onTap,

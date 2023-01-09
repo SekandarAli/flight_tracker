@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import '../../model/model_search_flight.dart';
-import '../../services/services_search_flight.dart';
 import 'search_button_by_route.dart';
 import 'search_tab_airline_optional.dart';
 import 'search_tab_arrival_departure_airport.dart';
@@ -31,7 +30,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   String departureAirport = "DPT Airport";
   String arrivalAirport = "ARR Airport";
   String airlineOptionalShortName = "AR";
-  String airlineOptional = "Airline(Optional)";
+  String airlineOptional = "Airline(OPT)";
   var temp1;
   var temp2;
   Box<ModelSearch>? dataBox;
@@ -45,16 +44,16 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
   Future<ModelSearchFlight>? futureList;
 
-  TextEditingController departureAirport1 = TextEditingController();
-  TextEditingController arrivalAirport1 = TextEditingController();
-  TextEditingController depIata1 = TextEditingController();
-  TextEditingController arrIata1 = TextEditingController();
-  TextEditingController departureAirportShortName1 = TextEditingController();
-  TextEditingController arrivalAirportShortName1 = TextEditingController();
+  // TextEditingController departureAirport1 = TextEditingController();
+  // TextEditingController arrivalAirport1 = TextEditingController();
+  // TextEditingController depIata1 = TextEditingController();
+  // TextEditingController arrIata1 = TextEditingController();
+  // TextEditingController departureAirportShortName1 = TextEditingController();
+  // TextEditingController arrivalAirportShortName1 = TextEditingController();
 
-  TextEditingController airlineOptional1 = TextEditingController();
-  TextEditingController airlineOptionalShortName1 = TextEditingController();
-  TextEditingController airlineIcao1 = TextEditingController();
+  // TextEditingController airlineOptional1 = TextEditingController();
+  // TextEditingController airlineOptionalShortName1 = TextEditingController();
+  // TextEditingController airlineIcao1 = TextEditingController();
 
 
   bool trackFlight = true;
@@ -95,11 +94,11 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   children: [
                     StatefulBuilder(
                         builder: (BuildContext context, StateSetter mySetState) {
-                          return ReusingWidgets.byRouteNewContainer(
+                          return ReusingWidgets.byRouteContainer(
 
-                            airportName1: departureAirport1,
+                            // airportName1: departureAirport1,
                             // airportName1: departureAirport1.text.length > 12 ? "departureAirport1.text.length == 12" : " departureAirport1.text",
-                            airportShortName1: depIata1,
+                            // airportShortName1: depIata1,
                             title2: "DPT Airport",
 
 
@@ -123,9 +122,9 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
 
 
-                                departureAirport1.text = newValue[0];
-                                departureAirportShortName1.text = newValue[1];
-                                depIata1.text = newValue[2];
+                                // departureAirport1.text = newValue[0];
+                                // departureAirportShortName1.text = newValue[1];
+                                // depIata1.text = newValue[2];
                               });
                             },
                           );
@@ -137,10 +136,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     ),
                     StatefulBuilder(
                         builder: (BuildContext context, StateSetter mySetState) {
-                          return ReusingWidgets.byRouteNewContainer(
+                          return ReusingWidgets.byRouteContainer(
 
-                            airportName1: arrivalAirport1,
-                            airportShortName1: arrIata1,
+                            // airportName1: arrivalAirport1,
+                            // airportShortName1: arrIata1,
                             title2: "ARR Airport",
 
 
@@ -161,9 +160,9 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                 arrIata = newValue[2];
 
 
-                                arrivalAirport1.text = newValue[0];
-                                arrivalAirportShortName1.text = newValue[1];
-                                arrIata1.text = newValue[2];
+                                // arrivalAirport1.text = newValue[0];
+                                // arrivalAirportShortName1.text = newValue[1];
+                                // arrIata1.text = newValue[2];
                               });
                             },
                           );
@@ -208,10 +207,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     ),
                     StatefulBuilder(
                         builder: (BuildContext context, StateSetter mySetState) {
-                          return ReusingWidgets.byRouteAirlineNewContainer(
+                          return ReusingWidgets.byRouteAirlineContainer(
 
-                             airlineName1: airlineOptional1,
-                             airlineShortName1: airlineIcao1,
+                             // airlineName1: airlineOptional1,
+                             // airlineShortName1: airlineIcao1,
 
 
                               airlineName: airlineOptional,
@@ -229,9 +228,9 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                   airlineIcao = newValue[2];
 
 
-                                  airlineOptional1.text = newValue[0];
-                                  airlineOptionalShortName1.text = newValue[1];
-                                  airlineIcao1.text = newValue[2];
+                                  // airlineOptional1.text = newValue[0];
+                                  // airlineOptionalShortName1.text = newValue[1];
+                                  // airlineIcao1.text = newValue[2];
 
                                 });
                               });
@@ -263,18 +262,35 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     {
                       ReusingWidgets().snackBar(context: context, text: 'Departure and Arrival Airport are Same');
                     }
-                    else if(hiveDepartureAirport.contains(departureAirport1.text) && hiveArrivalAirport.contains(arrivalAirport1.text)){
+                    else if(hiveDepartureAirport.contains(departureAirport) && hiveArrivalAirport.contains(arrivalAirport)){
                       ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
-                      setState(() {
-                        isLoading = true;
-                        futureList = ServicesSearchFlight().GetAllPosts(
-                          depIata: depIata1.text,
-                          arrIata: arrIata1.text,
-                          airlineIcao: airlineOptional1.text,
-                          day: dateDay,
-                          flightIata: "",
-                        );
-                      });
+
+
+                      Navigator.push(context, PageRouteBuilder(
+                        pageBuilder: (context, _, __) {
+                          return SearchButtonByRoute(
+                            depIata: depIata,
+                            arrIata: arrIata,
+                            arrivalAirport: arrivalAirport,
+                            departureAirport: departureAirport,
+                            airlineOptional: airlineIcao,
+                            dateDay: dateDay,
+                            currentDate: currentDate,
+                          );
+                        },
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ));
+                      // setState(() {
+                      //   // isLoading = true;
+                      //   futureList = ServicesSearchFlight().GetAllPosts(
+                      //     depIata: depIata1.text,
+                      //     arrIata: arrIata1.text,
+                      //     airlineIcao: airlineOptional1.text,
+                      //     day: dateDay,
+                      //     flightIata: "",
+                      //   );
+                      // });
                     }
                     else {
                       ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
@@ -285,16 +301,45 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           departureCityShortName: depIata,
                           flightCode: ""
                       );
-                      setState(() {
-                        isLoading = true;
-                        futureList = ServicesSearchFlight().GetAllPosts(
-                          depIata: depIata1.text,
-                          arrIata: arrIata1.text,
-                          airlineIcao: airlineOptional1.text,
-                          day: dateDay,
-                          flightIata: "",
-                        );
-                      });
+                      // Navigator.push(context, MaterialPageRoute(builder: (context){
+                      //   return SearchButtonByRoute(
+                      //     depIata: depIata,
+                      //     arrIata: arrIata,
+                      //     arrivalAirport: arrivalAirport,
+                      //     departureAirport: departureAirport,
+                      //     airlineOptional: airlineIcao,
+                      //     dateDay: dateDay,
+                      //     currentDate: currentDate,
+                      //   );
+                      // }));
+
+                      Navigator.push(context, PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) {
+                            return SearchButtonByRoute(
+                              depIata: depIata,
+                              arrIata: arrIata,
+                              arrivalAirport: arrivalAirport,
+                              departureAirport: departureAirport,
+                              airlineOptional: airlineIcao,
+                              dateDay: dateDay,
+                              currentDate: currentDate,
+                            );
+                          },
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+
+                      // setState(() {
+                      //   // isLoading = true;
+                      //   futureList = ServicesSearchFlight().GetAllPosts(
+                      //     depIata: depIata1.text,
+                      //     arrIata: arrIata1.text,
+                      //     airlineIcao: airlineOptional1.text,
+                      //     day: dateDay,
+                      //     flightIata: "",
+                      //   );
+                      // });
                       Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
                     }
                   },
@@ -308,94 +353,94 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
         ///Future Builder Starts
 
 
-        SizedBox(
-          height: 0,
-          width: w,
-          child: FutureBuilder(
-            future: futureList,
-            builder: (context,snapshot) {
-              print("future2");
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  log("hasData");
-                  if (snapshot.data!.response == null) {
-                    return Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Flexible(
-                            child: ListView.builder(
-                              padding: EdgeInsets.all(5),
-                              itemCount: snapshot.data!.response!.length,
-                              itemBuilder: (context, index) {
-
-                                log(snapshot.data!.response!.length.toString());
-                                log("notnull");
-                                Future(() {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          AlertDialog(
-                                            title: Text("No Flights Found"),
-                                            content: Text(
-                                                "Try again or try searching by flight code.\n\n"
-                                                    "Hint: For connecting flights try to search for each leg separately."),
-                                            actions: [
-                                              TextButton(
-                                                child: Text("OK"),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            ],
-                                          ));
-                                });
-                                return Container();
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  else {
-                    log("null");
-                    // isLoading = false;
-                    Future(() async {
-                      isLoading = false;
-                      await
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            isLoading = false;
-                            return SearchButtonByRoute(
-                              depIata: depIata1.text,
-                              arrIata: arrIata1.text,
-                              airlineOptional: airlineIcao1.text,
-                              dateDay: dateDay,
-                              currentDate: currentDate,
-                              departureAirport: departureAirport1.text,
-                              arrivalAirport: arrivalAirport1.text,
-                            );
-                          }));
-                    });
-                    return Container();
-                  }
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: NoInternetError(),
-                  );
-                } else {
-                  return Center(child: FunctionProgressIndicator());
-                }
-              }
-              else {
-                return Container();
-              }
-            },
-
-          ),
-        ),
+        // SizedBox(
+        //   height: 0,
+        //   width: w,
+        //   child: FutureBuilder(
+        //     future: futureList,
+        //     builder: (context,snapshot) {
+        //       print("future2");
+        //       if (snapshot.connectionState == ConnectionState.done) {
+        //         if (snapshot.hasData) {
+        //           log("hasData");
+        //           if (snapshot.data!.response == null) {
+        //             return Container(
+        //               color: Colors.white,
+        //               child: Column(
+        //                 children: [
+        //                   Flexible(
+        //                     child: ListView.builder(
+        //                       padding: EdgeInsets.all(5),
+        //                       itemCount: snapshot.data!.response!.length,
+        //                       itemBuilder: (context, index) {
+        //
+        //                         log(snapshot.data!.response!.length.toString());
+        //                         log("notnull");
+        //                         Future(() {
+        //                           showDialog(
+        //                               context: context,
+        //                               builder: (context) =>
+        //                                   AlertDialog(
+        //                                     title: Text("No Flights Found"),
+        //                                     content: Text(
+        //                                         "Try again or try searching by flight code.\n\n"
+        //                                             "Hint: For connecting flights try to search for each leg separately."),
+        //                                     actions: [
+        //                                       TextButton(
+        //                                         child: Text("OK"),
+        //                                         onPressed: () {
+        //                                           Navigator.pop(context);
+        //                                         },
+        //                                       ),
+        //                                     ],
+        //                                   ));
+        //                         });
+        //                         return Container();
+        //                       },
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             );
+        //           }
+        //
+        //           else {
+        //             log("false");
+        //             // isLoading = false;
+        //             Future(() async {
+        //               // isLoading = false;
+        //               await
+        //               Navigator.push(context, MaterialPageRoute(
+        //                   builder: (context) {
+        //                     // isLoading = false;
+        //                     return SearchButtonByRoute(
+        //                       depIata: depIata1.text,
+        //                       arrIata: arrIata1.text,
+        //                       airlineOptional: airlineIcao1.text,
+        //                       dateDay: dateDay,
+        //                       currentDate: currentDate,
+        //                       departureAirport: departureAirport1.text,
+        //                       arrivalAirport: arrivalAirport1.text,
+        //                     );
+        //                   }));
+        //             });
+        //             return Container();
+        //           }
+        //         } else if (snapshot.hasError) {
+        //           return Center(
+        //             child: NoInternetError(),
+        //           );
+        //         } else {
+        //           return Center(child: FunctionProgressIndicator());
+        //         }
+        //       }
+        //       else {
+        //         return Container();
+        //       }
+        //     },
+        //
+        //   ),
+        // ),
 
         /// Recent Searches Starts
         Container(
@@ -454,8 +499,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                           onTap: (){
                                             print("ontaoppp");
                                             log(depIata.toString());
-                                            log(depIata1.toString());
-                                            mySetState(() {
+                                            setState(() {
 
 
                                               departureAirport = currentTask.departureCity!;
@@ -464,15 +508,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                                               arrIata = currentTask.arrivalCityShortName!;
 
 
-                                              departureAirport1.text = currentTask.departureCity!;
-                                              depIata1.text = currentTask.departureCityShortName!;
-                                              arrivalAirport1.text = currentTask.arrivalCity!;
-                                              arrIata1.text = currentTask.arrivalCityShortName!;
+                                              // departureAirport = currentTask.departureCity!;
+                                              // depIata = currentTask.departureCityShortName!;
+                                              // arrivalAirport = currentTask.arrivalCity!;
+                                              // arrIata = currentTask.arrivalCityShortName!;
 
 
                                               log("aa$depIata");
-                                              log("aa$depIata1");
-                                              log("aa$arrIata1");
+                                              log("aa$arrIata");
                                             });
                                           },
                                           child: SizedBox(

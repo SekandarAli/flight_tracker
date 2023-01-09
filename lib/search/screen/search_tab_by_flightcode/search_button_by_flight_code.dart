@@ -54,28 +54,28 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
     super.initState();
     futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flightCode);
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
+    hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("build");
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(onPressed: () {
-          Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back,color: Colors.white,),),
-
-        actions: [
-          Center(child: Text(widget.currentDate.toString())),
-          SizedBox(width: 10),
-        ],
-
-        title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(onPressed: () {
+      //     Navigator.pop(context);
+      //     },
+      //     icon: Icon(Icons.arrow_back,color: Colors.white,),),
+      //
+      //   actions: [
+      //     Center(child: Text(widget.currentDate.toString())),
+      //     SizedBox(width: 10),
+      //   ],
+      //
+      //   title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
+      // ),
 
       body: SafeArea(
         child: SizedBox(
@@ -100,83 +100,136 @@ class _SearchButtonByFlightCodeState extends State<SearchButtonByFlightCode> {
                   flightStatus = snapshot.data!.response!.status ?? "---";
 
                   return
-                    FlightCardScreen().flightCardWithCardExpand(
-                        onTap: (){
-                          setState((){
-                            cardExpand =! cardExpand;
-                          });
-                        },
-                        context: context,
-                        flightCode: flightCode,
-                        flightStatus: flightStatus,
-                        departureCity: departureCity,
-                        departureCityShortCode: departureCityShortCode,
-                        departureCityTime: departureCityTime,
-                        arrivalCity: arrivalCity,
-                        arrivalCityShortCode: arrivalCityShortCode,
-                        arrivalCityTime: arrivalCityTime,
-                        cardExpandRow: cardExpand == true ?
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                            ),
-                          ),
+                    Column(
+                      children: [
+                        AppBar(
+                          leading: IconButton(onPressed: () {
+                            Navigator.pop(context);
+                          },
+                            icon: Icon(Icons.arrow_back,color: Colors.white,),),
 
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(width: w * 0.3),
-                              TextButton(onPressed: () {
+                          actions: [
+                            Center(child: Text(widget.currentDate.toString())),
+                            SizedBox(width: 10),
+                          ],
 
-                                Navigator.push(context, MaterialPageRoute(builder: (context){
-                                  return FlightDetailScreen(flight_iata: flightCode,openTrack: true,);
-                                }));
+                          title: Text("${widget.flightCode}",style: ThemeTexts.textStyleTitle3,),
+                        ),
+                        FlightCardScreen().flightCardWithCardExpand(
+                            onTap: (){
+                              setState((){
+                                cardExpand =! cardExpand;
+                              });
+                            },
+                            context: context,
+                            flightCode: flightCode,
+                            flightStatus: flightStatus,
+                            departureCity: departureCity,
+                            departureCityShortCode: departureCityShortCode,
+                            departureCityTime: departureCityTime,
+                            arrivalCity: arrivalCity,
+                            arrivalCityShortCode: arrivalCityShortCode,
+                            arrivalCityTime: arrivalCityTime,
+                            cardExpandRow: cardExpand == true ?
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
+                                ),
+                              ),
 
-                              },
-                                  child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(width: w * 0.3),
+                                  TextButton(onPressed: () {
+                                    setState(() {
+                                      cardExpand =! cardExpand;
+                                    });
 
-                              TextButton(onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                                      return FlightDetailScreen(flight_iata: flightCode,);
+                                    }));
 
-                                hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
+                                  },
+                                      child: Text("DETAILS",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
 
-                                if(hiveFlightCode!.contains(flightCode)){
-                                  log("Flight Codes$hiveFlightCode");
-                                  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                                }
-                                else{
-                                modelMyFlights = ModelMyFlightsUpcoming(
-                                    flightCode: flightCode,
-                                    departureCity: departureCity,
-                                    departureCityShortCode: departureCityShortCode,
-                                    departureCityTime: departureCityTime,
-                                    arrivalCityDate: arrivalCityDate,
-                                    arrivalCity: arrivalCity,
-                                    arrivalCityShortCode: arrivalCityShortCode,
-                                    arrivalCityTime: arrivalCityTime,
-                                    flightStatus: flightStatus,
-                                    flightIata: flightCode,
-                                    isSelected: false
-                                );
-                                dataBox!.add(modelMyFlights!);
-                                ReusingWidgets().snackBar(context: context, text: "Flight Successfully Tracked");}
-                                },
-                                  child: Text(trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
-                            ],
-                          ),
-                        ) : Container()
+                                  TextButton(onPressed: () {
+
+                                    hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
+                                    var index = -1;
+
+                                    if(hiveFlightCode!.contains(flightCode)){
+                                      log("Flight Codes$hiveFlightCode");
+                                      for(int i = 0; i < dataBox!.length ; i++){
+                                        if(dataBox!.values.elementAt(i).flightCode == flightCode){
+                                          index = i;
+                                        }
+                                      }
+                                      if(index != -1){
+                                        dataBox!.deleteAt(index);
+                                      }
+                                      else{
+                                        print("element not found");
+                                      }
+                                      ReusingWidgets().snackBar(context: context, text: "FLIGHT UNTRACKED");
+                                    }
+                                    else {
+                                      modelMyFlights = ModelMyFlightsUpcoming(
+                                          flightCode: flightCode,
+                                          departureCity: departureCity,
+                                          departureCityShortCode: departureCityShortCode,
+                                          departureCityTime: departureCityTime,
+                                          arrivalCityDate: arrivalCityDate,
+                                          arrivalCity: arrivalCity,
+                                          arrivalCityShortCode: arrivalCityShortCode,
+                                          arrivalCityTime: arrivalCityTime,
+                                          flightStatus: flightStatus,
+                                          flightIata: flightCode,
+                                          isSelected: false
+                                      );
+                                      dataBox!.add(modelMyFlights!);
+                                      ReusingWidgets().snackBar(context: context, text: "FLIGHT TRACKED");
+                                    }
+                                    setState(() {});
+                                  },
+                                      child: Text(hiveFlightCode != null ?
+                                      hiveFlightCode!.contains(flightCode) ?
+                                      "UNTRACK FLIGHT": "TRACK FLIGHT" : "TRACK FLIGHT",
+                                          style: ThemeTexts.textStyleTitle3.copyWith(color: ColorsTheme.primaryColor,fontWeight: FontWeight.normal))),
+                                ],
+                              ),
+                            ) : Container()
+                        ),
+                      ],
                     );
                 } else {
-                  return NoFlightFound();
+                  Future(() {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            AlertDialog(
+                              title: Text("No Flights Found"),
+                              content: Text(
+                                  "Try again or try searching by flight code.\n\n"
+                                      "Hint: For connecting flights try to search for each leg separately."),
+                              actions: [
+                                TextButton(
+                                  child: Text("OK"),
+                                  onPressed: () {
+                                    Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                                  },
+                                ),
+                              ],
+                            ));
+                  });
+                  return Container();
                 }
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "error 2${snapshot.error}",
-                  ),
-                );
+                return NoInternetError();
               } else {
                 return Center(child: FunctionProgressIndicator());
               }

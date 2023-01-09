@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -145,21 +146,9 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                         else if(hiveFlightCode.contains(flightCodeController.text)){
                           ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
                           log("$hiveFlightCode");
-                          // setState(() {
-                          //   futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
-                          // });
-
-                          Navigator.push(context, PageRouteBuilder(
-                            pageBuilder: (context, _, __) {
-                              return SearchButtonByFlightCode(
-                                flightCode: flightCodeController.text,
-                                dateDay: dateDay,
-                                currentDate: currentDate,
-                              );
-                            },
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ));
+                          setState(() {
+                            futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
+                          });
                         }
                         else {
                           ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
@@ -172,18 +161,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                               arrivalCityShortName: "",
                               departureCityShortName: "",
                             );
-                          // futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
-                          Navigator.push(context, PageRouteBuilder(
-                            pageBuilder: (context, _, __) {
-                              return SearchButtonByFlightCode(
-                                flightCode: flightCodeController.text,
-                                dateDay: dateDay,
-                                currentDate: currentDate,
-                              );
-                            },
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                          ));
+                          futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
                           Future.delayed(Duration(seconds: 2)).then((value) => dataBoxSearch!.add(modelMyFlightsSearch!));
                         }
 
@@ -196,69 +174,69 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
           ),
         ),
 
-        // SizedBox(
-        //     height: 0,
-        //     width: w,
-        //     child: FutureBuilder(
-        //         future: futureList,
-        //         builder: (context,snapshot) {
-        //           print("future");
-        //
-        //           if (snapshot.connectionState == ConnectionState.done) {
-        //             if (snapshot.hasData) {
-        //               print("hasData");
-        //               if (snapshot.data!.response != null) {
-        //                 Future(() async {
-        //                   await
-        //                   Navigator.push(context, MaterialPageRoute(
-        //                       builder: (context) =>
-        //                           SearchButtonByFlightCode(
-        //                             flightCode: flightCodeController.text,
-        //                             dateDay: null,
-        //                             currentDate: currentDate,
-        //                           )));
-        //                 });
-        //                 return Container();
-        //               } else {
-        //                 Future(() {
-        //                   showDialog(
-        //                       context: context,
-        //                       builder: (context) =>
-        //                           AlertDialog(
-        //                             title: Text("No Flights Found"),
-        //                             content: Text(
-        //                                 "Try again or try searching by flight code.\n\n"
-        //                                     "Hint: For connecting flights try to search for each leg separately."),
-        //                             actions: [
-        //                               TextButton(
-        //                                 child: Text("OK"),
-        //                                 onPressed: () {
-        //                                   Navigator.pop(context);
-        //                                 },
-        //                               ),
-        //                             ],
-        //                           ));
-        //                 });
-        //                 return Container();
-        //               }
-        //             }
-        //             else if (snapshot.hasError) {
-        //               print("noData");
-        //               return Center(
-        //                 child: Text(
-        //                   "error 2${snapshot.error}",
-        //                 ),
-        //               );
-        //             }
-        //             else {
-        //               return Center(child: CircularProgressIndicator());
-        //             }
-        //           }
-        //           else {
-        //             return Container();
-        //           }
-        //         })
-        // ),
+        SizedBox(
+            height: 0,
+            width: w,
+            child: FutureBuilder(
+                future: futureList,
+                builder: (context,snapshot) {
+                  print("future");
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      print("hasData");
+                      if (snapshot.data!.response != null) {
+                        Future(() async {
+                          await
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchButtonByFlightCode(
+                                    flightCode: flightCodeController.text,
+                                    dateDay: null,
+                                    currentDate: currentDate,
+                                  )));
+                        });
+                        return Container();
+                      } else {
+                        Future(() {
+                          showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    title: Text("No Flights Found"),
+                                    content: Text(
+                                        "Try again or try searching by flight code.\n\n"
+                                            "Hint: For connecting flights try to search for each leg separately."),
+                                    actions: [
+                                      TextButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ));
+                        });
+                        return Container();
+                      }
+                    }
+                    else if (snapshot.hasError) {
+                      print("noData");
+                      return Center(
+                        child: Text(
+                          "error 2${snapshot.error}",
+                        ),
+                      );
+                    }
+                    else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }
+                  else {
+                    return Container();
+                  }
+                })
+        ),
 
 
         Container(

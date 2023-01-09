@@ -18,10 +18,10 @@ import '../../myflights/model/my_flight_create_trip_model.dart';
 
 
 class FlightDetailScreen extends StatefulWidget {
-  FlightDetailScreen({super.key,required this.flight_iata,required this.openTrack});
+  FlightDetailScreen({super.key,required this.flight_iata});
 
   String flight_iata;
-  bool openTrack;
+  // bool openTrack;
 
   @override
   State<FlightDetailScreen> createState() => _FlightDetailScreenState();
@@ -66,6 +66,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   Box<ModelMyFlightsUpcoming>? dataBox;
   ModelMyFlightsUpcoming? modelMyFlights;
 
+  Iterable? hiveFlightCode;
+
   @override
   void initState() {
     super.initState();
@@ -74,14 +76,15 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     widget.flight_iata.isNotEmpty ? futureList = ServicesAirportsTrackScreen().GetAllPosts(widget.flight_iata) : null;
     service = LocalNotificationService();
     service!.initialize();
+    hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
   }
   @override
   Widget build(BuildContext context) {
 
-    return widget.flight_iata.isEmpty ?
-    NoResultFoundScreen()
-        :
-    Scaffold(
+    // return widget.flight_iata.isEmpty ?
+    // NoResultFoundScreen()
+    //     :
+    return Scaffold(
       backgroundColor: ColorsTheme.primaryColor,
       body: SafeArea(
         child: FutureBuilder(
@@ -128,7 +131,15 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   );
                 }
                 else {
-                  return NoResultFoundScreen();
+                  // return NoResultFoundScreen();
+                  Future(() {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            ReusingWidgets().noResultFoundDialog(context: context));
+                  });
+                  return Container();
                 }
               }
               else if (snapshot.hasError) {
@@ -282,80 +293,105 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             CustomBaggageClaim(baggage: baggage),
             SizedBox(height: 24),
             /// bottom two buttons
-            widget.openTrack == true ? Container(
+            // widget.openTrack == true ?
+            Container(
                 alignment: Alignment.center,
                 height: 70,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ReusingWidgets.searchButton(
-                        onPress: () {
-                          Iterable hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
-                          // log("sss${hiveFlightCode.toString()}");
-                          setState(() {
-                            trackFlight = !trackFlight;
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter mySetState) {
+                        return ReusingWidgets.searchButton(
+                            onPress: () {
+                              hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
+                              mySetState(() {
+                                var index = -1;
+                                trackFlight = !trackFlight;
 
-                            if (trackFlight == false) {
-                             if(hiveFlightCode.contains(flightCode)){
-                              // log("$hiveFlightCode");
-                              ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                             }
-                             else {
-                              modelMyFlights = ModelMyFlightsUpcoming(
-                                flightCode: flightCode,
-                                departureCityDate: departureCityDate,
-                                departureCity: departureCityShortCode,
-                                departureCityShortCode: departureAirport,
-                                departureCityTime: departureCityTime,
-                                arrivalCityDate: arrivalCityDate,
-                                arrivalCity: arrivalCityShortCode,
-                                arrivalCityShortCode: arrivalAirport,
-                                arrivalCityTime: arrivalCityTime,
-                                flightStatus: flightStatus,
-                                flightIata: widget.flight_iata,
-                                isSelected: false,
-                              );
-                              dataBox!.add(modelMyFlights!);
-                              /// Notification
+                                // if (trackFlight == false) {
+                                 // if(hiveFlightCode.contains(flightCode)){
+                                 //  // log("$hiveFlightCode");
+                                 //  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                                 // }
+                                  if(hiveFlightCode!.contains(flightCode)){
+                                    log("Flight Codes$hiveFlightCode");
+                                    for(int i = 0; i < dataBox!.length ; i++){
+                                      if(dataBox!.values.elementAt(i).flightCode == flightCode){
+                                        index = i;
+                                      }
+                                    }
+                                    if(index != -1){
+                                      dataBox!.deleteAt(index);
+                                    }
+                                    else{
+                                      print("element not found");
+                                    }
+                                    ReusingWidgets().snackBar(context: context, text: "FLIGHT UNTRACKED");
+                                  }
+                                 else {
+                                  modelMyFlights = ModelMyFlightsUpcoming(
+                                    flightCode: flightCode,
+                                    departureCityDate: departureCityDate,
+                                    departureCity: departureCityShortCode,
+                                    departureCityShortCode: departureAirport,
+                                    departureCityTime: departureCityTime,
+                                    arrivalCityDate: arrivalCityDate,
+                                    arrivalCity: arrivalCityShortCode,
+                                    arrivalCityShortCode: arrivalAirport,
+                                    arrivalCityTime: arrivalCityTime,
+                                    flightStatus: flightStatus,
+                                    flightIata: widget.flight_iata,
+                                    isSelected: false,
+                                  );
+                                  dataBox!.add(modelMyFlights!);
+                                  ReusingWidgets().snackBar(context: context, text: "FLIGHT TRACKED");
+                                  /// Notification
 
-                              var date1 = DateTime.now();
-                              var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
-                              print("dates1 $date1");
-                              print("dates2 $date2");
+                                  var date1 = DateTime.now();
+                                  var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
+                                  print("dates1 $date1");
+                                  print("dates2 $date2");
 
-                              Duration duration = date1.difference(date2);
-                              print("duration$duration");
+                                  Duration duration = date1.difference(date2);
+                                  print("duration$duration");
 
-                              var noOfHours = duration.inHours;
-                              print("durationInHours$noOfHours");
-
-
-                              service!.showScheduleNotification(
-                                  id: 0,
-                                  title: "Flight Track Update",
-                                  body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
-                                  hours: noOfHours - 1);
+                                  var noOfHours = duration.inHours;
+                                  print("durationInHours$noOfHours");
 
 
-                              service!.showScheduleNotification(
-                                  id: 1,
-                                  title: "Flight Track Update",
-                                  body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
-                                  hours: noOfHours);
+                                  service!.showScheduleNotification(
+                                      id: 0,
+                                      title: "Flight Track Update",
+                                      body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
+                                      hours: noOfHours - 1);
 
-                              print(modelMyFlights!.arrivalCity);
-                            }}
-                            else {
-                              modelMyFlights!.delete();
-                              // LocalNotificationService().localNotificationService.cancel(0);
-                            }
-                          });
-                        },
-                        context: context,
-                        text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
-                        style: ThemeTexts.textStyleTitle3.copyWith(
-                            color: ColorsTheme.white,
-                            fontWeight: FontWeight.normal)),
+
+                                  service!.showScheduleNotification(
+                                      id: 1,
+                                      title: "Flight Track Update",
+                                      body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
+                                      hours: noOfHours);
+
+                                  print(modelMyFlights!.arrivalCity);
+                                }
+                              // }
+                              //   else {
+                              //     modelMyFlights!.delete();
+                              //     // LocalNotificationService().localNotificationService.cancel(0);
+                              //   }
+                              });
+                            },
+                            context: context,
+                            // text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+                            text: hiveFlightCode!=null ?
+                            hiveFlightCode!.contains(flightCode) ?
+                            "UNTRACK FLIGHT": "TRACK FLIGHT" : "null",
+                            style: ThemeTexts.textStyleTitle3.copyWith(
+                                color: ColorsTheme.white,
+                                fontWeight: FontWeight.normal));
+                      }
+                    ),
 
                     ReusingWidgets.searchButton(
                         onPress: () {
@@ -367,7 +403,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                             color: ColorsTheme.white,
                             fontWeight: FontWeight.normal))
                   ],
-                )) : Container()
+                ))
           ],
         ),
       ),
@@ -485,7 +521,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Baggage Claim",
-                style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white)),
+                style: ThemeTexts.textStyleTitle3.copyWith(color: Colors.white,fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 40,vertical: 7),
@@ -676,11 +712,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                             if(element.isSelected == true){
                               log(hiveFlightCode.toString());
                               log(flightCode.toString());
-                              if(hiveFlightCode.contains(flightCode.toString())){
-                                log(hiveFlightCode.toString());
-                                // ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                              }
-                              else{
+                              // if(hiveFlightCode.contains(flightCode.toString())){
+                              //   log(hiveFlightCode.toString());
+                              //   // ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                              // }
+                              // else{
                                 element.modelMyFlightsUpcoming.add(
                                 ModelMyFlightsUpcoming(
                                   flightCode: flightCode,
@@ -696,7 +732,28 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                   flightIata: flightCode,
                                   isSelected: false,
                                 ));
-                            }}
+
+                              if(hiveFlightCode.contains(flightCode.toString())){
+                                log(hiveFlightCode.toString());
+                              }
+                              else{
+                                modelMyFlights = ModelMyFlightsUpcoming(
+                                  flightCode: flightCode,
+                                  departureCityDate: departureCityDate,
+                                  departureCity: departureCityShortCode,
+                                  departureCityShortCode: departureAirport,
+                                  departureCityTime: departureCityTime,
+                                  arrivalCityDate: arrivalCityDate,
+                                  arrivalCity: arrivalCityShortCode,
+                                  arrivalCityShortCode: arrivalAirport,
+                                  arrivalCityTime: arrivalCityTime,
+                                  flightStatus: flightStatus,
+                                  flightIata: widget.flight_iata,
+                                  isSelected: false,
+                                );
+                                dataBox!.add(modelMyFlights!);
+                            }
+                          }
                           });
                           Navigator.pop(context);
                           log("ADD");

@@ -152,6 +152,19 @@ class _NoInternetErrorState extends State<NoInternetError> {
                 color: Colors.black,
               ),
             ),
+            SizedBox(height: 30,),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                child: ReusingWidgets.searchButton(
+                    onPress: (){
+                      Navigator.pop(context);
+                    },
+                    context: context,
+                    text: "BACK", style: ThemeTexts.textStyleTitle2),
+              ),
+            ),
+
           ],
         ),
       ),

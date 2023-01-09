@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
@@ -12,6 +11,12 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'recent_airport_airline_search/model/model_recent_search.dart';
+
+
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() async{
 
@@ -67,8 +72,8 @@ class _MyAppState extends State<MyApp> {
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: HomePage(),
+      // home: CheckConnection(),
     );
   }
-
 }
+

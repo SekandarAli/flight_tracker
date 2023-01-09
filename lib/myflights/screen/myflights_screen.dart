@@ -49,11 +49,11 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
             Expanded(
               flex: 0,
               child: GestureDetector(
-                // onTap: (){
-                //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //     return  FlightDetailScreen(flight_iata: "IX142", openTrack: true);
-                //   }));
-                // },
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return  FlightDetailScreen(flight_iata: "IX142");
+                  }));
+                },
                 child: Container(
                   padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),
                   child: Row(
@@ -62,9 +62,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                       Text("My Flights",
                         style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2),
                       ),
-                      Text(DateTime.now().toString().substring(0,10),
-                        style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
-                      )
+                      // Text(DateTime.now().toString().substring(0,10),
+                      //   style: ThemeTexts.textStyleTitle2.copyWith(letterSpacing: 2,fontWeight: FontWeight.normal),
+                      // ) 
                     ],
                   ),
                 ),
@@ -139,6 +139,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                         GestureDetector(
                                           onTap: (){
                                             print(currentTask.tripName);
+                                            log(currentTask.toString());
+                                            log(currentTask.modelMyFlightsUpcoming[index].toString());
+                                            // currentTask.modelMyFlightsUpcoming.deleteAt(0);
                                             Navigator.push(context, MaterialPageRoute(builder: (context) {
                                               return MyFlightsOpenCreateNewTrips(
                                                 noOfFlights: currentTask.modelMyFlightsUpcoming.length,
@@ -237,18 +240,35 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       itemCount: box.values.length,
                                       itemBuilder: (context, index) {
                                         ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                        log("qwerty${currentTask.toString()}");
+                                        var lengthh = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").length;
+                                        log("qwerty$lengthh");
+                                        log("qwerty${taskBox.toString()}");
                                         return StatefulBuilder(
                                             builder: (BuildContext context, StateSetter mySetState) {
                                             return FlightCardScreen().flightCardSimple(
                                               onTap: (){
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: currentTask.flightIata!,openTrack: false,);
+                                                  return FlightDetailScreen(flight_iata: currentTask.flightIata!);
                                                 }));
                                               },
                                               onDismiss: (direction){
                                                 mySetState(() {
                                                   currentTask.delete();
+
+                                                  // for(int i = 0;i<lengthh;i++){
+                                                  //   int totalTrips = lengthh;
+                                                  //
+                                                  //   for(int j = 0;j<totalTrips; j++){
+                                                  //     // if(hiveFlightCode.contains(Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip"))){
+                                                  //     //
+                                                  //     // }
+                                                  //     if(taskBox!.containsKey(hiveFlightCode)){
+                                                  //
+                                                  //       taskBox == hiveFlightCode;
+                                                  //     }
+                                                  //   }
+                                                  // }
+
                                                 });
                                               },
                                               direction: DismissDirection.horizontal,
