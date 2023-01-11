@@ -242,20 +242,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                         context: context,
                         barrierDismissible: false,
                         builder: (context) =>
-                            AlertDialog(
-                              title: Text("No Flights Found"),
-                              content: Text(
-                                  "Try again or try searching by flight code.\n\n"
-                                      "Hint: For connecting flights try to search for each leg separately."),
-                              actions: [
-                                TextButton(
-                                  child: Text("OK"),
-                                  onPressed: () {
-                                    Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
-                                  },
-                                ),
-                              ],
-                            ));
+                            ReusingWidgets().noResultFoundDialog(context: context));
                   });
                   return Container();
                 }

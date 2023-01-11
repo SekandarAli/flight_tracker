@@ -94,9 +94,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                     log("${Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.map((e) {
                                       return e.tripName;
                                     })}");
-
                                     Iterable trips =  taskBox!.values.map((e) => e.tripName);
-
                                     if(trips.contains(createTripController.text) || trips.contains(createTripController.text.toUpperCase()) || trips.contains(createTripController.text.toLowerCase())){
                                       log("TRUE");
                                       ReusingWidgets().snackBar(context: context, text: "Trip Name Already Exist");
@@ -138,9 +136,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       children: [
                                         GestureDetector(
                                           onTap: (){
-                                            print(currentTask.tripName);
-                                            log(currentTask.toString());
-                                            log(currentTask.modelMyFlightsUpcoming[index].toString());
+                                            // print(currentTask.tripName);
+                                            // log(currentTask.toString());
+                                            // log(currentTask.modelMyFlightsUpcoming[index].toString());
                                             // currentTask.modelMyFlightsUpcoming.deleteAt(0);
                                             Navigator.push(context, MaterialPageRoute(builder: (context) {
                                               return MyFlightsOpenCreateNewTrips(
@@ -225,7 +223,7 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
 
                           Iterable hiveFlightCode =  Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
 
-                          log(hiveFlightCode.toString());
+                          // log(hiveFlightCode.toString());
 
                           if (items.isEmpty) {
                             viewAllTrips = false;
@@ -240,11 +238,8 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                       itemCount: box.values.length,
                                       itemBuilder: (context, index) {
                                         ModelMyFlightsUpcoming? currentTask = box.getAt(index);
-                                        var lengthh = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").length;
-                                        log("qwerty$lengthh");
-                                        log("qwerty${taskBox.toString()}");
-                                        return StatefulBuilder(
-                                            builder: (BuildContext context, StateSetter mySetState) {
+                                        return Builder(
+                                            builder: (BuildContext context) {
                                             return FlightCardScreen().flightCardSimple(
                                               onTap: (){
                                                 Navigator.push(context, MaterialPageRoute(builder: (context){
@@ -252,24 +247,54 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
                                                 }));
                                               },
                                               onDismiss: (direction){
-                                                mySetState(() {
-                                                  currentTask.delete();
+                                                setState(() {
+                                                  // currentTask.delete();
+                                               log(box.values.elementAt(index).flightCode.toString());
+                                               for (var element in taskBox!.values) {
+                                                 element.modelMyFlightsUpcoming.removeWhere((element) => element.flightCode == box.values.elementAt(index).flightCode);
+                                                 element.save();
+                                               }
+                                               box.values.elementAt(index).delete();
+                                               // box.values.elementAt(index).save();
 
-                                                  // for(int i = 0;i<lengthh;i++){
-                                                  //   int totalTrips = lengthh;
-                                                  //
-                                                  //   for(int j = 0;j<totalTrips; j++){
-                                                  //     // if(hiveFlightCode.contains(Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip"))){
-                                                  //     //
-                                                  //     // }
-                                                  //     if(taskBox!.containsKey(hiveFlightCode)){
-                                                  //
-                                                  //       taskBox == hiveFlightCode;
-                                                  //     }
-                                                  //   }
-                                                  // }
+                                                   /*for(int  i = 0; i < taskBox!.values.length; i++){
+                                                     print(i.toString());
+                                                     taskBox!.values.elementAt(i).modelMyFlightsUpcoming.forEach((element) {
+                                                       print(element.flightCode);
+                                                       if(element.flightCode == currentTask.flightCode){
+                                                         log("Flight code ${element.flightCode} found in trip ${taskBox!.values.elementAt(i).tripName}");
+                                                     //tempTaskBox!.values.elementAt(i).modelMyFlightsUpcoming.remove(element);
+                                                         log(box.values.elementAt(i).flightCode.toString());
+                                                         // box.values.where((element) => element.flightCode == currentTask.flightCode).first.delete();
+                                                         //  element.delete();
+                                                        // taskBox!.values.elementAt(i).modelMyFlightsUpcoming.removeLast();
+                                                        // element.save();
 
+                                                      //  taskBox!.values.elementAt(i).modelMyFlightsUpcoming.remove(element);
+                                                          // element.save();
+                                                         // currentTask.((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+
+                                                         // currentTask!.flightCode!.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+
+
+                                                         // taskBox!.delete(elementAt(i));
+                                                         // log("log1${taskBox!.values.elementAt(i).modelMyFlightsUpcoming.toString()}");
+                                                         // log("log2${currentTask.toString()}");
+                                                         // taskBox!.values.elementAt(i).modelMyFlightsUpcoming.clear();
+                                                         // taskBox!.values.elementAt(i).delete();
+                                                         // taskBox!.values.elementAt(i).modelMyFlightsUpcoming[i].delete();
+
+                                                         // taskBox!.values.elementAt(i).modelMyFlightsUpcoming.removeWhere((element) => element.flightCode == taskBox!.values.elementAt(i).modelMyFlightsUpcoming[i].flightCode);
+
+                                                         // taskBox!.values.elementAt(i).modelMyFlightsUpcoming.removeWhere((element) => taskBox!.values.elementAt(i).modelMyFlightsUpcoming[i].flightCode == currentTask.flightCode);
+                                                        ///
+                                                      //   taskBox!.values.elementAt(i).modelMyFlightsUpcoming.removeWhere((element) => element.flightCode == currentTask.flightCode);
+                                                      //   taskBox!.values.elementAt(i).save();
+                                                       }
+                                                     });
+                                                   }*/
                                                 });
+
                                               },
                                               direction: DismissDirection.horizontal,
                                               context: context,

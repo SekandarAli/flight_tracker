@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -137,7 +137,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                         context: context,
                         barrierDismissible: false,
                         builder: (context) =>
-                            ReusingWidgets().noResultFoundDialog(context: context));
+                            ReusingWidgets().simpleNoResultFoundDialog(context: context));
                   });
                   return Container();
                 }
@@ -302,18 +302,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   children: [
                     StatefulBuilder(
                         builder: (BuildContext context, StateSetter mySetState) {
-                        return ReusingWidgets.searchButton(
-                            onPress: () {
-                              hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
-                              mySetState(() {
-                                var index = -1;
-                                trackFlight = !trackFlight;
-
-                                // if (trackFlight == false) {
-                                 // if(hiveFlightCode.contains(flightCode)){
-                                 //  // log("$hiveFlightCode");
-                                 //  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                                 // }
+                          return ReusingWidgets.searchButton(
+                              onPress: () {
+                                hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
+                                mySetState(() {
+                                  var index = -1;
+                                  trackFlight = !trackFlight;
+                                  // if (trackFlight == false) {
+                                  // if(hiveFlightCode.contains(flightCode)){
+                                  //  // log("$hiveFlightCode");
+                                  //  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
+                                  // }
                                   if(hiveFlightCode!.contains(flightCode)){
                                     log("Flight Codes$hiveFlightCode");
                                     for(int i = 0; i < dataBox!.length ; i++){
@@ -322,6 +321,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                       }
                                     }
                                     if(index != -1){
+                                      for (var element in taskBox!.values) {
+                                        element.modelMyFlightsUpcoming.removeWhere((element) => element.flightCode == dataBox!.values.elementAt(index).flightCode);
+                                        element.save();
+                                      }
                                       dataBox!.deleteAt(index);
                                     }
                                     else{
@@ -329,68 +332,68 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                     }
                                     ReusingWidgets().snackBar(context: context, text: "FLIGHT UNTRACKED");
                                   }
-                                 else {
-                                  modelMyFlights = ModelMyFlightsUpcoming(
-                                    flightCode: flightCode,
-                                    departureCityDate: departureCityDate,
-                                    departureCity: departureCityShortCode,
-                                    departureCityShortCode: departureAirport,
-                                    departureCityTime: departureCityTime,
-                                    arrivalCityDate: arrivalCityDate,
-                                    arrivalCity: arrivalCityShortCode,
-                                    arrivalCityShortCode: arrivalAirport,
-                                    arrivalCityTime: arrivalCityTime,
-                                    flightStatus: flightStatus,
-                                    flightIata: widget.flight_iata,
-                                    isSelected: false,
-                                  );
-                                  dataBox!.add(modelMyFlights!);
-                                  ReusingWidgets().snackBar(context: context, text: "FLIGHT TRACKED");
-                                  /// Notification
+                                  else {
+                                    modelMyFlights = ModelMyFlightsUpcoming(
+                                      flightCode: flightCode,
+                                      departureCityDate: departureCityDate,
+                                      departureCity: departureCityShortCode,
+                                      departureCityShortCode: departureAirport,
+                                      departureCityTime: departureCityTime,
+                                      arrivalCityDate: arrivalCityDate,
+                                      arrivalCity: arrivalCityShortCode,
+                                      arrivalCityShortCode: arrivalAirport,
+                                      arrivalCityTime: arrivalCityTime,
+                                      flightStatus: flightStatus,
+                                      flightIata: widget.flight_iata,
+                                      isSelected: false,
+                                    );
+                                    dataBox!.add(modelMyFlights!);
+                                    ReusingWidgets().snackBar(context: context, text: "FLIGHT TRACKED");
+                                    /// Notification
 
-                                  var date1 = DateTime.now();
-                                  var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
-                                  print("dates1 $date1");
-                                  print("dates2 $date2");
+                                    var date1 = DateTime.now();
+                                    var date2 = DateTime.fromMillisecondsSinceEpoch(updated! * 1000);
+                                    print("dates1 $date1");
+                                    print("dates2 $date2");
 
-                                  Duration duration = date1.difference(date2);
-                                  print("duration$duration");
+                                    Duration duration = date1.difference(date2);
+                                    print("duration$duration");
 
-                                  var noOfHours = duration.inHours;
-                                  print("durationInHours$noOfHours");
-
-
-                                  service!.showScheduleNotification(
-                                      id: 0,
-                                      title: "Flight Track Update",
-                                      body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
-                                      hours: noOfHours - 1);
+                                    var noOfHours = duration.inHours;
+                                    print("durationInHours$noOfHours");
 
 
-                                  service!.showScheduleNotification(
-                                      id: 1,
-                                      title: "Flight Track Update",
-                                      body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
-                                      hours: noOfHours);
+                                    service!.showScheduleNotification(
+                                        id: 0,
+                                        title: "Flight Track Update",
+                                        body: "Flight Number $flightCode is departing from $departureAirport on $departureCityDate. Status of $flightCode is $flightStatus.",
+                                        hours: noOfHours - 1);
 
-                                  print(modelMyFlights!.arrivalCity);
-                                }
-                              // }
-                              //   else {
-                              //     modelMyFlights!.delete();
-                              //     // LocalNotificationService().localNotificationService.cancel(0);
-                              //   }
-                              });
-                            },
-                            context: context,
-                            // text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
-                            text: hiveFlightCode!=null ?
-                            hiveFlightCode!.contains(flightCode) ?
-                            "UNTRACK FLIGHT": "TRACK FLIGHT" : "null",
-                            style: ThemeTexts.textStyleTitle3.copyWith(
-                                color: ColorsTheme.white,
-                                fontWeight: FontWeight.normal));
-                      }
+
+                                    service!.showScheduleNotification(
+                                        id: 1,
+                                        title: "Flight Track Update",
+                                        body: "Flight Number $flightCode is arriving on $arrivalAirport on $arrivalCityDate. Status of $flightCode is $flightStatus.",
+                                        hours: noOfHours);
+
+                                    print(modelMyFlights!.arrivalCity);
+                                  }
+                                  // }
+                                  //   else {
+                                  //     modelMyFlights!.delete();
+                                  //     // LocalNotificationService().localNotificationService.cancel(0);
+                                  //   }
+                                });
+                              },
+                              context: context,
+                              // text: trackFlight == true ? "TRACK FLIGHT" : "UNTRACK FLIGHT",
+                              text: hiveFlightCode != null ?
+                              hiveFlightCode!.contains(flightCode) ?
+                              "UNTRACK FLIGHT": "TRACK FLIGHT" : "null",
+                              style: ThemeTexts.textStyleTitle3.copyWith(
+                                  color: ColorsTheme.white,
+                                  fontWeight: FontWeight.normal));
+                        }
                     ),
 
                     ReusingWidgets.searchButton(
@@ -541,233 +544,285 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.forEach((element) {
       element.isSelected = false;
     });
-      return showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
 
-        return StatefulBuilder(
-            builder: (BuildContext context, StateSetter mySetState) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter mySetState) {
 
-              return
-                AlertDialog(
-                  insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
-                  titlePadding: EdgeInsets.all(0),
-                  contentPadding: EdgeInsets.all(0),
-                  title: Container(
-                      padding: EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width ,
-                      color: ColorsTheme.primaryColor,
-                      child: Text("Add To Trip",style: ThemeTexts.textStyleTitle2,)),
-                  content: Column(
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          createTripController.clear();
-                          openDialogue(
-                              createTripController: createTripController,
-                              context: context,
-                              onTap: ()async {
-                                var newTask = ModelMyFlightsCreateTrip(
-                                    tripName: createTripController.text.toString(),
-                                    noOfFlights: '',
-                                    tripImage: '',
-                                    isSelected: false,
-                                    modelMyFlightsUpcoming: [
-                                      ModelMyFlightsUpcoming(
+                return
+                  AlertDialog(
+                    insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
+                    titlePadding: EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.all(0),
+                    title: Container(
+                        padding: EdgeInsets.all(20),
+                        width: MediaQuery.of(context).size.width ,
+                        color: ColorsTheme.primaryColor,
+                        child: Text("Add To Trip",style: ThemeTexts.textStyleTitle2,)),
+                    content: Column(
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            createTripController.clear();
+                            openDialogue(
+                                createTripController: createTripController,
+                                context: context,
+                                onTap: ()async {
+                                  var newTask = ModelMyFlightsCreateTrip(
+                                      tripName: createTripController.text.toString(),
+                                      noOfFlights: '',
+                                      tripImage: '',
+                                      isSelected: false,
+                                      modelMyFlightsUpcoming: [
+                                        ModelMyFlightsUpcoming(
+                                          flightCode: flightCode,
+                                          departureCityDate: departureCityDate,
+                                          departureCity: departureCityShortCode,
+                                          departureCityShortCode: departureAirport,
+                                          departureCityTime: departureCityTime,
+                                          arrivalCityDate: departureCityDate,
+                                          arrivalCity: arrivalCityShortCode,
+                                          arrivalCityShortCode: arrivalAirport,
+                                          arrivalCityTime: arrivalCityTime,
+                                          flightStatus: flightStatus,
+                                          flightIata: flightCode,
+                                          isSelected: false,
+                                        )]
+                                  );
+
+                                  if(hiveFlightCode!.contains(flightCode.toString())){
+                                    log("Duplication 2 Detected");
+                                  }
+                                  else{
+                                    modelMyFlights = ModelMyFlightsUpcoming(
                                       flightCode: flightCode,
                                       departureCityDate: departureCityDate,
-                                      departureCity: departureCity,
-                                      departureCityShortCode: departureCityShortCode,
+                                      departureCity: departureCityShortCode,
+                                      departureCityShortCode: departureAirport,
                                       departureCityTime: departureCityTime,
-                                      arrivalCityDate: departureCityDate,
-                                      arrivalCity: arrivalCity,
+                                      arrivalCityDate: arrivalCityDate,
+                                      arrivalCity: arrivalCityShortCode,
+                                      arrivalCityShortCode: arrivalAirport,
                                       arrivalCityTime: arrivalCityTime,
-                                      arrivalCityShortCode: arrivalCityShortCode,
                                       flightStatus: flightStatus,
                                       flightIata: widget.flight_iata,
                                       isSelected: false,
-                                    )]
-                                );
+                                    );
+                                    dataBox!.add(modelMyFlights!);
+                                  }
 
 
-                                await taskBox!.add(newTask);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                                  await taskBox!.add(newTask);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
 
-                                ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
+                                  ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
 
-                              }
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: 30,top: 20,bottom: 10),
-                          child: Row(
-                            children: [
-                              Icon(Icons.create_new_folder_outlined),
-                              SizedBox(width: 10),
-                              Text("Create New Trip",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
-                            ],
+                                }
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(left: 30,top: 20,bottom: 10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.create_new_folder_outlined),
+                                SizedBox(width: 10),
+                                Text("Create New Trip",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      InkWell(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 30,top: 5,bottom: 10),
-                          child: Row(
-                            children: [
-                              Icon(Icons.add_box_outlined),
-                              SizedBox(width: 10),
-                              Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
-                            ],
+                        InkWell(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 30,top: 5,bottom: 10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.add_box_outlined,color: ColorsTheme.textColor,),
+                                SizedBox(width: 10),
+                                Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.textColor),)
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          // height: MediaQuery.of(context).size.height * 0.3,
-                          color: ColorsTheme.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                color: ColorsTheme.white,
-                                width: MediaQuery.of(context).size.width * 0.75,
-                                child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
-                                  valueListenable: Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
-                                  builder: (context, box, _) {
-                                    final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-                                    if (items.isEmpty) {
-                                      return Container();
-                                    } else {
-                                      return ListView.builder(
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: box.values.length,
-                                        itemBuilder: (context, index) {
-                                          ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+                        Expanded(
+                          child: Container(
+                            // height: MediaQuery.of(context).size.height * 0.3,
+                            color: ColorsTheme.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  color: ColorsTheme.white,
+                                  width: MediaQuery.of(context).size.width * 0.75,
+                                  child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
+                                    valueListenable: Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
+                                    builder: (context, box, _) {
+                                      final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
+                                      if (items.isEmpty) {
+                                        return Center(
+                                          child: Text("No Trips Found",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.textColor),),
+                                        );
+                                      } else {
+                                        return ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: box.values.length,
+                                          itemBuilder: (context, index) {
+                                            ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
+                                            // ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
 
-                                          return InkWell(
-                                            onTap: () async{
-
-                                              mySetState(() {
-
-                                                // log(currentTask.tripName);
-                                                // log(currentTask.modelMyFlightsUpcoming.toString());
-                                                //
-                                                currentTask.isSelected =! currentTask.isSelected!;
-                                                // log(currentTask.isSelected.toString());
-                                                //
-                                                if (currentTask.isSelected == true) {
-                                                  log("TRUE");
-                                                }
-                                                else {
-                                                  log("FALSE");
-                                                }
-                                              });
-                                            },
-                                            child: Container(
-                                              color: Colors.white,
-                                              padding: EdgeInsets.all(5),
-                                              child: Row(
-                                                children: [
-                                                  currentTask!.isSelected == true ?
-                                                  Icon(Icons.check_box,
-                                                    color: ColorsTheme.primaryColor,) :
-                                                  Icon(Icons.check_box_outline_blank),
-                                                  Text(
-                                                    currentTask.tripName,
-                                                    style: ThemeTexts.textStyleTitle3
-                                                        .copyWith(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        letterSpacing: 0),
-                                                  ),
-                                                ],
+                                            return InkWell(
+                                              onTap: () async{
+                                                mySetState(() {
+                                                  currentTask.isSelected =! currentTask.isSelected!;
+                                                });
+                                              },
+                                              child: Container(
+                                                color: Colors.white,
+                                                padding: EdgeInsets.all(5),
+                                                child: Row(
+                                                  children: [
+                                                    currentTask!.isSelected == true ?
+                                                    Icon(Icons.check_box,
+                                                      color: ColorsTheme.primaryColor,) :
+                                                    Icon(Icons.check_box_outline_blank),
+                                                    Text(
+                                                      currentTask.tripName,
+                                                      style: ThemeTexts.textStyleTitle3
+                                                          .copyWith(
+                                                          color: Colors.black,
+                                                          fontWeight: FontWeight.w600,
+                                                          letterSpacing: 0),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-                                  },
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                            child: Text('CANCEL')),
-                        SizedBox(width: 20),
-                        ElevatedButton(onPressed: () async {
-                          Iterable hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
-                          Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.forEach((element) {
-                            if(element.isSelected == true){
-                              log(hiveFlightCode.toString());
-                              log(flightCode.toString());
-                              // if(hiveFlightCode.contains(flightCode.toString())){
-                              //   log(hiveFlightCode.toString());
-                              //   // ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                              // }
-                              // else{
-                                element.modelMyFlightsUpcoming.add(
-                                ModelMyFlightsUpcoming(
-                                  flightCode: flightCode,
-                                  departureCityDate: departureCityDate,
-                                  departureCity: departureCityShortCode,
-                                  departureCityShortCode: departureAirport,
-                                  departureCityTime: departureCityTime,
-                                  arrivalCityDate: departureCityDate,
-                                  arrivalCity: arrivalCityShortCode,
-                                  arrivalCityShortCode: arrivalCity,
-                                  arrivalCityTime: arrivalCityTime,
-                                  flightStatus: flightStatus,
-                                  flightIata: flightCode,
-                                  isSelected: false,
-                                ));
-
-                              if(hiveFlightCode.contains(flightCode.toString())){
-                                log(hiveFlightCode.toString());
-                              }
-                              else{
-                                modelMyFlights = ModelMyFlightsUpcoming(
-                                  flightCode: flightCode,
-                                  departureCityDate: departureCityDate,
-                                  departureCity: departureCityShortCode,
-                                  departureCityShortCode: departureAirport,
-                                  departureCityTime: departureCityTime,
-                                  arrivalCityDate: arrivalCityDate,
-                                  arrivalCity: arrivalCityShortCode,
-                                  arrivalCityShortCode: arrivalAirport,
-                                  arrivalCityTime: arrivalCityTime,
-                                  flightStatus: flightStatus,
-                                  flightIata: widget.flight_iata,
-                                  isSelected: false,
-                                );
-                                dataBox!.add(modelMyFlights!);
-                            }
-                          }
-                          });
-                          Navigator.pop(context);
-                          log("ADD");
-                        },
-                            child: Text('ADD')),
                       ],
                     ),
-                  ],
-                );
-            }
-        );
-      });}
+                    actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                              child: Text('CANCEL')),
+                          SizedBox(width: 20),
+                          ElevatedButton(onPressed: () async {
+                            hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
 
-Future<String?> openDialogue({
+                            Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").values.forEach((element) {
+                              if(element.isSelected == true){
+                                log(flightCode.toString());
+                                log(element.modelMyFlightsUpcoming.map((e) => e.flightCode).toString());
+                                if(element.modelMyFlightsUpcoming.map((e) => e.flightCode).toString().contains(flightCode.toString())){
+                                  log("Duplication Detected");
+                                  if(hiveFlightCode!.contains(flightCode.toString())){
+                                    log("Duplication 2 Detected");
+                                  }
+                                  else{
+                                    modelMyFlights = ModelMyFlightsUpcoming(
+                                      flightCode: flightCode,
+                                      departureCityDate: departureCityDate,
+                                      departureCity: departureCityShortCode,
+                                      departureCityShortCode: departureAirport,
+                                      departureCityTime: departureCityTime,
+                                      arrivalCityDate: arrivalCityDate,
+                                      arrivalCity: arrivalCityShortCode,
+                                      arrivalCityShortCode: arrivalAirport,
+                                      arrivalCityTime: arrivalCityTime,
+                                      flightStatus: flightStatus,
+                                      flightIata: widget.flight_iata,
+                                      isSelected: false,
+                                    );
+                                    dataBox!.add(modelMyFlights!);
+                                  }
+                                }
+                                else{
+                                  element.modelMyFlightsUpcoming.add(
+                                      ModelMyFlightsUpcoming(
+                                        flightCode: flightCode,
+                                        departureCityDate: departureCityDate,
+                                        departureCity: departureCityShortCode,
+                                        departureCityShortCode: departureAirport,
+                                        departureCityTime: departureCityTime,
+                                        arrivalCityDate: departureCityDate,
+                                        arrivalCity: arrivalCityShortCode,
+                                        arrivalCityShortCode: arrivalCity,
+                                        arrivalCityTime: arrivalCityTime,
+                                        flightStatus: flightStatus,
+                                        flightIata: flightCode,
+                                        isSelected: false,
+                                      ));
+                                  element.save();
+                                    if(hiveFlightCode!.contains(flightCode.toString())){
+                                      log("Duplication 2 Detected");
+                                    }
+                                    else{
+                                      modelMyFlights = ModelMyFlightsUpcoming(
+                                        flightCode: flightCode,
+                                        departureCityDate: departureCityDate,
+                                        departureCity: departureCityShortCode,
+                                        departureCityShortCode: departureAirport,
+                                        departureCityTime: departureCityTime,
+                                        arrivalCityDate: arrivalCityDate,
+                                        arrivalCity: arrivalCityShortCode,
+                                        arrivalCityShortCode: arrivalAirport,
+                                        arrivalCityTime: arrivalCityTime,
+                                        flightStatus: flightStatus,
+                                        flightIata: widget.flight_iata,
+                                        isSelected: false,
+                                      );
+                                      dataBox!.add(modelMyFlights!);
+                                  }
+                                }
+                                //   if(hiveFlightCode.contains(flightCode.toString())){
+                                //     log(hiveFlightCode.toString());
+                                //   }
+                                //   else{
+                                //     modelMyFlights = ModelMyFlightsUpcoming(
+                                //       flightCode: flightCode,
+                                //       departureCityDate: departureCityDate,
+                                //       departureCity: departureCityShortCode,
+                                //       departureCityShortCode: departureAirport,
+                                //       departureCityTime: departureCityTime,
+                                //       arrivalCityDate: arrivalCityDate,
+                                //       arrivalCity: arrivalCityShortCode,
+                                //       arrivalCityShortCode: arrivalAirport,
+                                //       arrivalCityTime: arrivalCityTime,
+                                //       flightStatus: flightStatus,
+                                //       flightIata: widget.flight_iata,
+                                //       isSelected: false,
+                                //     );
+                                //     dataBox!.add(modelMyFlights!);
+                                // }
+                              }
+                            });
+                            Navigator.pop(context);
+                            log("ADD");
+                          },
+                              child: Text('ADD')),
+                        ],
+                      ),
+                    ],
+                  );
+              }
+          );
+        });}
+
+  Future<String?> openDialogue({
     required TextEditingController createTripController,
     required BuildContext context,
     required Function() onTap,

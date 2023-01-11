@@ -37,28 +37,28 @@ class _SearchQRCodeState extends State<SearchQRCode> {
     return
       Scaffold(
         backgroundColor: ColorsTheme.primaryColor,
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: 30, left: 20, right: 20, bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
-                        Text("QR Scanner",
-                          style: ThemeTexts.textStyleTitle2.copyWith(
-                              letterSpacing: 2),
-                        ),
-                      ],
-                    ),
-                  ),
-
+        body: SafeArea(
+          child: Column(
+            children: [
                 Container(
+                  padding: EdgeInsets.only(
+                      top: 30, left: 20, right: 20, bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){
+                        Navigator.pop(context);
+                      }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
+                      Text("QR Scanner",
+                        style: ThemeTexts.textStyleTitle2.copyWith(
+                            letterSpacing: 2),
+                      ),
+                    ],
+                  ),
+                ),
+
+              Expanded(
+                child: Container(
                   height: h,
                   width: w,
                   padding: EdgeInsets.only(top: 30),
@@ -99,9 +99,9 @@ class _SearchQRCodeState extends State<SearchQRCode> {
                     ],
                   ),
                 ),
+              ),
 
-              ],
-            ),
+            ],
           ),
         ),
       );

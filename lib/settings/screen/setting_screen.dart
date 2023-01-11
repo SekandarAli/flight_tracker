@@ -8,8 +8,6 @@ import 'package:flight_tracker/recent_airport_airline_search/model/model_recent_
 import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/model_search.dart';
 import 'package:flight_tracker/settings/screen/setting_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../../app_theme/reusing_widgets.dart';
@@ -22,7 +20,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final box = GetStorage();
   Box<ModelMyFlightsUpcoming>? dataTrackFlights;
   Box<ModelSearch>? dataRecentSearch;
   Box<ModelRecentSearch>? dataRecentAirportAndAirline;
@@ -41,7 +38,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    box.writeIfNull('editName', editName);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(

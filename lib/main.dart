@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:ui';
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/bottom_navbar/bottom_navbar_screen.dart';
 import 'package:flight_tracker/myflights/model/my_flight_create_trip_model.dart';
@@ -65,6 +66,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: "FLIGHT TRACK",
       debugShowCheckedModeBanner: false,
+      scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(
           primarySwatch: ColorsTheme.themeColor,
           fontFamily: "OpenSansRegular"
@@ -75,5 +77,13 @@ class _MyAppState extends State<MyApp> {
       // home: CheckConnection(),
     );
   }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+  };
 }
 

@@ -74,7 +74,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                   Navigator.pop(context);
                   Navigator.pop(context);
 
-                // if (task != null) {
+                 // if (task != null) {
                 //   task!.tripName = newTask.tripName;
                 //   modelItemsList = selectedItems;
                 //   task!.save();
@@ -140,6 +140,7 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                                   flightStatus: currentTask.flightStatus,
                                   isSelected: false,
                                 ),
+
                               );
                               print(currentTask.isSelected);
                             }
@@ -162,141 +163,6 @@ class _MyFlightCreateNewTripState extends State<MyFlightCreateNewTrip> {
                           Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
                           Icon(Icons.check_box_outline_blank),
                       );
-                      // return InkWell(
-                      //   onTap: (){
-                      //     setState(() {
-                      //       currentTask.isSelected =! currentTask.isSelected!;
-                      //       if (currentTask.isSelected == true) {
-                      //         selectedItems.add(
-                      //           ModelMyFlightsUpcoming(
-                      //               flightCode: currentTask.flightCode,
-                      //               departureCity: currentTask.departureCity,
-                      //               departureCityDate: currentTask.departureCityDate,
-                      //               departureCityShortCode: currentTask.departureCityShortCode,
-                      //               departureCityTime: currentTask.departureCityTime,
-                      //               arrivalCity: currentTask.arrivalCity,
-                      //               arrivalCityShortCode: currentTask.arrivalCityShortCode,
-                      //               arrivalCityTime: currentTask.arrivalCityTime,
-                      //               arrivalCityDate: currentTask.arrivalCityDate,
-                      //               flightStatus: currentTask.flightStatus,
-                      //               isSelected: false,
-                      //           ),
-                      //         );
-                      //         print(currentTask.isSelected);
-                      //       }
-                      //       else {
-                      //         selectedItems.removeWhere((element) =>
-                      //         element.flightCode == currentTask.flightCode);
-                      //
-                      //       }
-                      //       // else if (currentTask.isSelected == false) {
-                      //       //   selectedItems.removeWhere((element) =>
-                      //       //   element.flightCode == currentTask.flightCode);
-                      //       //   print(selectedItems.length);
-                      //       //   print(selectedItems.map((e) => e.flightCode));
-                      //       //   print(selectedItems.map((e) => e.isSelected));
-                      //       //
-                      //       // }
-                      //       // else{
-                      //       //   getSelectedItems();
-                      //       // }
-                      //     });
-                      //   },
-                      //   child: Card(
-                      //     key: ValueKey(currentTask!.key),
-                      //     child: Row(
-                      //       children: [
-                      //             currentTask.isSelected == true ?
-                      //             Icon(Icons.check_box, color: ColorsTheme.primaryColor,) :
-                      //             Icon(Icons.check_box_outline_blank),
-                      //         Spacer(),
-                      //         SizedBox(
-                      //           width: w * 0.9,
-                      //           child: Column(
-                      //             children: [
-                      //               Container(
-                      //                 padding: EdgeInsets.all(15),
-                      //                 decoration: BoxDecoration(
-                      //                   color: ColorsTheme.primaryColor,
-                      //                   borderRadius: BorderRadius.only(
-                      //                     topLeft: Radius.circular(10),
-                      //                     topRight: Radius.circular(10),
-                      //                   ),
-                      //                 ),
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                   MainAxisAlignment.spaceBetween,
-                      //                   children: [
-                      //                     Text(currentTask.flightCode!,
-                      //                         style: ThemeTexts.textStyleTitle3
-                      //                             .copyWith(color: Colors.white)),
-                      //                     Text(currentTask.flightStatus!,
-                      //                         style: ThemeTexts.textStyleTitle3
-                      //                             .copyWith(color: Colors.white))
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //               Container(
-                      //                 width: double.infinity,
-                      //                 padding: EdgeInsets.all(15),
-                      //                 color: Colors.grey.shade200,
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                   MainAxisAlignment.center,
-                      //                   children: [
-                      //                     // Text(
-                      //                     //     "🗓️ ${currentTask.departureCityDate}",
-                      //                     //     style: ThemeTexts.textStyleTitle3.copyWith(
-                      //                     //         color: Colors.black87)),
-                      //                     Text(
-                      //                         "🗓️ ${currentTask.arrivalCityDate}",
-                      //                         style: ThemeTexts.textStyleTitle3.copyWith(
-                      //                             color: Colors.black87)),
-                      //                   ],
-                      //                 ),
-                      //               ),
-                      //               Container(
-                      //                 padding: EdgeInsets.all(15),
-                      //                 decoration: BoxDecoration(
-                      //                   color: Colors.grey.shade100,
-                      //                   borderRadius: BorderRadius.only(
-                      //                     bottomLeft: Radius.circular(10),
-                      //                     bottomRight: Radius.circular(10),
-                      //                   ),
-                      //                 ),
-                      //                 child: Row(
-                      //                   mainAxisAlignment:
-                      //                   MainAxisAlignment.spaceBetween,
-                      //                   children: [
-                      //                     flightDetails(
-                      //                       cityName: currentTask.departureCity!,
-                      //                       cityShortCode: currentTask.departureCityShortCode!,
-                      //                       cityTime: currentTask.departureCityTime!,
-                      //                       crossAlignment: CrossAxisAlignment.start,
-                      //                     ),
-                      //                     RotatedBox(
-                      //                       quarterTurns: 1,
-                      //                       child: Icon(
-                      //                         Icons.flight,
-                      //                         size: 50,
-                      //                         color: Colors.grey,),
-                      //                     ),
-                      //                     flightDetails(
-                      //                       cityName: currentTask.arrivalCity!,
-                      //                       cityShortCode: currentTask.arrivalCityShortCode!,
-                      //                       cityTime: currentTask.arrivalCityTime!,
-                      //                       crossAlignment: CrossAxisAlignment.end,
-                      //                     ),
-                      //                   ],
-                      //                 ),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
                     },
                   ),
                 ),

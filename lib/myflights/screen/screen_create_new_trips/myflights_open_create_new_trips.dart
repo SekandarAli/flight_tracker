@@ -14,13 +14,14 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../flight_detail/screen/flight_detail_screen.dart';
+import '../../model/myflights_upcoming_model.dart';
 
 class MyFlightsOpenCreateNewTrips extends StatefulWidget {
   MyFlightsOpenCreateNewTrips({Key? key,required this.noOfFlights,required this.tripName,required this.currentTask}) : super(key: key);
 
   int noOfFlights;
   String tripName;
-  var currentTask;
+  ModelMyFlightsCreateTrip currentTask;
 
   @override
   State<MyFlightsOpenCreateNewTrips> createState() => _MyFlightsOpenCreateNewTripsState();
@@ -29,10 +30,16 @@ class MyFlightsOpenCreateNewTrips extends StatefulWidget {
 class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrips> {
 
   TextEditingController? editingController = TextEditingController();
-
+  int? noOfFlights ;
+  String? tripName;
+  Box<ModelMyFlightsCreateTrip>? taskBox;
+  ModelMyFlightsCreateTrip? currentTask;
   @override
   void initState() {
     super.initState();
+    noOfFlights = widget.noOfFlights;
+    tripName = widget.tripName;
+    currentTask = widget.currentTask;
   }
 
   @override
@@ -116,9 +123,9 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                       textEditingController: editingController!);
                                   if (dialogueText != null) {
                                     setState(() {
-                                      widget.currentTask.tripName = editingController!.text.toString();
-                                      widget.tripName = editingController!.text.toString();
-                                      widget.currentTask.save();
+                                      currentTask!.tripName = editingController!.text.toString();
+                                      tripName = editingController!.text.toString();
+                                      currentTask!.save();
                                     });
                                   }
                                   else{
@@ -129,7 +136,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>MyFlightCreateNewTrip()));
                                 }
                                 else if (value == 3) {
-                                  deleteDialogue(currentTask: widget.currentTask);
+                                  deleteDialogue(currentTask: currentTask!);
                                 }
                               },
                             ),
@@ -153,7 +160,7 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.tripName, style: ThemeTexts.textStyleTitle2),
+                    Text(tripName!, style: ThemeTexts.textStyleTitle2),
                     SizedBox(height: 5),
                     Text("My Trip", style: ThemeTexts.textStyleTitle3),
                   ],
@@ -172,19 +179,20 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                       children: [
                         Icon(Icons.flight),
                         SizedBox(width: 10,),
-                        Text("${widget.noOfFlights} Flights"),
+                        // Text("${widget.noOfFlights} Flights"),
+                        Text("Flights"),
                       ],
                     ),
                   ),
                   Expanded(
-                    child: ValueListenableBuilder<Box<ModelMyFlightsCreateTrip>>(
-                      valueListenable:
-                      Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip").listenable(),
-                      builder: (context, box, _) {
+                    child: Builder(
+
+
+                      builder: (context) {
 
                         // final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
 
-                        if (widget.currentTask.modelMyFlightsUpcoming!.length == 0) {
+                        if (currentTask!.modelMyFlightsUpcoming.isEmpty) {
                           return NoFlightFound();
                         } else {
                           return Flex(
@@ -192,41 +200,48 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                               children: [
                                 Expanded(
                                   child: ListView.builder(
-                                    itemCount: widget.currentTask.modelMyFlightsUpcoming!.length,
+                                    itemCount: currentTask!.modelMyFlightsUpcoming.length,
                                     itemBuilder: (context, index) {
-                                      log("qwerty${widget.currentTask.modelMyFlightsUpcoming[index].toString()}");
+                                      // log("qwerty${currentTask!.modelMyFlightsUpcoming[index].toString()}");
                                       return
-                                        widget.currentTask.modelMyFlightsUpcoming[index].flightCode!.isNotEmpty ?
-                                      StatefulBuilder(
-                                          builder: (BuildContext context, StateSetter mySetState) {
-                                          return FlightCardScreen().flightCardSimple(
-                                            onDismiss: (direction){
+                                        currentTask!.modelMyFlightsUpcoming[index].flightCode!.isNotEmpty ?
+                                        FlightCardScreen().flightCardSimple(
+                                            onDismiss: (direction) async {
                                               setState(() {
-                                                // widget.currentTask.deleteAt(0);
-                                                log("flight${widget.currentTask.modelMyFlightsUpcoming[index].flightCode.toString()}");
-                                                // widget.currentTask.modelMyFlightsUpcoming[index].delete();
-                                                // widget.cu
+                                                 log("qwerty${currentTask!.modelMyFlightsUpcoming[index].flightCode.toString()}");
+                                                 currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+                                                 currentTask!.save();
+
+                                                 // currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+                                                 // log("qwerty${currentTask!.modelMyFlightsUpcoming[index]}");
+                                                 // var tasks= Hive.box<ModelMyFlightsUpcoming>('modelMyFlightsUpcoming');
+                                                 // var task = tasks.values.where((element) => element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode).first;
+                                                 // task.();
+                                                 // task!.save();
+                                                 // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+                                                 // print("hel${taskBox!.values.where((element) => element.tripName == currentTask!.tripName).elementAt(0).modelMyFlightsUpcoming.where((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode)).elementAt(0).flightCode}");
+                                                 //taskBox!.modelMyFlightsUpcoming.;
+                                                 //await taskBox!.add(currentTask!);
+
                                               });
                                             },
                                             onTap: (){
                                               Navigator.push(context, MaterialPageRoute(builder: (context){
                                                 return FlightDetailScreen(
-                                                    flight_iata: widget.currentTask.modelMyFlightsUpcoming[index].flightCode!,);
+                                                    flight_iata: currentTask!.modelMyFlightsUpcoming[index].flightCode!,);
                                               }));
                                             },
                                             direction: DismissDirection.horizontal,
                                             context: context,
-                                            flightCode: widget.currentTask.modelMyFlightsUpcoming![index].flightCode!,
-                                            flightStatus: widget.currentTask.modelMyFlightsUpcoming![index].flightStatus!,
-                                            departureCity: widget.currentTask.modelMyFlightsUpcoming![index].departureCity!,
-                                            departureCityShortCode:widget.currentTask.modelMyFlightsUpcoming![index].departureCityShortCode!,
-                                            departureCityTime: widget.currentTask.modelMyFlightsUpcoming![index].departureCityTime! ?? "---",
-                                            arrivalCity: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCity!,
-                                            arrivalCityShortCode: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityShortCode!,
-                                            arrivalCityTime: widget.currentTask.modelMyFlightsUpcoming![index].arrivalCityTime! ?? "---",
-                                          );
-                                        }
-                                      )
+                                            flightCode: currentTask!.modelMyFlightsUpcoming[index].flightCode!,
+                                            flightStatus: currentTask!.modelMyFlightsUpcoming[index].flightStatus!,
+                                            departureCity: currentTask!.modelMyFlightsUpcoming[index].departureCity!,
+                                            departureCityShortCode:currentTask!.modelMyFlightsUpcoming[index].departureCityShortCode!,
+                                            departureCityTime: currentTask!.modelMyFlightsUpcoming[index].departureCityTime! ?? "---",
+                                            arrivalCity: currentTask!.modelMyFlightsUpcoming[index].arrivalCity!,
+                                            arrivalCityShortCode: currentTask!.modelMyFlightsUpcoming[index].arrivalCityShortCode!,
+                                            arrivalCityTime: currentTask!.modelMyFlightsUpcoming[index].arrivalCityTime! ?? "---",
+                                          )
                                             : Container();
                                     },
                                   ),
@@ -316,3 +331,5 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
       });
 
 }
+
+// currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));

@@ -251,7 +251,10 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                     Iterable hiveDepartureAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.departureCity);
                     Iterable hiveArrivalAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.arrivalCity);
 
-                    if(departureAirport == "DPT Airport"){
+                    if(departureAirport == "DPT Airport" && arrivalAirport == "ARR Airport"){
+                      ReusingWidgets().snackBar(context: context, text: 'Please Select Departure & Arrival Airport');
+                    }
+                    else if(departureAirport == "DPT Airport"){
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Departure Airport');
                     }
                     else if(arrivalAirport == "ARR Airport")

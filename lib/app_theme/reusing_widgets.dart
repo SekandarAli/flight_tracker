@@ -2,9 +2,7 @@
 
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
-import 'package:flight_tracker/functions/function_date.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class ReusingWidgets {
   /// TAP BAR ///
@@ -544,24 +542,49 @@ class ReusingWidgets {
       });
 
 
-  AlertDialog noResultFoundDialog({
+  WillPopScope noResultFoundDialog({
   required BuildContext context,
 
-}) => AlertDialog(
-          title: Text("No Flights Found"),
-          content: Text(
-              "Try again or try searching by flight code.\n\n"
-                  "Hint: For connecting flights try to search for each leg separately."),
-          actions: [
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+}) => WillPopScope(
+    onWillPop: () async => false,
+    child: AlertDialog(
+      title: Text("No Flights Found"),
+      content: Text(
+          "Try again or try searching by flight code.\n\n"
+              "Hint: For connecting flights try to search for each leg separately."),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            },
+        ),
+      ],
+    ),
+);
+
+
+  WillPopScope simpleNoResultFoundDialog({
+  required BuildContext context,
+
+}) => WillPopScope(
+    onWillPop: () async => false,
+    child: AlertDialog(
+      title: Text("No Data Found!"),
+      content: Text(
+          "No details found for this flight."),
+      actions: [
+        TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            },
+        ),
+      ],
+    ),
+);
 
   SnackBar deleteInfoSnackBar = SnackBar(
     backgroundColor: Colors.redAccent,

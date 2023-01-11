@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'dart:developer';
+
 import 'package:flight_tracker/app_theme/color.dart';
 import 'package:flight_tracker/app_theme/reusing_widgets.dart';
 import 'package:flight_tracker/app_theme/theme_texts.dart';
@@ -22,10 +24,12 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
   TextEditingController createTripController = TextEditingController();
   ModelMyFlightsCreateTrip? task;
   List<ModelMyFlightsUpcoming>? modelItemsList;
+  Box<ModelMyFlightsCreateTrip>? taskBox;
 
   @override
   void initState() {
     super.initState();
+    taskBox = Hive.box<ModelMyFlightsCreateTrip>("modelMyFlightsTrip");
   }
 
   @override
@@ -85,7 +89,13 @@ class _MyFlightsViewAllState extends State<MyFlightsViewAll> {
                             },
                             onDismiss: (direction){
                               setState(() {
-                                currentTask.delete();
+                                // currentTask.delete();
+                                log(box.values.elementAt(index).flightCode.toString());
+                                for (var element in taskBox!.values) {
+                                  element.modelMyFlightsUpcoming.removeWhere((element) => element.flightCode == box.values.elementAt(index).flightCode);
+                                  element.save();
+                                }
+                                box.values.elementAt(index).delete();
                               });
                             },
                             direction: DismissDirection.horizontal,
