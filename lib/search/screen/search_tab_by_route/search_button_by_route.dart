@@ -53,18 +53,15 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
   void initState() {
     super.initState();
     // setState((){});
-    log(widget.depIata);
-    log(widget.arrIata);
-    log(widget.airlineOptional);
+    // log(widget.depIata);
+    // log(widget.arrIata);
+    // log(widget.airlineOptional);
     dataBox = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming");
     hiveFlightCode = dataBox!.values.map((e) => e.flightCode);
     futureList = ServicesSearchFlight().GetAllPosts(
       depIata: widget.depIata, arrIata: widget.arrIata, airlineIcao: widget.airlineOptional, day: widget.dateDay, flightIata: "",
     );
   }
-
-   refresh() => setState((){});
-
 
   @override
   Widget build(BuildContext context) {
@@ -127,13 +124,14 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                               List<String> dateDay = snapshot.data!.response![index].days!;
 
                               return
-                                (widget.depIata == departureCity && widget.arrIata == arrivalCity && dateDay.contains(widget.dateDay)) ||
-                                    (widget.depIata == departureCity && widget.arrIata == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay)) ?
+                                (widget.depIata == departureCity && widget.arrIata == arrivalCity && dateDay.contains(widget.dateDay) && flightCode != "---") ||
+                                    (widget.depIata == departureCity && widget.arrIata == arrivalCity && widget.airlineOptional == airlineCityOptional && dateDay.contains(widget.dateDay) && flightCode != "---") ?
+
                                 FlightCardScreen().flightCardWithCardExpand(
                                     onTap: (){
                                       setState((){
                                         cardExpand =! cardExpand;
-                                        log(cardExpand.toString());
+                                        // log(cardExpand.toString());
                                       });
                                     },
                                     context: context,
@@ -187,7 +185,7 @@ class _SearchButtonByRouteState extends State<SearchButtonByRoute> {
                                             //   isSelected: false,
                                             // );
                                             if(hiveFlightCode!.contains(flightCode)){
-                                              log("Flight Codes$hiveFlightCode");
+                                              // log("Flight Codes$hiveFlightCode");
                                               for(int i = 0; i < dataBox!.length ; i++){
                                                 if(dataBox!.values.elementAt(i).flightCode == flightCode){
                                                   index = i;

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'generated/assets.dart';
 import 'recent_airport_airline_search/model/model_recent_search.dart';
 
 
@@ -58,8 +59,8 @@ class _MyAppState extends State<MyApp> {
    loadJsonFiles() async {
      // await rootBundle.loadString('assets/json/airport.json');
      await DefaultAssetBundle.of(context).loadString('assets/json/airline.json',cache: true);
-     await DefaultAssetBundle.of(context).loadString('assets/json/airport.json');
-     await DefaultAssetBundle.of(context).loadString('assets/json/city.json');
+     await DefaultAssetBundle.of(context).loadString('assets/json/airport.json',cache: true);
+     await DefaultAssetBundle.of(context).loadString('assets/json/city.json',cache: true);
   }
   @override
   Widget build(BuildContext context) {
@@ -68,13 +69,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(
-          primarySwatch: ColorsTheme.themeColor,
+          primarySwatch: ColorsTheme.themeColorOld,
           fontFamily: "OpenSansRegular"
         // textTheme: GoogleFonts.montserratTextTheme(
         //   Theme.of(context).textTheme,),
       ),
       home: BottomNavBarScreen(),
-      // home: CheckConnection(),
+      // home: HomePage(),
     );
   }
 }
@@ -86,4 +87,21 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
     PointerDeviceKind.mouse,
   };
 }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topRight,
+      child: Image.asset(
+        Assets.imagesNewbgimage,
+        fit: BoxFit.fill,
+        // width: 130,
+        // height: 90,
+      ),
+    );
+  }
+}
+
 

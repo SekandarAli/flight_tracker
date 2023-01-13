@@ -25,8 +25,8 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
   TextEditingController flightCodeController = TextEditingController();
 
-  Box<ModelSearch>? dataBoxSearch;
-  ModelSearch? modelMyFlightsSearch;
+  Box<ModelSearch>? dataBox;
+  ModelSearch? modelMyFlights;
   var dateDay;
   DateTime selectedDate = DateTime.now();
 
@@ -53,7 +53,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
   @override
   void initState() {
     super.initState();
-    dataBoxSearch = Hive.box<ModelSearch>("modelSearch");
+    dataBox = Hive.box<ModelSearch>("modelSearch");
     dateDay = DateFormat('EEEE').format(selectedDate).substring(0,3).toLowerCase();
 
   }
@@ -135,6 +135,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
 
                       ReusingWidgets.searchButton(onPress: () async {
                         Iterable hiveFlightCode = Hive.box<ModelSearch>("modelSearch").values.map((e) => e.flightCode);
+                        var index = -1;
 
                         log("${hiveFlightCode.contains(flightCodeController.text)}");
 
@@ -142,12 +143,46 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                           ReusingWidgets().snackBar(context: context, text: 'Please Enter Flight Code');
                         }
 
+                        else if(hiveFlightCode.contains(flightCodeController.text)) {
+                          for (int i = 0; i < dataBox!.length; i++) {
+                            if (dataBox!.values.elementAt(i).flightCode == flightCodeController.text) {
+                              index = i;
+                            }
+                          }
+                          if (index != -1) {
+                            ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
+                            dataBox!.deleteAt(index);
+
+                            modelMyFlights = ModelSearch(
+                              flightCode: flightCodeController.text,
+                              arrivalCity: "",
+                              departureCity: "",
+                              arrivalCityShortName: "",
+                              departureCityShortName: "",
+                            );
+
+                            Navigator.push(context, PageRouteBuilder(
+                              pageBuilder: (context, _, __) {
+                                return SearchButtonByFlightCode(
+                                  flightCode: flightCodeController.text,
+                                  dateDay: dateDay,
+                                  currentDate: currentDate,
+                                );
+                              },
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ));
+
+                            Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
+                          }
+                          else {
+                            print("element not found");
+                          }
+                        }
+
                         else if(hiveFlightCode.contains(flightCodeController.text)){
                           ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
                           log("$hiveFlightCode");
-                          // setState(() {
-                          //   futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
-                          // });
 
                           Navigator.push(context, PageRouteBuilder(
                             pageBuilder: (context, _, __) {
@@ -165,14 +200,13 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                           ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
                           setState(() {});
                           log("$hiveFlightCode");
-                          modelMyFlightsSearch = ModelSearch(
+                          modelMyFlights = ModelSearch(
                               flightCode: flightCodeController.text,
                               arrivalCity: "",
                               departureCity: "",
                               arrivalCityShortName: "",
                               departureCityShortName: "",
                             );
-                          // futureList =  ServicesAirportsTrackScreen().GetAllPosts(flightCodeController.text);
                           Navigator.push(context, PageRouteBuilder(
                             pageBuilder: (context, _, __) {
                               return SearchButtonByFlightCode(
@@ -184,7 +218,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                             transitionDuration: Duration.zero,
                             reverseTransitionDuration: Duration.zero,
                           ));
-                          Future.delayed(Duration(seconds: 2)).then((value) => dataBoxSearch!.add(modelMyFlightsSearch!));
+                          Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
                         }
 
                       }, context: context,
@@ -195,71 +229,6 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
             ),
           ),
         ),
-
-        // SizedBox(
-        //     height: 0,
-        //     width: w,
-        //     child: FutureBuilder(
-        //         future: futureList,
-        //         builder: (context,snapshot) {
-        //           print("future");
-        //
-        //           if (snapshot.connectionState == ConnectionState.done) {
-        //             if (snapshot.hasData) {
-        //               print("hasData");
-        //               if (snapshot.data!.response != null) {
-        //                 Future(() async {
-        //                   await
-        //                   Navigator.push(context, MaterialPageRoute(
-        //                       builder: (context) =>
-        //                           SearchButtonByFlightCode(
-        //                             flightCode: flightCodeController.text,
-        //                             dateDay: null,
-        //                             currentDate: currentDate,
-        //                           )));
-        //                 });
-        //                 return Container();
-        //               } else {
-        //                 Future(() {
-        //                   showDialog(
-        //                       context: context,
-        //                       builder: (context) =>
-        //                           AlertDialog(
-        //                             title: Text("No Flights Found"),
-        //                             content: Text(
-        //                                 "Try again or try searching by flight code.\n\n"
-        //                                     "Hint: For connecting flights try to search for each leg separately."),
-        //                             actions: [
-        //                               TextButton(
-        //                                 child: Text("OK"),
-        //                                 onPressed: () {
-        //                                   Navigator.pop(context);
-        //                                 },
-        //                               ),
-        //                             ],
-        //                           ));
-        //                 });
-        //                 return Container();
-        //               }
-        //             }
-        //             else if (snapshot.hasError) {
-        //               print("noData");
-        //               return Center(
-        //                 child: Text(
-        //                   "error 2${snapshot.error}",
-        //                 ),
-        //               );
-        //             }
-        //             else {
-        //               return Center(child: CircularProgressIndicator());
-        //             }
-        //           }
-        //           else {
-        //             return Container();
-        //           }
-        //         })
-        // ),
-
 
         Container(
           color: ColorsTheme.white,
@@ -299,7 +268,7 @@ class _SearchTabByFlightCodeState extends State<SearchTabByFlightCode> {
                         return
                           currentTask!.flightCode!.isNotEmpty ?
                           Card(
-                            color: ColorsTheme.lightGreenPrimary,
+                            color: ColorsTheme.lightGreyColor,
                             elevation: 5,
                             child: Container(
                               width: w,

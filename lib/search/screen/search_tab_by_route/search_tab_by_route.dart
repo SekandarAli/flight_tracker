@@ -10,6 +10,7 @@ import 'package:flight_tracker/search/screen/search_tab_recent_searches/model/mo
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+import '../../../generated/assets.dart';
 import '../../model/model_search_flight.dart';
 import 'search_button_by_route.dart';
 import 'search_tab_airline_optional.dart';
@@ -31,8 +32,8 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   String arrivalAirport = "ARR Airport";
   String airlineOptionalShortName = "AR";
   String airlineOptional = "Airline(OPT)";
-  var temp1;
-  var temp2;
+  String temp1 = "";
+  String temp2 = "";
   Box<ModelSearch>? dataBox;
   ModelSearch? modelMyFlights;
   String depIata = "Departure";
@@ -43,6 +44,9 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   var currentDate;
 
   Future<ModelSearchFlight>? futureList;
+  bool trackFlight = true;
+  bool cardExpand = false;
+
 
   // TextEditingController departureAirport1 = TextEditingController();
   // TextEditingController arrivalAirport1 = TextEditingController();
@@ -55,11 +59,6 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
   // TextEditingController airlineOptionalShortName1 = TextEditingController();
   // TextEditingController airlineIcao1 = TextEditingController();
 
-
-  bool trackFlight = true;
-  bool cardExpand = false;
-
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -82,12 +81,13 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
         /// WHITE CONTAINER
         Container(
           color:  ColorsTheme.primaryColor,
+          // color:  Colors.transparent,
           child: Container(
             decoration: ReusingWidgets().curveDecorationContainer(),
             padding: EdgeInsets.symmetric(horizontal: 20),
             width: double.infinity,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,8 +100,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                             // airportName1: departureAirport1.text.length > 12 ? "departureAirport1.text.length == 12" : " departureAirport1.text",
                             // airportShortName1: depIata1,
                             title2: "DPT Airport",
-
-
+                            textAlign: TextAlign.start,
                             sizedBoxHeight: 0,
                             context: context,
                             title1: 'From',
@@ -115,7 +114,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                               }));
 
 
-                              mySetState(() {
+                              setState(() {
                                 departureAirport = newValue[0];
                                 departureAirportShortName = newValue[1];
                                 depIata = newValue[2];
@@ -130,9 +129,42 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           );
                         }
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: Image.asset("assets/images/flightIcon.png",width:  w * 0.22,height:  w * 0.15,),
+                    Container(
+                      padding: EdgeInsets.only(top: 50),
+                      // color: Colors.green,
+                      child: Column(
+                        children: [
+                          // IconButton(onPressed: (){
+                          //   temp1 = departureAirport;
+                          //   temp2 = depIata;
+                          //
+                          //   setState((){
+                          //     departureAirport = arrivalAirport;
+                          //     depIata = arrIata;
+                          //
+                          //     arrivalAirport = temp1;
+                          //     arrIata = temp2;
+                          //
+                          //   });
+                          //
+                          // }, icon: Icon(Icons.swap_horiz,color: ColorsTheme.themeColor,size: 50,)),
+                          // Image.asset("assets/images/flightIcon.png",width:  w * 0.22,height:  w * 0.15,),
+                          departureAirport == "DPT Airport" || arrivalAirport == "ARR Airport" ?
+                          Image.asset(Assets.imagesSwapImage,width:  w * 0.22,height:  w * 0.15) :
+                          InkWell(onTap: (){
+                            temp1 = departureAirport;
+                            temp2 = depIata;
+
+                            setState((){
+                              departureAirport = arrivalAirport;
+                              depIata = arrIata;
+                              arrivalAirport = temp1;
+                              arrIata = temp2;
+                            });
+                          },
+                          child: Image.asset(Assets.imagesSwapImage,width:  w * 0.22,height:  w * 0.15)),
+                        ],
+                      ),
                     ),
                     StatefulBuilder(
                         builder: (BuildContext context, StateSetter mySetState) {
@@ -148,13 +180,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                             airportName: arrivalAirport,
                             airportShortName: "($arrIata)",
                             crossAxisAlignment: CrossAxisAlignment.end,
+                            textAlign: TextAlign.end,
                             onTapAirport: () async{
                               List<dynamic> newValue = await Navigator.of(context)
                                   .push(MaterialPageRoute(builder: (context) {
                                 return SearchTabArrivalDepartureAirport();
                               }));
 
-                              mySetState(() {
+                              setState(() {
                                 arrivalAirport = newValue[0];
                                 arrivalAirportShortName = newValue[1];
                                 arrIata = newValue[2];
@@ -171,7 +204,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                   ],
                 ),
 
-                SizedBox(height: 10),
+                SizedBox(height: 0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -182,7 +215,7 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           "Date",
                           style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
                         ),
-                        SizedBox(height: 5),
+                        SizedBox(height: 10),
                         StatefulBuilder(
                             builder: (BuildContext context, StateSetter mySetState) {
                               return InkWell(
@@ -216,6 +249,13 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                               airlineName: airlineOptional,
                               airlineShortName: airlineIcao,
                               context: context,
+                              onTapClear: (){
+                                setState(() {
+                                  airlineOptional = "Airline(OPT)";
+                                  airlineIcao = "";
+                                });
+                              },
+                              clearIcon: airlineOptional == "Airline(OPT)" ? false : true,
                               onTapAirline: () async{
                                 final List<dynamic> newValue = await Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (context) {
@@ -245,55 +285,65 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
 
                   context: context,
                   // text: isLoading?  CircularProgressIndicator(color: Colors.white) : Text('SEARCH'),
-                  text: isLoading? "SEARCH" : 'SEARCH',
+                  text: 'SEARCH',
                   style: ThemeTexts.textStyleTitle2,
                   onPress: () {
                     Iterable hiveDepartureAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.departureCity);
                     Iterable hiveArrivalAirport =  Hive.box<ModelSearch>("modelSearch").values.map((e) => e.arrivalCity);
-
+                    var index = -1;
                     if(departureAirport == "DPT Airport" && arrivalAirport == "ARR Airport"){
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Departure & Arrival Airport');
                     }
                     else if(departureAirport == "DPT Airport"){
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Departure Airport');
                     }
-                    else if(arrivalAirport == "ARR Airport")
-                    {
+                    else if(arrivalAirport == "ARR Airport") {
                       ReusingWidgets().snackBar(context: context, text: 'Please Select Arrival Airport');
                     }
-                    else if(arrivalAirport == departureAirport)
-                    {
+                    else if(arrivalAirport == departureAirport) {
                       ReusingWidgets().snackBar(context: context, text: 'Departure and Arrival Airport are Same');
                     }
-                    else if(hiveDepartureAirport.contains(departureAirport) && hiveArrivalAirport.contains(arrivalAirport)){
-                      ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
 
 
-                      Navigator.push(context, PageRouteBuilder(
-                        pageBuilder: (context, _, __) {
-                          return SearchButtonByRoute(
-                            depIata: depIata,
-                            arrIata: arrIata,
-                            arrivalAirport: arrivalAirport,
-                            departureAirport: departureAirport,
-                            airlineOptional: airlineIcao,
-                            dateDay: dateDay,
-                            currentDate: currentDate,
-                          );
-                        },
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ));
-                      // setState(() {
-                      //   // isLoading = true;
-                      //   futureList = ServicesSearchFlight().GetAllPosts(
-                      //     depIata: depIata1.text,
-                      //     arrIata: arrIata1.text,
-                      //     airlineIcao: airlineOptional1.text,
-                      //     day: dateDay,
-                      //     flightIata: "",
-                      //   );
-                      // });
+                    else if(hiveDepartureAirport.contains(departureAirport) && hiveArrivalAirport.contains(arrivalAirport)) {
+                      for (int i = 0; i < dataBox!.length; i++) {
+                        if (dataBox!.values.elementAt(i).departureCityShortName == depIata && dataBox!.values.elementAt(i).arrivalCityShortName == arrIata) {
+                          index = i;
+                        }
+                      }
+                      if (index != -1) {
+                        ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
+                        dataBox!.deleteAt(index);
+
+                        modelMyFlights = ModelSearch(
+                            arrivalCity: arrivalAirport,
+                            departureCity: departureAirport,
+                            arrivalCityShortName: arrIata,
+                            departureCityShortName: depIata,
+                            flightCode: ""
+                        );
+
+                        Navigator.push(context, PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) {
+                            return SearchButtonByRoute(
+                              depIata: depIata,
+                              arrIata: arrIata,
+                              arrivalAirport: arrivalAirport,
+                              departureAirport: departureAirport,
+                              airlineOptional: airlineIcao,
+                              dateDay: dateDay,
+                              currentDate: currentDate,
+                            );
+                          },
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ));
+
+                        Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
+                      }
+                      else {
+                        print("element not found");
+                      }
                     }
                     else {
                       ReusingWidgets().snackBar(context: context, text: "Searching Please Wait!");
@@ -304,17 +354,6 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           departureCityShortName: depIata,
                           flightCode: ""
                       );
-                      // Navigator.push(context, MaterialPageRoute(builder: (context){
-                      //   return SearchButtonByRoute(
-                      //     depIata: depIata,
-                      //     arrIata: arrIata,
-                      //     arrivalAirport: arrivalAirport,
-                      //     departureAirport: departureAirport,
-                      //     airlineOptional: airlineIcao,
-                      //     dateDay: dateDay,
-                      //     currentDate: currentDate,
-                      //   );
-                      // }));
 
                       Navigator.push(context, PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) {
@@ -332,118 +371,14 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                           reverseTransitionDuration: Duration.zero,
                         ),
                       );
-
-                      // setState(() {
-                      //   // isLoading = true;
-                      //   futureList = ServicesSearchFlight().GetAllPosts(
-                      //     depIata: depIata1.text,
-                      //     arrIata: arrIata1.text,
-                      //     airlineIcao: airlineOptional1.text,
-                      //     day: dateDay,
-                      //     flightIata: "",
-                      //   );
-                      // });
                       Future.delayed(Duration(seconds: 2)).then((value) => dataBox!.add(modelMyFlights!));
                     }
                   },
-
                 ),
               ],
             ),
           ),
         ),
-
-        ///Future Builder Starts
-
-
-        // SizedBox(
-        //   height: 0,
-        //   width: w,
-        //   child: FutureBuilder(
-        //     future: futureList,
-        //     builder: (context,snapshot) {
-        //       print("future2");
-        //       if (snapshot.connectionState == ConnectionState.done) {
-        //         if (snapshot.hasData) {
-        //           log("hasData");
-        //           if (snapshot.data!.response == null) {
-        //             return Container(
-        //               color: Colors.white,
-        //               child: Column(
-        //                 children: [
-        //                   Flexible(
-        //                     child: ListView.builder(
-        //                       padding: EdgeInsets.all(5),
-        //                       itemCount: snapshot.data!.response!.length,
-        //                       itemBuilder: (context, index) {
-        //
-        //                         log(snapshot.data!.response!.length.toString());
-        //                         log("notnull");
-        //                         Future(() {
-        //                           showDialog(
-        //                               context: context,
-        //                               builder: (context) =>
-        //                                   AlertDialog(
-        //                                     title: Text("No Flights Found"),
-        //                                     content: Text(
-        //                                         "Try again or try searching by flight code.\n\n"
-        //                                             "Hint: For connecting flights try to search for each leg separately."),
-        //                                     actions: [
-        //                                       TextButton(
-        //                                         child: Text("OK"),
-        //                                         onPressed: () {
-        //                                           Navigator.pop(context);
-        //                                         },
-        //                                       ),
-        //                                     ],
-        //                                   ));
-        //                         });
-        //                         return Container();
-        //                       },
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             );
-        //           }
-        //
-        //           else {
-        //             log("false");
-        //             // isLoading = false;
-        //             Future(() async {
-        //               // isLoading = false;
-        //               await
-        //               Navigator.push(context, MaterialPageRoute(
-        //                   builder: (context) {
-        //                     // isLoading = false;
-        //                     return SearchButtonByRoute(
-        //                       depIata: depIata1.text,
-        //                       arrIata: arrIata1.text,
-        //                       airlineOptional: airlineIcao1.text,
-        //                       dateDay: dateDay,
-        //                       currentDate: currentDate,
-        //                       departureAirport: departureAirport1.text,
-        //                       arrivalAirport: arrivalAirport1.text,
-        //                     );
-        //                   }));
-        //             });
-        //             return Container();
-        //           }
-        //         } else if (snapshot.hasError) {
-        //           return Center(
-        //             child: NoInternetError(),
-        //           );
-        //         } else {
-        //           return Center(child: FunctionProgressIndicator());
-        //         }
-        //       }
-        //       else {
-        //         return Container();
-        //       }
-        //     },
-        //
-        //   ),
-        // ),
 
         /// Recent Searches Starts
         Container(
@@ -469,11 +404,6 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                 Hive.box<ModelSearch>("modelSearch").listenable(),
                 builder: (context, box, _) {
                   final items = box.values.toList().cast<ModelSearch>();
-
-                  // log("${Hive.box<ModelSearch>("modelSearch").values.map((e) => e.departureCity)}");
-
-
-
                   if (items.isEmpty) {
                     return NoSearchFound();
                   } else {
@@ -487,66 +417,88 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
                         return
                           currentTask!.departureCity!.isNotEmpty ?
                           Card(
-                            color: ColorsTheme.lightGreenPrimary,
+                            color: ColorsTheme.lightGreyColor,
                             elevation: 5,
                             child: Container(
                               width: w,
                               padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.all(5),
+                              // margin: EdgeInsets.all(5),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  StatefulBuilder(
-                                      builder: (BuildContext context, StateSetter mySetState) {
-                                        return GestureDetector(
-                                          onTap: (){
-                                            print("ontaoppp");
-                                            log(depIata.toString());
-                                            setState(() {
+                                  Expanded(
+                                    child: StatefulBuilder(
+                                        builder: (BuildContext context, StateSetter mySetState) {
+                                          return GestureDetector(
+                                            onTap: (){
+                                              setState(() {
+                                                departureAirport = currentTask.departureCity!;
+                                                depIata = currentTask.departureCityShortName!;
+                                                arrivalAirport = currentTask.arrivalCity!;
+                                                arrIata = currentTask.arrivalCityShortName!;
+                                                // departureAirport = currentTask.departureCity!;
+                                                // depIata = currentTask.departureCityShortName!;
+                                                // arrivalAirport = currentTask.arrivalCity!;
+                                                // arrIata = currentTask.arrivalCityShortName!;
+                                                log("aa$depIata");
+                                                log("aa$arrIata");
+                                              });
+                                            },
+                                            child: Container(
+                                              // color: Colors.green,
+                                              // width: w * 0.7,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Icon(Icons.history,color: ColorsTheme.primaryColor,),
+                                                  SizedBox(width: 10),
+                                                  SizedBox(
+                                                    width: MediaQuery.of(context).size.width * 0.28,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          // currentTask.departureCity!.length > 10 ? '${currentTask.departureCity!.substring(0, 10)}...' : "${currentTask.departureCity!}\t",
+                                                            "${currentTask.departureCity!}\t",
+                                                            // style: ThemeTexts.textStyleValueBlack2),
+                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
+                                                        // SizedBox(height: 5),
+                                                        // Text(
+                                                        //     currentTask.departureCityShortName!,
+                                                        //     style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 14)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                      padding: EdgeInsets.all(5),
+                                                      child: Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,)),
+                                                  SizedBox(
+                                                    width: MediaQuery.of(context).size.width * 0.28,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                                      children: [
+                                                        Text(
+                                                            "${currentTask.arrivalCity!}\t",textAlign: TextAlign.end,
+                                                            // currentTask.arrivalCity!.length > 10 ? '  ${currentTask.arrivalCity!.substring(0, 10)}...' : "\t${currentTask.arrivalCity!}",
+                                                            style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular"))
+                                                            // style: ThemeTexts.textStyleValueBlack2),
+                                                        // SizedBox(height: 5),
+                                                        // Text(
+                                                        //     currentTask.arrivalCityShortName!,
+                                                        //     style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 14)),
+                                                      ],
+                                                    ),
+                                                  ),
 
-
-                                              departureAirport = currentTask.departureCity!;
-                                              depIata = currentTask.departureCityShortName!;
-                                              arrivalAirport = currentTask.arrivalCity!;
-                                              arrIata = currentTask.arrivalCityShortName!;
-
-
-                                              // departureAirport = currentTask.departureCity!;
-                                              // depIata = currentTask.departureCityShortName!;
-                                              // arrivalAirport = currentTask.arrivalCity!;
-                                              // arrIata = currentTask.arrivalCityShortName!;
-
-
-                                              log("aa$depIata");
-                                              log("aa$arrIata");
-                                            });
-                                          },
-                                          child: SizedBox(
-                                            width: w * 0.7,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                Icon(Icons.history,color: ColorsTheme.primaryColor,),
-                                                SizedBox(width: 10,),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                        currentTask.departureCity!.length > 8 ? '${currentTask.departureCity!.substring(0, 8)}...  ' : "${currentTask.departureCity!}\t",
-                                                        style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular",fontSize: 12)),
-                                                    Icon(Icons.flight_takeoff,color: ColorsTheme.themeColor,),
-                                                    Text(
-                                                        currentTask.arrivalCity!.length > 8 ? '  ${currentTask.arrivalCity!.substring(0, 8)}...  ' : "\t${currentTask.arrivalCity!}",
-                                                        style: ThemeTexts.textStyleValueBlack2.copyWith(fontWeight: FontWeight.bold,fontFamily: "OpenSansRegular")),
-
-                                                  ],
-                                                )
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }
+                                          );
+                                        }
+                                    ),
                                   ),
-                                  IconButton(icon: Icon(Icons.clear),color: Colors.grey,
+                                  IconButton(
+                                    icon: Icon(Icons.clear),color: Colors.grey,
                                     onPressed: (){
                                       currentTask.delete();
                                     },
@@ -574,8 +526,8 @@ class _SearchTabByRouteState extends State<SearchTabByRoute> {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime.utc(2022,12,28),
-      lastDate: DateTime(2023,12,12),
+      firstDate: DateTime.utc(2023,01,01),
+      lastDate: DateTime(2024,01,01),
       helpText: "Flight Track Date",
       initialEntryMode: DatePickerEntryMode.calendar,
     );

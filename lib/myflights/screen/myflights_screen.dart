@@ -50,9 +50,9 @@ class _MyFlightsScreenState extends State<MyFlightsScreen> {
               flex: 0,
               child: GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return  FlightDetailScreen(flight_iata: "IX142");
-                  }));
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //   return  FlightDetailScreen(flight_iata: "IX142");
+                  // }));
                 },
                 child: Container(
                   padding: EdgeInsets.only(top: 30,left: 20,right: 20,bottom: 20),

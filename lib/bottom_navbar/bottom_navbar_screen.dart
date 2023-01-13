@@ -21,14 +21,13 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProviderStateMixin{
-  int currentIndex = 1;
 
   late BannerAd _bannerAd;
   bool isBannerAdLoaded = false;
   DateTime? currentTime;
 
   int tabIndex = 0;
-  late TabController tabController = TabController(length: 5, vsync: this,animationDuration: Duration(microseconds: 1));
+  late TabController tabController = TabController(length: 4, vsync: this,animationDuration: Duration(microseconds: 1));
 
   @override
   void initState() {
@@ -62,12 +61,12 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProv
           tabController.index = tabIndex;
         });
       }
-      else if (tabController.index == 4) {
-        setState(() {
-          tabIndex = 4;
-          tabController.index = tabIndex;
-        });
-      }
+      // else if (tabController.index == 4) {
+      //   setState(() {
+      //     tabIndex = 4;
+      //     tabController.index = tabIndex;
+      //   });
+      // }
     });
   }
   @override
@@ -103,6 +102,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProv
         return null!;
       },
       child: Scaffold(
+        // drawer: Drawer(),
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -168,19 +168,19 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProv
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            tabIndex = 4;
-                            tabController.index = tabIndex;
-                          },
-                          child: bottomWidget(
-                            4,
-                            "Settings",
-                            Icons.settings,
-                          ),
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: InkWell(
+                      //     onTap: () {
+                      //       tabIndex = 4;
+                      //       tabController.index = tabIndex;
+                      //     },
+                      //     child: bottomWidget(
+                      //       4,
+                      //       "Settings",
+                      //       Icons.settings,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 )),
@@ -192,7 +192,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProv
           ],
         ),
         body: DefaultTabController(
-          length: 5,
+          length: 4,
           child: Scaffold(
             body: Column(
               children: [
@@ -225,12 +225,12 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> with TickerProv
                         alignment: Alignment.center,
                         child: AirlineScreen(),
                       ),
-                      Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        alignment: Alignment.center,
-                        child: SettingsScreen(),
-                      )
+                      // Container(
+                      //   width: double.infinity,
+                      //   height: double.infinity,
+                      //   alignment: Alignment.center,
+                      //   child: SettingsScreen(),
+                      // )
                     ],
                   ),
                 ),

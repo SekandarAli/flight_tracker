@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
  class ColorsTheme{
    static Color textColor = Colors.grey;
    // static MaterialColor primaryColor = Colors.blue;
-   static MaterialColor themeColor = Colors.deepOrange;
+   static MaterialColor themeColorOld = Colors.deepOrange;
+   static Color themeColor = Color(0xfffe8d48);
    static Color lightThemeColor = Color(0xffff9e6c);
-   static  Color primaryColor = Color(0xff0da493);
+   static  Color primaryColor = Color(0xff067d70);
    static  Color lightPrimaryColor = Color(0xe62d9086);
    static  Color lightGreenPrimary = Color(0xffdbf5db);
    static Color lightGreyColor = Colors.grey.shade200;

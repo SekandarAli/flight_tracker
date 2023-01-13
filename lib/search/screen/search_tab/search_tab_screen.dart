@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
 
+import '../../../drawer/drawer_screen.dart';
+import '../../../generated/assets.dart';
+
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
@@ -20,16 +23,22 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   int index = 1;
   String qrCode = 'No data Found';
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: ColorsTheme.white,
+      drawer: DrawerScreen(),
       body: SafeArea(
         child: ListView(
-              children: [
-                topBarGreen(),
-                index == 1 ? SearchTabByRoute() : index == 2 ? SearchTabByFlightCode() : Container()
-              ],
+          children: [
+            topBarGreen(),
+            index == 1 ? SearchTabByRoute() : index == 2 ? SearchTabByFlightCode() : Container()
+          ],
         ),
       ),
     );
@@ -44,10 +53,10 @@ class _SearchScreenState extends State<SearchScreen> {
           Positioned(
             right: 30,
             child: Image.asset(
-              "assets/images/plane.png",
+              Assets.imagesBackgroundMap,
               fit: BoxFit.fill,
-              width: 130,
-              height: 90,
+              width: 400,
+              height: 250,
             ),
           ),
           Column(
@@ -55,52 +64,67 @@ class _SearchScreenState extends State<SearchScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  GestureDetector(
+                      onTap: (){
+                        if(scaffoldKey.currentState!.isDrawerOpen){
+                          scaffoldKey.currentState!.closeDrawer();
+                        }
+                        else{
+                          scaffoldKey.currentState!.openDrawer();
+                        }
+                      },
+                      child: Icon(Icons.menu,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
+
                   Align(
                     alignment: Alignment.bottomLeft,
-                      heightFactor: 1.3,
-                      child: Text("Check Your\nFlight",
-                          style: ThemeTexts.textStyleTitle1.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            letterSpacing: 2
-                          ),
+                    heightFactor: 1.3,
+                    child: Text("Flight Tracker",
+                      style: ThemeTexts.textStyleTitle1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 18,
+                          letterSpacing: 1
                       ),
+                    ),
                   ),
                   GestureDetector(
                       onTap: (){
                         scanQRCode();
                       },
-                      child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
-
+                      // child: Icon(Icons.qr_code_scanner_rounded,color: Colors.white,size: MediaQuery.of(context).size.width * 0.1)),
+                    child: Image.asset(
+                        Assets.imagesQrCodeImage,
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height:  MediaQuery.of(context).size.width * 0.1)),
                 ],
               ),
               SizedBox(height: 20),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ReusingWidgets().searchModuleTabBar(
-                        onTap: () {
-                          setState(() {
-                            index = 1;
-                          });
-                        },
-                        context: context,
-                        text: "BY ROUTE",
-                        textColor: index == 1 ? ColorsTheme.white : Colors.white54,
-                        borderColor: index == 1 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
-                        borderWidth: index == 1 ? 3 : 1),
-                    ReusingWidgets().searchModuleTabBar(
-                        onTap: () {
-                          setState(() {
-                            index = 2;
-                          });
-                        },
-                        context: context,
-                        text: "BY FLIGHT CODE",
-                        textColor: index == 2 ? ColorsTheme.white : Colors.white54,
-                        borderColor: index == 2 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
-                        borderWidth: index == 2 ? 3 : 1),
-                  ],
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ReusingWidgets().searchModuleTabBar(
+                      onTap: () {
+                        setState(() {
+                          index = 1;
+                        });
+                      },
+                      context: context,
+                      text: "By Route",
+                      textColor: index == 1 ? ColorsTheme.white : Colors.white54,
+                      borderColor: index == 1 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
+                      borderWidth: index == 1 ? 3 : 1),
+                  ReusingWidgets().searchModuleTabBar(
+                      onTap: () {
+                        setState(() {
+                          index = 2;
+                        });
+                      },
+                      context: context,
+                      text: "By Flight Code",
+                      textColor: index == 2 ? ColorsTheme.white : Colors.white54,
+                      borderColor: index == 2 ? ColorsTheme.themeColor : ColorsTheme.primaryColor,
+                      borderWidth: index == 2 ? 3 : 1),
+                ],
               ),
             ],
           ),

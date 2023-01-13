@@ -264,6 +264,7 @@ class ReusingWidgets {
     required String airportName,
     required String airportShortName,
     required BuildContext context,
+    required TextAlign textAlign,
     required CrossAxisAlignment crossAxisAlignment,
     required Function() onTapAirport,
      double? sizedBoxHeight,
@@ -302,7 +303,7 @@ class ReusingWidgets {
                   children: [
                     Text(
                       // airportName.length > 12 ? '${airportName.substring(0, 12)}...' : airportName,
-                      airportName,
+                      airportName,textAlign: textAlign,
                       style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
                     ),
                     SizedBox(height: 5),
@@ -330,6 +331,8 @@ class ReusingWidgets {
     required String airlineShortName,
     required BuildContext context,
     required Function() onTapAirline,
+    required Function() onTapClear,
+    required bool clearIcon,
     // required TextEditingController? airlineName1,
     // required TextEditingController? airlineShortName1,
 
@@ -345,7 +348,7 @@ class ReusingWidgets {
             Material(
               color: Colors.transparent,
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
+                // width: MediaQuery.of(context).size.width * 0.35,
                 // height: MediaQuery.of(context).size.height * 0.05,
                 padding: EdgeInsets.only(bottom: 0),
                 // decoration: BoxDecoration(
@@ -361,10 +364,20 @@ class ReusingWidgets {
                   },
                   child: Column(
                     children: [
-                      Text(
-                        // airlineName.length > 12 ? '${airlineName.substring(0, 12)}...' : airlineName,
-                        airlineName,textAlign: TextAlign.center,
-                        style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            // airlineName.length > 12 ? '${airlineName.substring(0, 12)}...' : airlineName,
+                            airlineName,textAlign: TextAlign.center,
+                            style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.primaryColor),
+                          ),
+                          clearIcon == true ? IconButton(
+                              onPressed: (){
+                                onTapClear();
+                              },
+                              icon: Icon(Icons.clear,color: ColorsTheme.primaryColor,)) : Container()
+                        ],
                       ),
                       SizedBox(height: 5),
                     ],
@@ -548,10 +561,19 @@ class ReusingWidgets {
 }) => WillPopScope(
     onWillPop: () async => false,
     child: AlertDialog(
-      title: Text("No Flights Found"),
-      content: Text(
-          "Try again or try searching by flight code.\n\n"
-              "Hint: For connecting flights try to search for each leg separately."),
+      titlePadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.all(0),
+      title:  Container(
+          padding: EdgeInsets.all(20),
+          width: MediaQuery.of(context).size.width ,
+          color: ColorsTheme.primaryColor,
+          child: Text("No Flight Found",style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.white))),
+      content: Container(
+        padding: EdgeInsets.all(20),
+        child: Text(
+            "Try again or try searching by flight code.\n\n"
+                "Hint: For connecting flights try to search for each leg separately."),
+      ),
       actions: [
         TextButton(
           child: Text("OK"),
@@ -571,9 +593,18 @@ class ReusingWidgets {
 }) => WillPopScope(
     onWillPop: () async => false,
     child: AlertDialog(
-      title: Text("No Data Found!"),
-      content: Text(
-          "No details found for this flight."),
+      titlePadding: EdgeInsets.all(0),
+      contentPadding: EdgeInsets.all(0),
+      title: Container(
+          padding: EdgeInsets.all(20),
+          width: MediaQuery.of(context).size.width ,
+          color: ColorsTheme.primaryColor,
+          child: Text("No Data Found",style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.white))),
+      content: Container(
+        padding: EdgeInsets.all(20),
+        child: Text(
+            "No details found for this flight."),
+      ),
       actions: [
         TextButton(
           child: Text("OK"),

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, must_be_immutable
 
 import 'dart:convert';
 
@@ -14,7 +14,7 @@ import '../../flight_detail/screen/flight_detail_screen.dart';
 import '../../functions/function_progress_indicator.dart';
 
 class AirlineScreenDetails extends StatefulWidget {
-   AirlineScreenDetails({required this.airlineName,required this.iataValue});
+   AirlineScreenDetails({super.key, required this.airlineName,required this.iataValue});
 
    String airlineName;
    String iataValue;
@@ -69,32 +69,53 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              expandedHeight: h * 0.3,
-              floating: false,
-              pinned: true,
-              leading: IconButton(onPressed: (){
-                Navigator.pop(context);
-              },
-                  icon: Icon(Icons.arrow_back,color: ColorsTheme.primaryColor,)),
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text(widget.airlineName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
-                background: Container(
-                    color: Colors.white,
-                    child: Lottie.asset('assets/lottie/createtripbg.json',)),
+      // body: NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return [
+      //       SliverAppBar(
+      //         expandedHeight: h * 0.3,
+      //         floating: false,
+      //         pinned: true,
+      //         leading: IconButton(onPressed: (){
+      //           Navigator.pop(context);
+      //         },
+      //             icon: Icon(Icons.arrow_back,color: ColorsTheme.primaryColor,)),
+      //         flexibleSpace: FlexibleSpaceBar(
+      //           centerTitle: true,
+      //           title: Text(widget.airlineName, style: ThemeTexts.textStyleTitle3.copyWith(fontSize: 10,fontWeight: FontWeight.bold),),
+      //           background: Container(
+      //               color: Colors.white,
+      //               child: Lottie.asset('assets/lottie/createtripbg.json',)),
+      //         ),
+      //
+      //       ),
+      //     ];
+      //   },
+        body: Column(
+          children: [
+            Expanded(
+              flex: 0,
+              child: Stack(
+                children: [
+                  Lottie.asset('assets/lottie/createtripbg.json',),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(onPressed: (){
+                            Navigator.pop(context);
+                          }, icon: Icon(Icons.arrow_back,color: ColorsTheme.themeColor,))
+                      ),
+                    ],
+                  ),
+                ],
               ),
-
             ),
-          ];
-        },
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container(
+
+            Expanded(
+              flex: 2,
+              child: Container(
                 padding: EdgeInsets.all(15),
                 width: w,
                 decoration: BoxDecoration(
@@ -124,96 +145,91 @@ class _AirlineScreenDetailsState extends State<AirlineScreenDetails> {
                         ],
                       ),
                     ),
-                    Container(
-                        height: h * 0.8,
-                        color: Colors.white,
-                        child: FutureBuilder(
-                          future: futureList,
-                          builder: (context,snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.response!.isNotEmpty) {
-                                return Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      Flexible(
-                                        child: ListView.builder(
-                                          itemCount: snapshot.data!.response!.length,
-                                          itemBuilder: (context, index) {
+                    Expanded(
+                      child: Container(
+                          // height: h * 0.8,
+                          color: Colors.white,
+                          child: FutureBuilder(
+                            future: futureList,
+                            builder: (context,snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data!.response!.isNotEmpty) {
+                                  return Container(
+                                    color: Colors.white,
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data!.response!.length,
+                                      itemBuilder: (context, index) {
 
-                                            String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
-                                            String departureTime = snapshot.data!.response![index].depTime  ?? "---";
-                                            String arrivalDestination = snapshot.data!.response![index].arrIata ?? "---";
-                                            String departureDestination = snapshot.data!.response![index].depIata ?? "---";
-                                            String arrivalDestinationShortCode = snapshot.data!.response![index].arrIcao ?? "---";
-                                            String departureDestinationShortCode = snapshot.data!.response![index].depIcao ?? "---";
-                                            String flightNo = snapshot.data!.response![index].flightIata  ?? "---";
-                                            Object airlineIcao = snapshot.data!.response![index].aircraftIcao  ?? "---";
-                                            String date = snapshot.data!.response![index].updated.toString()  ?? "---";
-                                            DateTime y = DateTime.parse(date);
-                                            final DateFormat formatter = DateFormat('dd-MM-yyyy');
+                                        String arrivalTime = snapshot.data!.response![index].arrTime  ?? "---";
+                                        String departureTime = snapshot.data!.response![index].depTime  ?? "---";
+                                        String arrivalDestination = snapshot.data!.response![index].arrIata ?? "---";
+                                        String departureDestination = snapshot.data!.response![index].depIata ?? "---";
+                                        String arrivalDestinationShortCode = snapshot.data!.response![index].arrIcao ?? "---";
+                                        String departureDestinationShortCode = snapshot.data!.response![index].depIcao ?? "---";
+                                        String flightNo = snapshot.data!.response![index].flightIata  ?? "---";
+                                        Object airlineIcao = snapshot.data!.response![index].aircraftIcao  ?? "---";
+                                        String date = snapshot.data!.response![index].updated.toString()  ?? "---";
+                                        DateTime y = DateTime.parse(date);
+                                        final DateFormat formatter = DateFormat('dd-MM-yyyy');
 
 
-                                            String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
+                                        String flight_iata = snapshot.data!.response![index].flightIata  ?? "---";
 
-                                            String dateNow = DateTime.now().toString().substring(0,10);
-                                            String dateYesterday = DateTime.now().subtract(Duration(days:1)).toString().substring(0,10);
-                                            String dateAirline = date.toString().substring(0,10);
+                                        String dateNow = DateTime.now().toString().substring(0,10);
+                                        String dateYesterday = DateTime.now().subtract(Duration(days:1)).toString().substring(0,10);
+                                        String dateAirline = date.toString().substring(0,10);
 
-                                            // return dateNow == dateAirline || dateYesterday == dateAirline ?
-                                            return dateNow == dateAirline ?
-                                             InkWell(
-                                              onTap: () async {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                  return FlightDetailScreen(flight_iata: flight_iata);
-                                                }));
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(20),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                        // return dateNow == dateAirline || dateYesterday == dateAirline ?
+                                        return dateNow == dateAirline ?
+                                         InkWell(
+                                          onTap: () async {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                                              return FlightDetailScreen(flight_iata: flight_iata);
+                                            }));
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("$departureTime\n$arrivalTime"),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text("$departureTime\n$arrivalTime"),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("${getCityName(departureDestination)}",style: ThemeTexts.textStyleTitle2Black,),
-                                                        Text("${getCityName(arrivalDestination)}",style: ThemeTexts.textStyleTitle2Black,),
-                                                      ],
-                                                    ),
-                                                    Text("$flightNo\n${formatter.format(y)}"),
+                                                    Text("${getCityName(departureDestination)}",style: ThemeTexts.textStyleTitle2Black,),
+                                                    Text("${getCityName(arrivalDestination)}",style: ThemeTexts.textStyleTitle2Black,),
                                                   ],
                                                 ),
-                                              ),
-                                            )
-                                            : Container();
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                                Text("$flightNo\n${formatter.format(y)}"),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                        : Container();
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  return Center(child: NoFlightFound());
+                                }
+                              } else if (snapshot.hasError) {
+                                return NoInternetError();
                               } else {
-                                return Center(child: NoFlightFound());
+                                return Center(child: FunctionProgressIndicator());
                               }
-                            } else if (snapshot.hasError) {
-                              return NoInternetError();
-                            } else {
-                              return Center(child: FunctionProgressIndicator());
-                            }
-                          },
+                            },
 
+                          ),
                         ),
-                      ),
+                    ),
 
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
     );
   }
 

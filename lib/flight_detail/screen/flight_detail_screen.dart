@@ -29,7 +29,6 @@ class FlightDetailScreen extends StatefulWidget {
 
 class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
-  bool trackFlight = true;
   Future<ModelAirportTrackScreen>? futureList;
   String flightCode = "---";
   String departureCityDate = '---';
@@ -55,6 +54,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   String flightStatus = "---";
   int? updated;
   String flagCountry = "---";
+  int departureTime = 0;
+  int arrivalTime = 0;
   LocalNotificationService? service;
 
   ///   ///   ///   ///   ///
@@ -99,10 +100,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   arrivalCountry = snapshot.data!.response!.arrCountry ?? "---";
                   departureCityShortCode = snapshot.data!.response!.depIata ?? "---";
                   arrivalCityShortCode = snapshot.data!.response!.arrIata ?? "---";
-                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
-                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.depTimeTs! * 1000));
-                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
-                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(snapshot.data!.response!.arrTimeTs! * 1000));
+                  departureTime = snapshot.data!.response!.depTimeTs ?? 0;
+                  arrivalTime = snapshot.data!.response!.arrTimeTs ?? 0;
+                  departureCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(departureTime * 1000));
+                  departureCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(departureTime * 1000));
+                  arrivalCityDate = DateFormat.yMMMEd().format(DateTime.fromMillisecondsSinceEpoch(arrivalTime * 1000));
+                  arrivalCityTime = DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(arrivalTime * 1000));
                   departureTerminal = snapshot.data!.response!.depTerminal ?? "---";
                   arrivalTerminal = snapshot.data!.response!.arrTerminal ?? "---";
                   departureGate = snapshot.data!.response!.depGate ?? "---";
@@ -175,32 +178,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 },
                 icon: Icon(Icons.arrow_back,color: Colors.white,),
               ),
-              PopupMenuButton(
-                icon: Icon(Icons.more_vert, color: Colors.white,),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
-                      children: [
-                        Icon(Icons.share),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("Share Flight")
-                      ],
-                    ),
-                  ),
-                ],
-                offset: Offset(0, 40),
-                elevation: 2,
-                onSelected: (value) async {
-                  if (value == 1)  {
-                    Share.share(
-                        'Flight Code is $flightCode and its Status is $flightStatus \n Flight is departing from $departureAirport to $arrivalAirport',
-                        subject: 'Flight Track Update');
-                  }
-                },
-              ),
+             IconButton(onPressed: (){
+               Share.share(
+                   'Flight Code is $flightCode and its Status is $flightStatus \n Flight is departing from $departureAirport to $arrivalAirport',
+                   subject: 'Flight Track Update');
+             }, icon: Icon(Icons.share,color: ColorsTheme.white,))
             ],
           ),
           SizedBox(height: 50),
@@ -235,9 +217,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             SizedBox(height: 24),
             CustomFlightDetails(
               departureTitle: 'Departure Airport',
-              departureSubTitle: departureAirport.length > 17 ? '${departureAirport.substring(0, 17)}...' : departureAirport,
+              // departureSubTitle: departureAirport.length > 17 ? '${departureAirport.substring(0, 17)}...' : departureAirport,
+              departureSubTitle: departureAirport,
               arrivalTitle: "Arrival Airport",
-              arrivalSubTitle: arrivalAirport.length > 17 ? '${arrivalAirport.substring(0, 17)}...' : arrivalAirport,
+              // arrivalSubTitle: arrivalAirport.length > 17 ? '${arrivalAirport.substring(0, 17)}...' : arrivalAirport,
+              arrivalSubTitle: arrivalAirport,
             ),
             SizedBox(height: 20),
             CustomFlightDetails(
@@ -256,7 +240,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             SizedBox(height: 15),
             CustomFlightDetails(
                 departureTitle: 'Airline Name',
-                departureSubTitle: airlineName.length > 17 ? '${airlineName.substring(0, 17)}...' : airlineName,
+                // departureSubTitle: airlineName.length > 17 ? '${airlineName.substring(0, 17)}...' : airlineName,
+                departureSubTitle: airlineName,
                 arrivalTitle: "Airline Code",
                 arrivalSubTitle: airlineShortCode
             ),
@@ -307,12 +292,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                 hiveFlightCode = Hive.box<ModelMyFlightsUpcoming>("modelMyFlightsUpcoming").values.map((e) => e.flightCode);
                                 mySetState(() {
                                   var index = -1;
-                                  trackFlight = !trackFlight;
-                                  // if (trackFlight == false) {
-                                  // if(hiveFlightCode.contains(flightCode)){
-                                  //  // log("$hiveFlightCode");
-                                  //  ReusingWidgets().snackBar(context: context, text: "Flight Already Tracked");
-                                  // }
+                                  // trackFlight = !trackFlight;
+
                                   if(hiveFlightCode!.contains(flightCode)){
                                     log("Flight Codes$hiveFlightCode");
                                     for(int i = 0; i < dataBox!.length ; i++){
@@ -447,8 +428,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          cardRow(title: departureTitle, subTitle: departureSubTitle,crossAxisAlignment: CrossAxisAlignment.start),
-          cardRow(title: arrivalTitle, subTitle: arrivalSubTitle,crossAxisAlignment: CrossAxisAlignment.end),
+          cardRow(title: departureTitle, subTitle: departureSubTitle,crossAxisAlignment: CrossAxisAlignment.start,textAlign: TextAlign.start),
+          cardRow(title: arrivalTitle, subTitle: arrivalSubTitle,crossAxisAlignment: CrossAxisAlignment.end,textAlign: TextAlign.end),
         ],
       ),
     );
@@ -457,23 +438,27 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   cardRow({
     required String title,
     required String subTitle,
+    required TextAlign textAlign,
     required CrossAxisAlignment crossAxisAlignment,
   }){
     return
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: crossAxisAlignment,
-        children: [
-          Text(title,style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),),
-          SizedBox(height: 10,),
-          Text(subTitle,style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black,fontWeight: FontWeight.normal,fontSize: 13),),
-          SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: Divider(
-                thickness: 2,
-                color: ColorsTheme.themeColor,
-              )),
-        ],
+      SizedBox(
+        width: MediaQuery.of(context).size.width * 0.4,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: crossAxisAlignment,
+          children: [
+            Text(title,style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),),
+            SizedBox(height: 10,),
+            Text(subTitle,textAlign: textAlign,style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black,fontWeight: FontWeight.normal,fontSize: 13),),
+            SizedBox(
+                width: MediaQuery.of(context).size.width / 3,
+                child: Divider(
+                  thickness: 2,
+                  color: ColorsTheme.themeColor,
+                )),
+          ],
+        ),
       );
   }
 
@@ -553,7 +538,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
 
                 return
                   AlertDialog(
-                    insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 5.5),
+                    insetPadding: EdgeInsets.symmetric(horizontal: 20, vertical:  MediaQuery.of(context).size.height / 10),
                     titlePadding: EdgeInsets.all(0),
                     contentPadding: EdgeInsets.all(0),
                     title: Container(
@@ -562,6 +547,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                         color: ColorsTheme.primaryColor,
                         child: Text("Add To Trip",style: ThemeTexts.textStyleTitle2,)),
                     content: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         InkWell(
                           onTap: (){
@@ -619,6 +605,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                   Navigator.pop(context);
 
                                   ReusingWidgets().snackBar(context: context, text: "Flight Added Successfully");
+                                  setState(() {});
 
                                 }
                             );
@@ -639,16 +626,16 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                             padding: EdgeInsets.only(left: 30,top: 5,bottom: 10),
                             child: Row(
                               children: [
-                                Icon(Icons.add_box_outlined,color: ColorsTheme.textColor,),
+                                Icon(Icons.add_box_outlined,color: ColorsTheme.black,),
                                 SizedBox(width: 10),
-                                Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.textColor),)
+                                Text("Add To Existing",style: ThemeTexts.textStyleTitle2.copyWith(fontWeight: FontWeight.bold,color: ColorsTheme.black),)
                               ],
                             ),
                           ),
                         ),
-                        Expanded(
+                        SingleChildScrollView(
                           child: Container(
-                            // height: MediaQuery.of(context).size.height * 0.3,
+                            height: MediaQuery.of(context).size.height * 0.15,
                             color: ColorsTheme.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -670,8 +657,6 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                           itemCount: box.values.length,
                                           itemBuilder: (context, index) {
                                             ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-                                            // ModelMyFlightsCreateTrip? currentTask = box.getAt(index);
-
                                             return InkWell(
                                               onTap: () async{
                                                 mySetState(() {
@@ -689,8 +674,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                                     Icon(Icons.check_box_outline_blank),
                                                     Text(
                                                       currentTask.tripName,
-                                                      style: ThemeTexts.textStyleTitle3
-                                                          .copyWith(
+                                                      style: ThemeTexts.textStyleTitle3.copyWith(
                                                           color: Colors.black,
                                                           fontWeight: FontWeight.w600,
                                                           letterSpacing: 0),
@@ -729,8 +713,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                 log(element.modelMyFlightsUpcoming.map((e) => e.flightCode).toString());
                                 if(element.modelMyFlightsUpcoming.map((e) => e.flightCode).toString().contains(flightCode.toString())){
                                   log("Duplication Detected");
+                                  // ReusingWidgets().snackBar(context: context, text: "Trip Already Exist");
                                   if(hiveFlightCode!.contains(flightCode.toString())){
                                     log("Duplication 2 Detected");
+                                    // ReusingWidgets().snackBar(context: context, text: "Trip Already Exist");
                                   }
                                   else{
                                     modelMyFlights = ModelMyFlightsUpcoming(
@@ -748,6 +734,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                       isSelected: false,
                                     );
                                     dataBox!.add(modelMyFlights!);
+                                    ReusingWidgets().snackBar(context: context, text: "Trip Added Successfully");
+                                    setState(() {});
                                   }
                                 }
                                 else{
@@ -769,6 +757,7 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                   element.save();
                                     if(hiveFlightCode!.contains(flightCode.toString())){
                                       log("Duplication 2 Detected");
+                                      // ReusingWidgets().snackBar(context: context, text: "Trip Already Exist");
                                     }
                                     else{
                                       modelMyFlights = ModelMyFlightsUpcoming(
@@ -786,28 +775,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                         isSelected: false,
                                       );
                                       dataBox!.add(modelMyFlights!);
+                                      ReusingWidgets().snackBar(context: context, text: "Trip Added Successfully");
+                                      setState(() {});
                                   }
                                 }
-                                //   if(hiveFlightCode.contains(flightCode.toString())){
-                                //     log(hiveFlightCode.toString());
-                                //   }
-                                //   else{
-                                //     modelMyFlights = ModelMyFlightsUpcoming(
-                                //       flightCode: flightCode,
-                                //       departureCityDate: departureCityDate,
-                                //       departureCity: departureCityShortCode,
-                                //       departureCityShortCode: departureAirport,
-                                //       departureCityTime: departureCityTime,
-                                //       arrivalCityDate: arrivalCityDate,
-                                //       arrivalCity: arrivalCityShortCode,
-                                //       arrivalCityShortCode: arrivalAirport,
-                                //       arrivalCityTime: arrivalCityTime,
-                                //       flightStatus: flightStatus,
-                                //       flightIata: widget.flight_iata,
-                                //       isSelected: false,
-                                //     );
-                                //     dataBox!.add(modelMyFlights!);
-                                // }
                               }
                             });
                             Navigator.pop(context);

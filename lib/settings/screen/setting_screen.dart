@@ -24,8 +24,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Box<ModelSearch>? dataRecentSearch;
   Box<ModelRecentSearch>? dataRecentAirportAndAirline;
   Box<ModelMyFlightsCreateTrip>? dataCreateTrips;
-  String editName = "👤";
-  TextEditingController nameController = TextEditingController();
+
+  bool forDeparture = true;
+  bool forArrival = true;
 
   @override
   void initState() {
@@ -61,66 +62,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             SizedBox(height: 20),
-            // Spacer(),
             Expanded(
               flex: 1,
               child: Container(
-                // height: h * 0.8,
-                // width: w,
                 decoration: ReusingWidgets().curveDecorationContainer(),
                 child: ListView(
-                  padding: EdgeInsets.all(12),
+                  padding: EdgeInsets.zero,
                   children: [
-                    SizedBox(height: 20.0),
-                    ReusingWidgets().settingListTiles(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingAlert()));
+                    SizedBox(height: 20),
+                    ListTile(
+                      leading: iconStyle(icon: Icons.add_alert),
+                      title: textStyle(text: "Alert Settings"),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      leading: Text(""),
+                      title: textStyle(text: "Departure Reminder"),
+                      onTap: () {},
+                        trailing: Switch(
+                            activeColor: ColorsTheme.primaryColor,
+                            inactiveThumbColor: Colors.grey.shade200,
+                            inactiveTrackColor: Colors.grey,
+                            splashRadius: 50.0,
+                            value: forDeparture,
+                            onChanged: (value) => setState(() => forDeparture = value)
+                        )
+                    ),
+                    ListTile(
+                      leading: Text(""),
+                      title: textStyle(text: "Arrival Reminder"),
+                      onTap: () {},
+                      trailing: Switch(
+                        activeColor: ColorsTheme.primaryColor,
+                        inactiveThumbColor: Colors.grey.shade200,
+                        inactiveTrackColor: Colors.grey,
+                        splashRadius: 50.0,
+                        value: forArrival,
+                        onChanged: (value) => setState(() => forArrival = value),
+                      ),
+                    ),
+                    ListTile(
+                      leading: iconStyle(icon: Icons.search_off_rounded),
+                      title: textStyle(text: "Clear Searches"),
+                      onTap: () {
+                        deleteDialogue(boxData: dataRecentSearch!);
                       },
-                      title: "Alert",
-                      subTitle: "Alert default notifications",
-                      icon: Icons.add_alert,
-                      iconColor: ColorsTheme.primaryColor,
                     ),
-                    SizedBox(height: 20.0),
-                    ReusingWidgets().settingListTiles(
-                        onTap: (){
-                          deleteDialogue(boxData: dataRecentSearch!);
-                        },
-                        title: "Clear Recent Searches",
-                        subTitle: "This is irreversible and your data will be remove",
-                        icon: Icons.search_off_rounded,
-                        iconColor: ColorsTheme.dismissibleColor,
+                    ListTile(
+                      leading: iconStyle(icon: Icons.remove_circle_outline),
+                      title: textStyle(text: "Clear Trips"),
+                      onTap: () {
+                        deleteDialogue(boxData: dataCreateTrips!);
+                      },
                     ),
-                    SizedBox(height: 20.0),
-                    ReusingWidgets().settingListTiles(
-                        onTap: (){
-                          deleteDialogue(boxData: dataCreateTrips!);
-                        },
-                        title: "Clear All Created Trips",
-                        subTitle: "Remove your created trips of MyFlights",
-                        icon: Icons.remove_circle_outline,
-                        iconColor: ColorsTheme.dismissibleColor,
+                    ListTile(
+                      leading: iconStyle(icon: Icons.delete_forever_outlined),
+                      title: textStyle(text: "Clear Flights"),
+                      onTap: () {
+                        deleteDialogue(boxData: dataTrackFlights!);
+                      },
                     ),
-                    SizedBox(height: 20.0),
-                    ReusingWidgets().settingListTiles(
-                        onTap: (){
-                          deleteDialogue(boxData: dataTrackFlights!);
-                        },
-                        title: "Clear Track Flights",
-                        subTitle: "This is irreversible and your data will be remove",
-                        icon: Icons.delete_forever_outlined,
-                        iconColor: ColorsTheme.dismissibleColor,
+                    ListTile(
+                      leading: iconStyle(icon: Icons.star),
+                      title: textStyle(text: "Rate Us"),
+                      onTap: () {},
                     ),
-                    // SizedBox(height: 20.0),
-                    // ReusingWidgets().settingListTiles(
-                    //     onTap: (){
-                    //       ReusingWidgets().snackBar(context: context, text: "Not Working Yet!");
-                    //     },
-                    //     title: "Theme",
-                    //     subTitle: "Change Your Theme to Dark or Light",
-                    //     icon: Icons.dark_mode,
-                    //     iconColor: ColorsTheme.black,
-                    // )
+                    ListTile(
+                      leading: iconStyle(icon: Icons.share),
+                      title: textStyle(text: "Share"),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      leading: iconStyle(icon: Icons.privacy_tip_outlined),
+                      title: textStyle(text: "Privacy Policy"),
+                      onTap: () {},
+                    ),
+
                   ],
                 ),
               ),
@@ -153,4 +170,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       });
 
+  Widget textStyle({
+    required String text,
+  }){
+    return Text(
+      text,
+      style: ThemeTexts.textStyleTitle2.copyWith(color: Colors.black),
+    );
+  }
+  Icon iconStyle({
+    required IconData icon,
+  }){
+    return Icon(icon,color: ColorsTheme.themeColor,);
+  }
 }

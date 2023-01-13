@@ -186,67 +186,59 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
                   ),
                   Expanded(
                     child: Builder(
-
-
                       builder: (context) {
-
                         // final items = box.values.toList().cast<ModelMyFlightsCreateTrip>();
-
                         if (currentTask!.modelMyFlightsUpcoming.isEmpty) {
                           return NoFlightFound();
                         } else {
-                          return Flex(
-                              direction: Axis.vertical,
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: currentTask!.modelMyFlightsUpcoming.length,
-                                    itemBuilder: (context, index) {
-                                      // log("qwerty${currentTask!.modelMyFlightsUpcoming[index].toString()}");
-                                      return
-                                        currentTask!.modelMyFlightsUpcoming[index].flightCode!.isNotEmpty ?
-                                        FlightCardScreen().flightCardSimple(
-                                            onDismiss: (direction) async {
-                                              setState(() {
-                                                 log("qwerty${currentTask!.modelMyFlightsUpcoming[index].flightCode.toString()}");
-                                                 currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
-                                                 currentTask!.save();
+                          return Container(
+                            color: Colors.white,
+                            child: ListView.builder(
+                              itemCount: currentTask!.modelMyFlightsUpcoming.length,
+                              itemBuilder: (context, index) {
+                                // log("qwerty${currentTask!.modelMyFlightsUpcoming[index].toString()}");
+                                return
+                                  currentTask!.modelMyFlightsUpcoming[index].flightCode!.isNotEmpty ?
+                                  FlightCardScreen().flightCardSimple(
+                                      onDismiss: (direction) async {
+                                        setState(() {
+                                           log("qwerty${currentTask!.modelMyFlightsUpcoming[index].flightCode.toString()}");
+                                           currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+                                           currentTask!.save();
 
-                                                 // currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
-                                                 // log("qwerty${currentTask!.modelMyFlightsUpcoming[index]}");
-                                                 // var tasks= Hive.box<ModelMyFlightsUpcoming>('modelMyFlightsUpcoming');
-                                                 // var task = tasks.values.where((element) => element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode).first;
-                                                 // task.();
-                                                 // task!.save();
-                                                 // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
-                                                 // print("hel${taskBox!.values.where((element) => element.tripName == currentTask!.tripName).elementAt(0).modelMyFlightsUpcoming.where((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode)).elementAt(0).flightCode}");
-                                                 //taskBox!.modelMyFlightsUpcoming.;
-                                                 //await taskBox!.add(currentTask!);
+                                           // currentTask!.modelMyFlightsUpcoming.removeWhere((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode));
+                                           // log("qwerty${currentTask!.modelMyFlightsUpcoming[index]}");
+                                           // var tasks= Hive.box<ModelMyFlightsUpcoming>('modelMyFlightsUpcoming');
+                                           // var task = tasks.values.where((element) => element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode).first;
+                                           // task.();
+                                           // task!.save();
+                                           // taskBox = Hive.box<ModelMyFlightsCreateTrip>('modelMyFlightsTrip');
+                                           // print("hel${taskBox!.values.where((element) => element.tripName == currentTask!.tripName).elementAt(0).modelMyFlightsUpcoming.where((element) => (element.flightCode == currentTask!.modelMyFlightsUpcoming[index].flightCode)).elementAt(0).flightCode}");
+                                           //taskBox!.modelMyFlightsUpcoming.;
+                                           //await taskBox!.add(currentTask!);
 
-                                              });
-                                            },
-                                            onTap: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                                return FlightDetailScreen(
-                                                    flight_iata: currentTask!.modelMyFlightsUpcoming[index].flightCode!,);
-                                              }));
-                                            },
-                                            direction: DismissDirection.horizontal,
-                                            context: context,
-                                            flightCode: currentTask!.modelMyFlightsUpcoming[index].flightCode!,
-                                            flightStatus: currentTask!.modelMyFlightsUpcoming[index].flightStatus!,
-                                            departureCity: currentTask!.modelMyFlightsUpcoming[index].departureCity!,
-                                            departureCityShortCode:currentTask!.modelMyFlightsUpcoming[index].departureCityShortCode!,
-                                            departureCityTime: currentTask!.modelMyFlightsUpcoming[index].departureCityTime! ?? "---",
-                                            arrivalCity: currentTask!.modelMyFlightsUpcoming[index].arrivalCity!,
-                                            arrivalCityShortCode: currentTask!.modelMyFlightsUpcoming[index].arrivalCityShortCode!,
-                                            arrivalCityTime: currentTask!.modelMyFlightsUpcoming[index].arrivalCityTime! ?? "---",
-                                          )
-                                            : Container();
-                                    },
-                                  ),
-                                ),
-                              ]
+                                        });
+                                      },
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context){
+                                          return FlightDetailScreen(
+                                              flight_iata: currentTask!.modelMyFlightsUpcoming[index].flightCode!,);
+                                        }));
+                                      },
+                                      direction: DismissDirection.horizontal,
+                                      context: context,
+                                      flightCode: currentTask!.modelMyFlightsUpcoming[index].flightCode!,
+                                      flightStatus: currentTask!.modelMyFlightsUpcoming[index].flightStatus!,
+                                      departureCity: currentTask!.modelMyFlightsUpcoming[index].departureCity!,
+                                      departureCityShortCode:currentTask!.modelMyFlightsUpcoming[index].departureCityShortCode!,
+                                      departureCityTime: currentTask!.modelMyFlightsUpcoming[index].departureCityTime! ?? "---",
+                                      arrivalCity: currentTask!.modelMyFlightsUpcoming[index].arrivalCity!,
+                                      arrivalCityShortCode: currentTask!.modelMyFlightsUpcoming[index].arrivalCityShortCode!,
+                                      arrivalCityTime: currentTask!.modelMyFlightsUpcoming[index].arrivalCityTime! ?? "---",
+                                    )
+                                      : Container();
+                              },
+                            ),
                           );
                         }
                       },
@@ -310,7 +302,18 @@ class _MyFlightsOpenCreateNewTripsState extends State<MyFlightsOpenCreateNewTrip
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Are you sure you want to Delete this Trip?'),
+          titlePadding: EdgeInsets.all(0),
+          contentPadding: EdgeInsets.all(0),
+          title: Container(
+              padding: EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width ,
+              color: ColorsTheme.primaryColor,
+              child: Text("Delete Trip?",style: ThemeTexts.textStyleTitle2.copyWith(color: ColorsTheme.white))),
+          content: Container(
+            padding: EdgeInsets.all(20),
+            child: Text(
+                "Are you sure you want to Delete this Trip?"),
+          ),
           actions: [
             TextButton(
                 onPressed: () {

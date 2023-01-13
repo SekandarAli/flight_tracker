@@ -4,12 +4,14 @@ class Assets {
 
   static const String fontsMontserratRegular = 'assets/fonts/MontserratRegular.ttf';
   static const String fontsOpenSansRegular = 'assets/fonts/OpenSansRegular.ttf';
-  static const String imagesAirline = 'assets/images/airline.png';
-  static const String imagesAirport = 'assets/images/airport.jpg';
+  static const String imagesBackgroundMap = 'assets/images/background_map.png';
   static const String imagesFlightIcon = 'assets/images/flightIcon.png';
+  static const String imagesNewbgimage = 'assets/images/newbgimage.jpg';
   static const String imagesNoflight = 'assets/images/noflight.jpg';
   static const String imagesNosearch = 'assets/images/nosearch.jpg';
   static const String imagesPlane = 'assets/images/plane.png';
+  static const String imagesQrCodeImage = 'assets/images/qr_code_image.png';
+  static const String imagesSwapImage = 'assets/images/swap_image.png';
   static const String jsonAirline = 'assets/json/airline.json';
   static const String jsonAirport = 'assets/json/airport.json';
   static const String jsonCity = 'assets/json/city.json';
